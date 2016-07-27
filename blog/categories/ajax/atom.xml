@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Ajax | 小黄鸡]]></title>
   <link href="http://hunter222.github.io/blog/categories/ajax/atom.xml" rel="self"/>
   <link href="http://hunter222.github.io/"/>
-  <updated>2016-07-27T17:43:25+08:00</updated>
+  <updated>2016-07-27T23:06:25+08:00</updated>
   <id>http://hunter222.github.io/</id>
   <author>
     <name><![CDATA[小黄鸡]]></name>
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[Ajax的get和post请求方式示例]]></title>
-    <link href="http://hunter222.github.io/blog/2016/07/27/ajax/"/>
+    <link href="http://hunter222.github.io/blog/2016/07/27/xiao/"/>
     <updated>2016-07-27T17:19:26+08:00</updated>
-    <id>http://hunter222.github.io/blog/2016/07/27/ajax</id>
+    <id>http://hunter222.github.io/blog/2016/07/27/xiao</id>
     <content type="html"><![CDATA[<h5>1.两者的不同:</h5>
 
 <p>① 给服务器传递数据量，get最多是2k
@@ -28,10 +28,8 @@
 <p>③ 传递数据的形式不一样
     get方式在url地址后边以请求字符串形式传递参数
     <a href="http://%E7%BD%91%E5%9D%80/index.php?name=tom&amp;age=23&amp;addr=beijing">http://%E7%BD%91%E5%9D%80/index.php?name=tom&amp;age=23&amp;addr=beijing</a>
-    蓝色部分就是请求字符串，就是一些“名-值”对，中间使用&amp;符号连接。</p>
-
-<pre><code>post方式是把form表单的数据给请求出来以xml形式传递给服务器
-</code></pre>
+    蓝色部分就是请求字符串，就是一些“名-值”对，中间使用&amp;符号连接。
+    post方式是把form表单的数据给请求出来以xml形式传递给服务器</p>
 
 <h5>2.处理特殊符号函数：</h5>
 
@@ -69,9 +67,11 @@
 
 <h5>4.实例代码:</h5>
 
-<pre><code class="javascritp js代码 ">  function checkname() {
-                        //ajax负责抓取用户名信息，传递给服务器进行校验
+<p>js代码：</p>
 
+<pre><code>function checkname() 
+                    {
+                        //ajax负责抓取用户名信息，传递给服务器进行校验
                         //获得用户名信息
                         var nm = document.getElementById('username').value;
                         nm = encodeURIComponent(nm);
@@ -85,15 +85,27 @@
                         //post模仿form表单把数据传递给服务器端
                         //form表单把数据组织为“xml格式”传递给服务器端
                         //把传递的数据组织为请求字符串
-
                         //以下方法设置header头信息，作用把传递的数据组织为xml格式
                         //(要在open()方法执行之后设置)
                         xhr.setRequestHeader('content-type', 'application/x-www-form-urlencoded');
-
                         var info = "name=" + nm;
                         xhr.send(info);
-                    }
+                     }
 </code></pre>
+
+<p>06.php
+<code>
+&lt;?php
+header('Content-Type:text/html;charset=utf8');
+$conn = mysqli_connect("localhost","root","1234567","db_liuyanben");
+$sql=mysqli_query($conn,"select Username from tb_user where Username='".$_POST["name"]."'");
+$sq = mysqli_fetch_array($sql, MYSQLI_BOTH);
+if($_POST['name']==$sq['Username']){
+    echo '正确';
+}  else {
+    echo '不正确';
+}
+</code></p>
 ]]></content>
   </entry>
   
