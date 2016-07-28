@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Ajax | 小黄鸡]]></title>
   <link href="http://hunter222.github.io/blog/categories/ajax/atom.xml" rel="self"/>
   <link href="http://hunter222.github.io/"/>
-  <updated>2016-07-28T11:17:58+08:00</updated>
+  <updated>2016-07-28T15:14:26+08:00</updated>
   <id>http://hunter222.github.io/</id>
   <author>
     <name><![CDATA[小黄鸡]]></name>
@@ -12,6 +12,78 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Ajax对xml接收]]></title>
+    <link href="http://hunter222.github.io/blog/2016/07/27/ajax-xml/"/>
+    <updated>2016-07-27T17:19:26+08:00</updated>
+    <id>http://hunter222.github.io/blog/2016/07/27/ajax-xml</id>
+    <content type="html"><![CDATA[<h5>ajax负责请求xml和接收xml信息，dom负责处理xml信息</h5>
+
+<p>效果：
+<img src="http://d3.freep.cn/3tb_160728151221rkbf570245.png" alt="haha" /></p>
+
+<p>代码如下：</p>
+
+<pre><code>&lt;!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"&gt;
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;title&gt;新建网页&lt;/title&gt;
+        &lt;meta http-equiv="Content-Type" content="text/html; charset=utf-8" /&gt;
+        &lt;meta name="description" content="" /&gt;
+        &lt;meta name="keywords" content="" /&gt;
+        &lt;script type="text/javascript"&gt;
+        function f1(){
+            var xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function(){
+                if(xhr.readyState==4){    
+                    var xmldom = xhr.responseXML;//这里有点不同
+                    var std = xmldom.getElementsByTagName('student');                 
+                    var s = "";
+                    for(var i=0; i&lt;std.length; i++){
+                        var nm = std[i].getElementsByTagName('name')[0].innerHTML;
+                        var age = std[i].getElementsByTagName('age')[0].firstChild.wholeText;
+                        var addr = std[i].getElementsByTagName('addr')[0].innerHTML;                       
+                        s += "名称："+nm+"--年龄："+age+"--地址："+addr+"&lt;br /&gt;";
+                    }
+                    document.body.innerHTML += s;
+                }
+            }
+            xhr.open('get','./stu.xml');
+            xhr.send(null);
+        }
+        &lt;/script&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;h2&gt;ajax+javascript实现对xml处理&lt;/h2&gt;
+        &lt;input type="button" value="处理" onclick="f1()" /&gt;
+    &lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+
+<p>xml代码（stu.xml）：
+<code>
+&lt;?xml version="1.0" encoding="utf-8" ?&gt;
+&lt;students&gt;
+    &lt;student&gt;
+        &lt;name&gt;张三&lt;/name&gt;
+        &lt;age&gt;22&lt;/age&gt;
+        &lt;addr&gt;河北&lt;/addr&gt;
+    &lt;/student&gt;
+    &lt;student&gt;
+        &lt;name&gt;苏您退&lt;/name&gt;
+        &lt;age&gt;21&lt;/age&gt;
+        &lt;addr&gt;河南&lt;/addr&gt;
+    &lt;/student&gt;
+    &lt;student&gt;
+        &lt;name&gt;李阳&lt;/name&gt;
+        &lt;age&gt;44&lt;/age&gt;
+        &lt;addr&gt;山东&lt;/addr&gt;
+    &lt;/student&gt;
+&lt;/students&gt;
+</code></p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Ajax的无刷新分页显示]]></title>

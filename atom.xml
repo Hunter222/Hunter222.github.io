@@ -4,7 +4,7 @@
   <title><![CDATA[小黄鸡]]></title>
   <link href="http://hunter222.github.io/atom.xml" rel="self"/>
   <link href="http://hunter222.github.io/"/>
-  <updated>2016-07-28T11:17:58+08:00</updated>
+  <updated>2016-07-28T15:14:26+08:00</updated>
   <id>http://hunter222.github.io/</id>
   <author>
     <name><![CDATA[小黄鸡]]></name>
@@ -12,6 +12,130 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Ajax对xml接收]]></title>
+    <link href="http://hunter222.github.io/blog/2016/07/27/ajax-xml/"/>
+    <updated>2016-07-27T17:19:26+08:00</updated>
+    <id>http://hunter222.github.io/blog/2016/07/27/ajax-xml</id>
+    <content type="html"><![CDATA[<h5>ajax负责请求xml和接收xml信息，dom负责处理xml信息</h5>
+
+<p>效果：
+<img src="http://d3.freep.cn/3tb_160728151221rkbf570245.png" alt="haha" /></p>
+
+<p>代码如下：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"&gt;
+</span><span class='line'>&lt;html&gt;
+</span><span class='line'>    &lt;head&gt;
+</span><span class='line'>        &lt;title&gt;新建网页&lt;/title&gt;
+</span><span class='line'>        &lt;meta http-equiv="Content-Type" content="text/html; charset=utf-8" /&gt;
+</span><span class='line'>        &lt;meta name="description" content="" /&gt;
+</span><span class='line'>        &lt;meta name="keywords" content="" /&gt;
+</span><span class='line'>        &lt;script type="text/javascript"&gt;
+</span><span class='line'>        function f1(){
+</span><span class='line'>            var xhr = new XMLHttpRequest();
+</span><span class='line'>            xhr.onreadystatechange = function(){
+</span><span class='line'>                if(xhr.readyState==4){    
+</span><span class='line'>                    var xmldom = xhr.responseXML;//这里有点不同
+</span><span class='line'>                    var std = xmldom.getElementsByTagName('student');                 
+</span><span class='line'>                    var s = "";
+</span><span class='line'>                    for(var i=0; i&lt;std.length; i++){
+</span><span class='line'>                        var nm = std[i].getElementsByTagName('name')[0].innerHTML;
+</span><span class='line'>                        var age = std[i].getElementsByTagName('age')[0].firstChild.wholeText;
+</span><span class='line'>                        var addr = std[i].getElementsByTagName('addr')[0].innerHTML;                       
+</span><span class='line'>                        s += "名称："+nm+"--年龄："+age+"--地址："+addr+"&lt;br /&gt;";
+</span><span class='line'>                    }
+</span><span class='line'>                    document.body.innerHTML += s;
+</span><span class='line'>                }
+</span><span class='line'>            }
+</span><span class='line'>            xhr.open('get','./stu.xml');
+</span><span class='line'>            xhr.send(null);
+</span><span class='line'>        }
+</span><span class='line'>        &lt;/script&gt;
+</span><span class='line'>    &lt;/head&gt;
+</span><span class='line'>    &lt;body&gt;
+</span><span class='line'>        &lt;h2&gt;ajax+javascript实现对xml处理&lt;/h2&gt;
+</span><span class='line'>        &lt;input type="button" value="处理" onclick="f1()" /&gt;
+</span><span class='line'>    &lt;/body&gt;
+</span><span class='line'>&lt;/html&gt;</span></code></pre></td></tr></table></div></figure>
+
+
+<p>xml代码（stu.xml）：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;?xml version="1.0" encoding="utf-8" ?&gt;
+</span><span class='line'>&lt;students&gt;
+</span><span class='line'>  &lt;student&gt;
+</span><span class='line'>      &lt;name&gt;张三&lt;/name&gt;
+</span><span class='line'>      &lt;age&gt;22&lt;/age&gt;
+</span><span class='line'>      &lt;addr&gt;河北&lt;/addr&gt;
+</span><span class='line'>  &lt;/student&gt;
+</span><span class='line'>  &lt;student&gt;
+</span><span class='line'>      &lt;name&gt;苏您退&lt;/name&gt;
+</span><span class='line'>      &lt;age&gt;21&lt;/age&gt;
+</span><span class='line'>      &lt;addr&gt;河南&lt;/addr&gt;
+</span><span class='line'>  &lt;/student&gt;
+</span><span class='line'>  &lt;student&gt;
+</span><span class='line'>      &lt;name&gt;李阳&lt;/name&gt;
+</span><span class='line'>      &lt;age&gt;44&lt;/age&gt;
+</span><span class='line'>      &lt;addr&gt;山东&lt;/addr&gt;
+</span><span class='line'>  &lt;/student&gt;
+</span><span class='line'>&lt;/students&gt;</span></code></pre></td></tr></table></div></figure>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Ajax的无刷新分页显示]]></title>
