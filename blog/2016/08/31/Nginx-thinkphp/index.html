@@ -5,11 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Ajax对xml接收 - 小黄鸡</title>
+  <title>linux下thinkphp的Nginx配置文件 - 小黄鸡</title>
   <meta name="author" content="小黄鸡">
 
   
-  <meta name="description" content="ajax负责请求xml和接收xml信息，dom负责处理xml信息 效果： 代码如下： 1
+  <meta name="description" content="linux下thinkphp的Nginx配置文件 一个配置文件，完美支持普通,兼容,pathinfo,rewrite4种url模式，别怪我没提醒你收藏哦. 常见的静态文件404时也不会再去跑一遍fastcgi浪费资源。 1
 2
 3
 4
@@ -24,26 +24,7 @@
 13
 14
 15
-16
-17
-18
-19
-20
-21
-22
-23
-24
-25
-26
-27
-28
-29
-30
-31
-32
-33
-34
-&lt;!DOCTYPE &hellip;">
+16 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -52,7 +33,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://hunter222.github.io/blog/2016/07/27/ajax-xml/">
+  <link rel="canonical" href="http://hunter222.github.io/blog/2016/08/31/Nginx-thinkphp/">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="小黄鸡" type="application/atom+xml">
@@ -104,7 +85,7 @@
   
   <header>
     
-      <h1 class="entry-title">Ajax对xml接收</h1>
+      <h1 class="entry-title">linux下thinkphp的Nginx配置文件</h1>
     
     
       <p class="meta">
@@ -113,19 +94,16 @@
 
 
 
-<time class='entry-date' datetime='2016-07-27T17:19:26+08:00'><span class='date'><span class='date-month'>Jul</span> <span class='date-day'>27</span><span class='date-suffix'>th</span>, <span class='date-year'>2016</span></span> <span class='time'>5:19 pm</span></time>
+<time class='entry-date' datetime='2016-08-31T18:19:26+08:00'><span class='date'><span class='date-month'>Aug</span> <span class='date-day'>31</span><span class='date-suffix'>st</span>, <span class='date-year'>2016</span></span> <span class='time'>6:19 pm</span></time>
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><h5>ajax负责请求xml和接收xml信息，dom负责处理xml信息</h5>
+<div class="entry-content"><h5>linux下thinkphp的Nginx配置文件</h5>
 
-<p>效果：
-<img src="http://ww2.sinaimg.cn/mw690/710059dfgw1f7c5fj7vwgj20h307ign8.jpg" alt="haha" /></p>
-
-<p>代码如下：</p>
+<p>一个配置文件，完美支持普通,兼容,pathinfo,rewrite4种url模式，别怪我没提醒你收藏哦. 常见的静态文件404时也不会再去跑一遍fastcgi浪费资源。</p>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -161,80 +139,80 @@
 <span class='line-number'>32</span>
 <span class='line-number'>33</span>
 <span class='line-number'>34</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"&gt;
-</span><span class='line'>&lt;html&gt;
-</span><span class='line'>    &lt;head&gt;
-</span><span class='line'>        &lt;title&gt;新建网页&lt;/title&gt;
-</span><span class='line'>        &lt;meta http-equiv="Content-Type" content="text/html; charset=utf-8" /&gt;
-</span><span class='line'>        &lt;meta name="description" content="" /&gt;
-</span><span class='line'>        &lt;meta name="keywords" content="" /&gt;
-</span><span class='line'>        &lt;script type="text/javascript"&gt;
-</span><span class='line'>        function f1(){
-</span><span class='line'>            var xhr = new XMLHttpRequest();
-</span><span class='line'>            xhr.onreadystatechange = function(){
-</span><span class='line'>                if(xhr.readyState==4){    
-</span><span class='line'>                    var xmldom = xhr.responseXML;//这里有点不同
-</span><span class='line'>                    var std = xmldom.getElementsByTagName('student');                 
-</span><span class='line'>                    var s = "";
-</span><span class='line'>                    for(var i=0; i&lt;std.length; i++){
-</span><span class='line'>                        var nm = std[i].getElementsByTagName('name')[0].innerHTML;
-</span><span class='line'>                        var age = std[i].getElementsByTagName('age')[0].firstChild.wholeText;
-</span><span class='line'>                        var addr = std[i].getElementsByTagName('addr')[0].innerHTML;                       
-</span><span class='line'>                        s += "名称："+nm+"--年龄："+age+"--地址："+addr+"&lt;br /&gt;";
-</span><span class='line'>                    }
-</span><span class='line'>                    document.body.innerHTML += s;
-</span><span class='line'>                }
-</span><span class='line'>            }
-</span><span class='line'>            xhr.open('get','./stu.xml');
-</span><span class='line'>            xhr.send(null);
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+<span class='line-number'>53</span>
+<span class='line-number'>54</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>server {
+</span><span class='line'>    listen       80;
+</span><span class='line'>    server_name  thinkphp.lo;
+</span><span class='line'>    root /var/www;
+</span><span class='line'>    index  index.html index.htm index.php;
+</span><span class='line'>
+</span><span class='line'>    error_page  404              /404.html;
+</span><span class='line'>    location = /404.html {
+</span><span class='line'>        return 404 'Sorry, File not Found!';
+</span><span class='line'>    }
+</span><span class='line'>    error_page  500 502 503 504  /50x.html;
+</span><span class='line'>    location = /50x.html {
+</span><span class='line'>        root   /usr/share/nginx/html; # windows用户替换这个目录
+</span><span class='line'>    }
+</span><span class='line'>
+</span><span class='line'>    location / {
+</span><span class='line'>        try_files $uri @rewrite;
+</span><span class='line'>    }
+</span><span class='line'>
+</span><span class='line'>    location @rewrite {
+</span><span class='line'>        set $static 0;
+</span><span class='line'>        if  ($uri ~ \.(css|js|jpg|jpeg|png|gif|ico|woff|eot|svg|css\.map|min\.map)$) {
+</span><span class='line'>            set $static 1;
 </span><span class='line'>        }
-</span><span class='line'>        &lt;/script&gt;
-</span><span class='line'>    &lt;/head&gt;
-</span><span class='line'>    &lt;body&gt;
-</span><span class='line'>        &lt;h2&gt;ajax+javascript实现对xml处理&lt;/h2&gt;
-</span><span class='line'>        &lt;input type="button" value="处理" onclick="f1()" /&gt;
-</span><span class='line'>    &lt;/body&gt;
-</span><span class='line'>&lt;/html&gt;</span></code></pre></td></tr></table></div></figure>
-
-
-<p>xml代码（stu.xml）：</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;?xml version="1.0" encoding="utf-8" ?&gt;
-</span><span class='line'>&lt;students&gt;
-</span><span class='line'>  &lt;student&gt;
-</span><span class='line'>      &lt;name&gt;张三&lt;/name&gt;
-</span><span class='line'>      &lt;age&gt;22&lt;/age&gt;
-</span><span class='line'>      &lt;addr&gt;河北&lt;/addr&gt;
-</span><span class='line'>  &lt;/student&gt;
-</span><span class='line'>  &lt;student&gt;
-</span><span class='line'>      &lt;name&gt;苏您退&lt;/name&gt;
-</span><span class='line'>      &lt;age&gt;21&lt;/age&gt;
-</span><span class='line'>      &lt;addr&gt;河南&lt;/addr&gt;
-</span><span class='line'>  &lt;/student&gt;
-</span><span class='line'>  &lt;student&gt;
-</span><span class='line'>      &lt;name&gt;李阳&lt;/name&gt;
-</span><span class='line'>      &lt;age&gt;44&lt;/age&gt;
-</span><span class='line'>      &lt;addr&gt;山东&lt;/addr&gt;
-</span><span class='line'>  &lt;/student&gt;
-</span><span class='line'>&lt;/students&gt;</span></code></pre></td></tr></table></div></figure>
+</span><span class='line'>
+</span><span class='line'>        if ($static = 0) {
+</span><span class='line'>            rewrite ^/(.*)$ /index.php?s=/$1;
+</span><span class='line'>        }
+</span><span class='line'>
+</span><span class='line'>    }
+</span><span class='line'>
+</span><span class='line'>    location ~ /Uploads/.*\.php$ {
+</span><span class='line'>        deny all;
+</span><span class='line'>    }
+</span><span class='line'>
+</span><span class='line'>    location ~ \.php/ {
+</span><span class='line'>       if ($request_uri ~ ^(.+\.php)(/.+?)($|\?)) { }
+</span><span class='line'>       fastcgi_pass 127.0.0.1:9000;
+</span><span class='line'>       include fastcgi_params;
+</span><span class='line'>       fastcgi_param SCRIPT_NAME     $1;
+</span><span class='line'>       fastcgi_param PATH_INFO       $2;
+</span><span class='line'>       fastcgi_param SCRIPT_FILENAME $document_root$1;
+</span><span class='line'>    }
+</span><span class='line'>
+</span><span class='line'>    location ~ \.php$ {
+</span><span class='line'>        fastcgi_pass 127.0.0.1:9000;
+</span><span class='line'>        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+</span><span class='line'>        include fastcgi_params;
+</span><span class='line'>    }
+</span><span class='line'>
+</span><span class='line'>    location ~ /\.ht {
+</span><span class='line'>        deny  all;
+</span><span class='line'>    }
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
 
 </div>
 
@@ -251,12 +229,12 @@
 
 
 
-<time class='entry-date' datetime='2016-07-27T17:19:26+08:00'><span class='date'><span class='date-month'>Jul</span> <span class='date-day'>27</span><span class='date-suffix'>th</span>, <span class='date-year'>2016</span></span> <span class='time'>5:19 pm</span></time>
+<time class='entry-date' datetime='2016-08-31T18:19:26+08:00'><span class='date'><span class='date-month'>Aug</span> <span class='date-day'>31</span><span class='date-suffix'>st</span>, <span class='date-year'>2016</span></span> <span class='time'>6:19 pm</span></time>
       
 
 <span class="categories">
   
-    <a class='category' href='/blog/categories/ajax/'>ajax</a>, <a class='category' href='/blog/categories/html/'>html</a>, <a class='category' href='/blog/categories/js/'>js</a>, <a class='category' href='/blog/categories/php/'>php</a>
+    <a class='category' href='/blog/categories/linux/'>linux</a>, <a class='category' href='/blog/categories/nginx/'>nginx</a>, <a class='category' href='/blog/categories/php/'>php</a>, <a class='category' href='/blog/categories/thinkphp/'>thinkphp</a>
   
 </span>
 
@@ -265,7 +243,7 @@
     
       <div class="sharing">
   
-  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://hunter222.github.io/blog/2016/07/27/ajax-xml/" data-via="" data-counturl="http://hunter222.github.io/blog/2016/07/27/ajax-xml/" >Tweet</a>
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://hunter222.github.io/blog/2016/08/31/Nginx-thinkphp/" data-via="" data-counturl="http://hunter222.github.io/blog/2016/08/31/Nginx-thinkphp/" >Tweet</a>
   
   
   
@@ -288,10 +266,8 @@
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2016/07/27/ajax-page/" title="Previous Post: ajax的无刷新分页显示">&laquo; ajax的无刷新分页显示</a>
+        <a class="basic-alignment left" href="/blog/2016/08/31/centos-LNMP/" title="Previous Post: 在Centos6.5下搭建LNMP的方法">&laquo; 在Centos6.5下搭建LNMP的方法</a>
       
-      
-        <a class="basic-alignment right" href="/blog/2016/08/31/centos-LNMP/" title="Next Post: 在Centos6.5下搭建LNMP的方法">在Centos6.5下搭建LNMP的方法 &raquo;</a>
       
     </p>
   </footer>
@@ -300,7 +276,7 @@
   <section>
     <h1>Comments</h1>
     <div id="disqus_thread" aria-live="polite"><!-- 多说评论框 start -->
-	<div class="ds-thread" data-thread-key="/blog/2016/07/27/ajax-xml" data-title="ajax对xml接收" data-url="http://hunter222.github.io/blog/2016/07/27/ajax-xml/"></div>
+	<div class="ds-thread" data-thread-key="/blog/2016/08/31/Nginx-thinkphp" data-title="linux下thinkphp的Nginx配置文件" data-url="http://hunter222.github.io/blog/2016/08/31/Nginx-thinkphp/"></div>
 <!-- 多说评论框 end -->
 <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
 <script type="text/javascript">

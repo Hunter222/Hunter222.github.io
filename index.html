@@ -9,11 +9,22 @@
   <meta name="author" content="小黄鸡">
 
   
-  <meta name="description" content="在Centos6.5下搭建LNMP的方法 1：查看环境 1
+  <meta name="description" content="linux下thinkphp的Nginx配置文件 一个配置文件，完美支持普通,兼容,pathinfo,rewrite4种url模式，别怪我没提醒你收藏哦. 常见的静态文件404时也不会再去跑一遍fastcgi浪费资源。 1
 2
-[root@10-4-14-168 html]# cat /etc/redhat-release
-CentOS release 6.5 (Final) 2：关掉防火墙 1
-[root@10-4-14-168 html]# &hellip;">
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -71,6 +82,147 @@ CentOS release 6.5 (Final) 2：关掉防火墙 1
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2016/08/31/Nginx-thinkphp/">linux下thinkphp的Nginx配置文件</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2016-08-31T18:19:26+08:00'><span class='date'><span class='date-month'>Aug</span> <span class='date-day'>31</span><span class='date-suffix'>st</span>, <span class='date-year'>2016</span></span> <span class='time'>6:19 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h5>linux下thinkphp的Nginx配置文件</h5>
+
+<p>一个配置文件，完美支持普通,兼容,pathinfo,rewrite4种url模式，别怪我没提醒你收藏哦. 常见的静态文件404时也不会再去跑一遍fastcgi浪费资源。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+<span class='line-number'>53</span>
+<span class='line-number'>54</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>server {
+</span><span class='line'>    listen       80;
+</span><span class='line'>    server_name  thinkphp.lo;
+</span><span class='line'>    root /var/www;
+</span><span class='line'>    index  index.html index.htm index.php;
+</span><span class='line'>
+</span><span class='line'>    error_page  404              /404.html;
+</span><span class='line'>    location = /404.html {
+</span><span class='line'>        return 404 'Sorry, File not Found!';
+</span><span class='line'>    }
+</span><span class='line'>    error_page  500 502 503 504  /50x.html;
+</span><span class='line'>    location = /50x.html {
+</span><span class='line'>        root   /usr/share/nginx/html; # windows用户替换这个目录
+</span><span class='line'>    }
+</span><span class='line'>
+</span><span class='line'>    location / {
+</span><span class='line'>        try_files $uri @rewrite;
+</span><span class='line'>    }
+</span><span class='line'>
+</span><span class='line'>    location @rewrite {
+</span><span class='line'>        set $static 0;
+</span><span class='line'>        if  ($uri ~ \.(css|js|jpg|jpeg|png|gif|ico|woff|eot|svg|css\.map|min\.map)$) {
+</span><span class='line'>            set $static 1;
+</span><span class='line'>        }
+</span><span class='line'>
+</span><span class='line'>        if ($static = 0) {
+</span><span class='line'>            rewrite ^/(.*)$ /index.php?s=/$1;
+</span><span class='line'>        }
+</span><span class='line'>
+</span><span class='line'>    }
+</span><span class='line'>
+</span><span class='line'>    location ~ /Uploads/.*\.php$ {
+</span><span class='line'>        deny all;
+</span><span class='line'>    }
+</span><span class='line'>
+</span><span class='line'>    location ~ \.php/ {
+</span><span class='line'>       if ($request_uri ~ ^(.+\.php)(/.+?)($|\?)) { }
+</span><span class='line'>       fastcgi_pass 127.0.0.1:9000;
+</span><span class='line'>       include fastcgi_params;
+</span><span class='line'>       fastcgi_param SCRIPT_NAME     $1;
+</span><span class='line'>       fastcgi_param PATH_INFO       $2;
+</span><span class='line'>       fastcgi_param SCRIPT_FILENAME $document_root$1;
+</span><span class='line'>    }
+</span><span class='line'>
+</span><span class='line'>    location ~ \.php$ {
+</span><span class='line'>        fastcgi_pass 127.0.0.1:9000;
+</span><span class='line'>        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+</span><span class='line'>        include fastcgi_params;
+</span><span class='line'>    }
+</span><span class='line'>
+</span><span class='line'>    location ~ /\.ht {
+</span><span class='line'>        deny  all;
+</span><span class='line'>    }
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1624,6 +1776,10 @@ comments: true</p>
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2016/08/31/Nginx-thinkphp/">linux下thinkphp的Nginx配置文件</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2016/08/31/centos-LNMP/">在Centos6.5下搭建LNMP的方法</a>
       </li>
     
@@ -1637,10 +1793,6 @@ comments: true</p>
     
       <li class="post">
         <a href="/blog/2016/07/27/ajax-get-post/">Ajax的get和post请求方式示例</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2016/07/27/php/">49点php编程重点知识</a>
       </li>
     
   </ul>
