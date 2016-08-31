@@ -1,24 +1,92 @@
-<?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[Category: Linux | 小黄鸡]]></title>
-  <link href="http://hunter222.github.io/blog/categories/linux/atom.xml" rel="self"/>
-  <link href="http://hunter222.github.io/"/>
-  <updated>2016-08-31T21:09:52+08:00</updated>
-  <id>http://hunter222.github.io/</id>
-  <author>
-    <name><![CDATA[小黄鸡]]></name>
-    
-  </author>
-  <generator uri="http://octopress.org/">Octopress</generator>
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Linux的基础语法 - 小黄鸡</title>
+  <meta name="author" content="小黄鸡">
 
   
-  <entry>
-    <title type="html"><![CDATA[Linux的基础语法]]></title>
-    <link href="http://hunter222.github.io/blog/2016/08/31/linux-base/"/>
-    <updated>2016-08-31T18:19:31+08:00</updated>
-    <id>http://hunter222.github.io/blog/2016/08/31/linux-base</id>
-    <content type="html"><![CDATA[<h5>Linux的目录结构：</h5>
+  <meta name="description" content="Linux的目录结构： /bin bin是Binary的缩写。这个目录存放着最经常使用的命令。 /boot这里存放的是启动Linux时使用的一些核心文件，包括一些连接文件以及镜像文件。 /dev dev是Device(设备)的缩写。该目录下存放的是Linux的外部设备， &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://hunter222.github.io/blog/2016/08/31/linux-base/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="小黄鸡" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="/javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">小黄鸡</a></h1>
+  
+    <h2>Achieve something what I think.</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="sitesearch" value="hunter222.github.io">
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/category">Category</a></li>
+  <li><a href="/aboutme">AboutMe</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Linux的基础语法</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2016-08-31T18:19:31+08:00'><span class='date'><span class='date-month'>Aug</span> <span class='date-day'>31</span><span class='date-suffix'>st</span>, <span class='date-year'>2016</span></span> <span class='time'>6:19 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><h5>Linux的目录结构：</h5>
 
 <p>/bin bin是Binary的缩写。这个目录存放着最经常使用的命令。</p>
 
@@ -715,221 +783,154 @@ gzip -dc cd_iso.gz | cdrecord dev=/dev/cdrom - 刻录一个压缩了的ISO镜像
 
 <p>ifconfig eth0 promisc 设置 &lsquo;eth0&rsquo; 成混杂模式以嗅探数据包
 (sniffing)</p>
-]]></content>
-  </entry>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
   
-  <entry>
-    <title type="html"><![CDATA[linux下thinkphp的Nginx配置文件]]></title>
-    <link href="http://hunter222.github.io/blog/2016/08/31/Nginx-thinkphp/"/>
-    <updated>2016-08-31T18:19:26+08:00</updated>
-    <id>http://hunter222.github.io/blog/2016/08/31/Nginx-thinkphp</id>
-    <content type="html"><![CDATA[<h5>linux下thinkphp的Nginx配置文件(亲测有效)</h5>
 
-<p>一个配置文件，完美支持普通,兼容,pathinfo,rewrite4种url模式，常见的静态文件404时也不会再去跑一遍fastcgi浪费资源。
-```
-server {
-    listen       80;
-    server_name  thinkphp.lo;
-    root /var/www;
-    index  index.html index.htm index.php;</p>
+<span class="byline author vcard">Posted by <span class="fn">小黄鸡</span></span>
 
-<pre><code>error_page  404              /404.html;
-location = /404.html {
-    return 404 'Sorry, File not Found!';
-}
-error_page  500 502 503 504  /50x.html;
-location = /50x.html {
-    root   /usr/share/nginx/html; # windows用户替换这个目录
-}
+      
 
-location / {
-    try_files $uri @rewrite;
-}
 
-location @rewrite {
-    set $static 0;
-    if  ($uri ~ \.(css|js|jpg|jpeg|png|gif|ico|woff|eot|svg|css\.map|min\.map)$) {
-        set $static 1;
-    }
 
-    if ($static = 0) {
-        rewrite ^/(.*)$ /index.php?s=/$1;
-    }
 
-}
+<time class='entry-date' datetime='2016-08-31T18:19:31+08:00'><span class='date'><span class='date-month'>Aug</span> <span class='date-day'>31</span><span class='date-suffix'>st</span>, <span class='date-year'>2016</span></span> <span class='time'>6:19 pm</span></time>
+      
 
-location ~ /Uploads/.*\.php$ {
-    deny all;
-}
-
-location ~ \.php/ {
-   if ($request_uri ~ ^(.+\.php)(/.+?)($|\?)) { }
-   fastcgi_pass 127.0.0.1:9000;
-   include fastcgi_params;
-   fastcgi_param SCRIPT_NAME     $1;
-   fastcgi_param PATH_INFO       $2;
-   fastcgi_param SCRIPT_FILENAME $document_root$1;
-}
-
-location ~ \.php$ {
-    fastcgi_pass 127.0.0.1:9000;
-    fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
-    include fastcgi_params;
-}
-
-location ~ /\.ht {
-    deny  all;
-}
-</code></pre>
-
-<p>}
-```</p>
-]]></content>
-  </entry>
+<span class="categories">
   
-  <entry>
-    <title type="html"><![CDATA[在Centos6.5下搭建LNMP的方法]]></title>
-    <link href="http://hunter222.github.io/blog/2016/08/31/centos-LNMP/"/>
-    <updated>2016-08-31T17:19:26+08:00</updated>
-    <id>http://hunter222.github.io/blog/2016/08/31/centos-LNMP</id>
-    <content type="html"><![CDATA[<h5>在Centos6.5下搭建LNMP的方法</h5>
-
-<p>1：查看环境
-<code>
-[root@10-4-14-168 html]# cat /etc/redhat-release
-CentOS release 6.5 (Final)
-</code>
-2：关掉防火墙
-<code>
-[root@10-4-14-168 html]# chkconfig iptables off
-</code>
-3：配置CentOS 6.0 第三方yum源（CentOS默认的标准源里没有nginx软件包）
-```</p>
-
-<h1>wget <a href="http://www.atomicorp.com/installers/atomic">http://www.atomicorp.com/installers/atomic</a></h1>
-
-<h1>sh ./atomic</h1>
-
-<h1>yum check-update</h1>
-
-<pre><code>4：安装开发包和库文件　(安装下面四个)
-</code></pre>
-
-<h1>yum -y install ntp make openssl openssl-devel pcre pcre-devel libpng</h1>
-
-<p>libpng-devel libjpeg-6b libjpeg-devel-6b freetype freetype-devel gd gd-devel zlib zlib-devel</p>
-
-<p>gcc gcc-c++ libXpm libXpm-devel ncurses ncurses-devel libmcrypt libmcrypt-devel libxml2</p>
-
-<p>libxml2-devel imake autoconf automake screen sysstat compat-libstdc++-33 curl curl-devel
-<code>
-5：卸载已安装的apache、mysql、php
-</code></p>
-
-<h1>yum remove httpd</h1>
-
-<h1>yum remove mysql</h1>
-
-<h1>yum remove php</h1>
-
-<pre><code>6：安装nginx
-</code></pre>
-
-<h1>yum install nginx</h1>
-
-<h1>service nginx start</h1>
-
-<h1>chkconfig &ndash;levels 235 nginx on</h1>
-
-<p>//设2、3、5级别开机启动
-<code>
-7：安装mysql
-</code></p>
-
-<h1>yum install mysql mysql-server mysql-devel</h1>
-
-<h1>service mysqld start</h1>
-
-<h1>chkconfig &ndash;levels 235 mysqld on</h1>
-
-<p>登陆MySQL删除空用户，修改root密码
-mysql>select user,host,password from mysql.user;</p>
-
-<p>mysql>drop user &lsquo;&rsquo;@localhost;</p>
-
-<p>mysql>update mysql.user set password = PASSWORD(&lsquo;*********&rsquo;) where user=&lsquo;root&rsquo;;</p>
-
-<p>mysql>flush privileges;
-<code>
-8：安装php
-</code></p>
-
-<h1>yum install php lighttpd-fastcgi php-cli php-mysql php-gd php-imap php-ldap</h1>
-
-<p>php-odbc php-pear php-xml php-xmlrpc php-mbstring php-mcrypt php-mssql php-snmp php-soap
-//安装php和所需组件使PHP支持MySQL、FastCGI模式</p>
-
-<h1>yum install  php-tidy php-common php-devel php-fpm php-mysql</h1>
-
-<h1>service php-fpm start</h1>
-
-<h1>chkconfig &ndash;levels 235 php-fpm on</h1>
-
-<pre><code>9：配置nginx支持php
-</code></pre>
-
-<h1>mv /etc/nginx/nginx.conf /etc/nginx/nginx.confbak</h1>
-
-<p>//将配置文件改为备份文件</p>
-
-<h1>cp /etc/nginx/nginx.conf.default /etc/nginx/nginx.conf</h1>
-
-<p>//由于原配置文件要自己去写因此可以使用默认的配置文件作为配置文件</p>
-
-<p>//修改nginx配置文件，添加fastcgi支持</p>
-
-<h1>vi /etc/nginx/nginx.conf</h1>
-
-<p>index index.php index.html index.htm;
-//加入index.php</p>
-
-<p>location ~ .php$ {
-            root           /usr/share/nginx/html;
-            fastcgi_pass   127.0.0.1:9000;
-            fastcgi_index  index.php;
-            fastcgi_param  SCRIPT_FILENAME  /usr/share/nginx/html$fastcgi_script_name;
-            include        fastcgi_params;
-        }
-//将以上代码注释去掉，并修改成nginx默认路径
-<code>
-10：配置php
-</code>
-//编辑文件php.ini，在文件末尾添加cgi.fix_pathinfo = 1
-[root@CentOS ~]# vi /etc/php.ini
-<code>
-11：重启nginx php-fpm
-</code></p>
-
-<h1>service nginx restart</h1>
-
-<h1>service php-fpm restart</h1>
-
-<pre><code class="　　">12：建立info.php文件
-</code></pre>
-
-<h1>vi /usr/share/nginx/html/info.php</h1>
-
-<p>&lt;?php
-   phpinfo();
-?>
-<code>
-13：测试nginx是否解析php
-</code>
-本地浏览器输入：192.168.12.103/info.php
-显示php界面  环境搭建成功
-```
-注：原文参考：<a href="http://www.cnblogs.com/xiaoit/p/3991037.html">http://www.cnblogs.com/xiaoit/p/3991037.html</a></p>
-]]></content>
-  </entry>
+    <a class='category' href='/blog/categories/linux/'>linux</a>
   
-</feed>
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://hunter222.github.io/blog/2016/08/31/linux-base/" data-via="" data-counturl="http://hunter222.github.io/blog/2016/08/31/linux-base/" >Tweet</a>
+  
+  
+  
+  
+    <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style_32x32">
+	<a class="jiathis_button_qzone"></a>
+	<a class="jiathis_button_tsina"></a>
+	<a class="jiathis_button_tqq"></a>
+	<a class="jiathis_button_weixin"></a>
+	<a class="jiathis_button_renren"></a>
+	<a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
+	<a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2016/08/31/php-arrays/" title="Previous Post: 【转】php的数组各种用法(上)">&laquo; 【转】php的数组各种用法(上)</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><!-- 多说评论框 start -->
+	<div class="ds-thread" data-thread-key="/blog/2016/08/31/linux-base" data-title="Linux的基础语法" data-url="http://hunter222.github.io/blog/2016/08/31/linux-base/"></div>
+<!-- 多说评论框 end -->
+<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+<script type="text/javascript">
+var duoshuoQuery = {short_name:"hunter222"};
+	(function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] 
+		 || document.getElementsByTagName('body')[0]).appendChild(ds);
+	})();
+	</script>
+<!-- 多说公共JS代码 end -->
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2016/08/31/linux-base/">Linux的基础语法</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016/08/31/php-arrays/">【转】php的数组各种用法(上)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016/08/31/Mysql-base/">简单的mysql基本操作</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016/08/31/zhengzebiaodashio/">关于php的正则表达式</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016/08/31/php-arrays2/">【转】php的数组各种用法（下）</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2016 - 小黄鸡 -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>
