@@ -282,6 +282,276 @@ ALTER TABLE 旧表名 RENAME (TO) 新表名 &hellip;">
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class=''><span class='line'>DROP TRIGGER 触发器名</span></code></pre></td></tr></table></div></figure>
 
+
+<h4>附加：</h4>
+
+<p>MySQL服务的配置和使用</p>
+
+<p>修改MySQL管理员的口令：mysqladmin –u root password 密码字符串           <br/>
+如：mysqldmin –u root password 111111</p>
+
+<p>连接MySQL服务器，使用命令： mysql [-h 主机名或IP地址] [-u 用户名] [-p]    <br/>
+如：mysql –u root –p</p>
+
+<p>如已有密码需修改root密码用命令: mysqladmin –u root –p password 新密码字符串<br/>
+如：mysqladmin –u root –p password 111111</p>
+
+<p>创建数据库格式为：CREATE DATABASE 数据库名称；
+如：mysql>create database abc;    默认创建数据库保存在/var/lib/mysql中</p>
+
+<p>查看数据库是  mysql>show abc;</p>
+
+<p>选择数据库是  USE 数据库名称;  如：mysql>use abc;</p>
+
+<p>删除数据库是  DROP DATABASE 数据库名称； 如：mysql>drop database abc;</p>
+
+<p>数据库的创建和删除</p>
+
+<p>创建表是 CREATE TABLE 表名称(字段1，字段2，…[表级约束]) [TYPE=表类型]；</p>
+
+<p>其中字段(1,2 )格式为:字段名 字段类型 [字段约束]
+如创建一个表student，如下：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>mysql&gt;create table student (
+</span><span class='line'>sno varchar(7) not null,   字段不允许为空
+</span><span class='line'>sname varchar (20 )not null,
+</span><span class='line'>ssex char (1) default ‘t’,
+</span><span class='line'>sbirthday date,
+</span><span class='line'>sdepa char (20),
+</span><span class='line'>primary key (sno)       表的主键
+</span><span class='line'>);</span></code></pre></td></tr></table></div></figure>
+
+
+<p>可用describe命令查看表的结构。</p>
+
+<p>默认表的类型为MYISAM，并在/var/lib/mysql/abc 目录下建立student.frm(表定义文件)，student.MDY(数据文件)，stedent.MYI(索引文件)。</p>
+
+<p>复制表 CREATE TABLE 新表名称 LIKE 原表名称；
+如：mysql>create table xtable like student;</p>
+
+<p>删除表 DROP TABLE 表名称1[表名称2…];
+如：mysql> drop table xtale;</p>
+
+<p>修改表 ALTER TABLE 表名称 更改动作1[动作2]；
+动作有ADD(增加) DROP(删除)CHANGE、MODIFY(更改字段名和类型)RENAME</p>
+
+<p>增加字段：mysql>alter table student add saddress varchar(25);</p>
+
+<p>更改字段名和字段类型： mysql>alter table student change saddress sremark test;</p>
+
+<p>即使不更改字段类型也要给出字段类型如：
+mysql>alter table student change saddress sremark varchar (25);</p>
+
+<p>更改字段类型　：mysql> alter table student modify sremark varchar(25);</p>
+
+<p>删除字段：mysql>alter table student drop sremark；
+更改表名称： mysql>alter table student rename to xs；</p>
+
+<p>表中数据的插入、删除和修改</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>   插入记录： INSERT INTO 表名称（字段名1,字段名2…
+</span><span class='line'>               VALUES(字段1的值，字段2的值
+</span><span class='line'>   如：mysql&gt;insert into student (sno,sname,ssex,sbirthday,sdepa)
+</span><span class='line'>             values(‘0321001’,’Liu Tao’,dagault,19870201,’math’);
+</span><span class='line'>   查看表  mysql&gt;select * from student;</span></code></pre></td></tr></table></div></figure>
+
+
+<p>插入与前面相同的记录，可用insert命令的缩写格式，
+如: mysql>insert into student values (‘0321001’, ‘Liu Tao’, default, 19870201, ‘mth’);</p>
+
+<p>如果字段名列表中没有给出表中的某些字段，那么这些字段设置为默认值，
+如：mysql>insert into student (sno,sname,sbirthday)
+          values(‘0321002’,’Wang Jun’,1870112);</p>
+
+<p>一个单独的insert语句中可使用多个valuse字句，插入多条记录，
+如：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>mysql&gt;insert into  student values
+</span><span class='line'>         (‘0322001’, ‘Zhang Liaoyun’, ‘f’ 1971102,’computer’),
+</span><span class='line'>         (‘0322002’, ‘Li Ming’, ‘t’ 1971105,’computer’);</span></code></pre></td></tr></table></div></figure>
+
+
+<p>   删除记录： DELETE FROM 表名称 WHERE 条件表达式；
+   如：mysql>delete from student where sno=’0321002’;</p>
+
+<p>   删除student表中sno字段值前4位为‘0322’的记录
+   如：mysql>delete from student where left (sno,4)=’0322’;</p>
+
+<p>   删除所以记录，可以不带where字句
+   如：mysql>delete from student;</p>
+
+<p>   删除所以记录可以用命令truncate     删除表，然后重建表，所以比delete命令快
+   如：mysql>truncate table student;</p>
+
+<p>   修改记录 UPDATE 表名称 SET 字段名1=字段值1
+            WHERE 条件表达式
+   如： mysql>update student set sbirthday=1920113, sdepa=’math’ where sno=’0321002’;</p>
+
+<p>索引的创建与删除</p>
+
+<p>   在创建表的同时创建索引</p>
+
+<p>  创建表时，可用INDEX字句或UNIQUE(字段值必须惟一)字句创建索引
+   如：创建课程表course, 课程编号cno字段为主键，课程名称cname字段创建一个名为can的索引</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>mysql&gt;create table course(
+</span><span class='line'>cno varchar(5) not null,
+</span><span class='line'>cname varchar(30) not null,
+</span><span class='line'>teacher varchar(20),
+</span><span class='line'>primary key (cno),
+</span><span class='line'>index can (cname)
+</span><span class='line'>);</span></code></pre></td></tr></table></div></figure>
+
+
+<p>   向已存在的表添加索引   CREATE [UNIQUE ] INDEX 索引名ON表名称 (字段名1[(长度)])；
+   如：mysql>create index sna on student (sname);</p>
+
+<p>对于类型为CHAR和VARCHAR的字段建立索引时还可指定长度值，类型为BLOB和TEXT的字段索引时必须指定长度值。
+   如mysql>create index sna on student (sname(10));</p>
+
+<p>删除索引  DROP INDEX 索引 ON表名称；
+   如：mysql>drop index sna on student;</p>
+
+<p>用户的创建和删除</p>
+
+<p>初始化时有5个MySQL授权表，其中host、tables_priv和columnts_priv 是空的，表user和db决定了MySQL默认的访问规则。默认有mysql和test两个数据库。</p>
+
+<p>授权表：user  用户从哪些主机可以连接到数据库服务器，以及对所以数据库的访问权限（全局权限）</p>
+
+<pre><code>    db   用户可以使用哪些权限，以及对数据库执行哪些操作（数据库级权限）
+
+    host  当表db 中的host 字段值为空时，用户从哪些主机可以连接到数据库服务器。
+
+    tables_priv  连接的用户可以访问哪些表（表级权限）
+
+    columnts_priv  连接的用户可以访问哪些字段 （字段级权限）
+</code></pre>
+
+<p>创建新用户</p>
+
+<p>以MySQL管理员连接到数据库服务器： #mysql –u root –p</p>
+
+<p>创建新用户guess并设置密码，同时可以从任何主机连接数据库服务器：</p>
+
+<p>mysql>insert into mysql.user (host,user,password)
+values (‘%’,’gusee’,password(‘guest’));      使用password()函数，密码是加密的</p>
+
+<p>重载MySQL授权表：mysql>flush privileges;
+远程客户端连接数据库服务器 ：#mysql –h 192.168.0.50 –u guess –</p>
+
+<p>p      开放服务器的TCP断口3306</p>
+
+<p>查看当前用户可用数据库： show database</p>
+
+<p>删除用户</p>
+
+<p>mysql>delete from mysql.user where user=’guest’;</p>
+
+<p>mysql>flush privileges;      重载MySQL授权表</p>
+
+<p>更改用户密码</p>
+
+<p>如：更改guset密码为123456</p>
+
+<p>mysql>update mysql.user set password=password(‘123456’)
+      where user =’guset’;</p>
+
+<p>mysql>flush privileges;</p>
+
+<p>或者是 mysql>set password for guset@’%’=password(‘123456’);</p>
+
+<p>用户权限的设置</p>
+
+<p>   在表user、db和host中，所有字段声明为ENUM(‘N’,’Y’),默认是‘N’;</p>
+
+<p>   在表tables_priv和columns_priv中，权限字段声明为SET类型
+   修改授权表中的访问权限有两中方法，一是使用 INSERT、UPDATE和
+DELETE等DML语句，</p>
+
+<p>   另一中是GRANT和GRVOKE语句
+   使用GRANT语句授权：
+   格式如下：</p>
+
+<p>   GRANT 权限列表 [(字段列表)] on 数据库名称.表名称</p>
+
+<p>   TO 用户名@域名或IP地址</p>
+
+<p>   [INDETIFIED BY ‘密码值’] [WITH CRANT OPTION];</p>
+
+<p>   授权哪个用户能连接，从哪连接
+   如：授权用户guest从任意主机连接数据库服务器，并具有完全访问数据库abc的权限。</p>
+
+<p>   Mysql>grant all on abc.* to guset@’%’ identified by ‘guest’</p>
+
+<p>   注意几点：如指定用户不存在，则创建该新用户；
+             ‘权限列表’处ALL表示授予全部权限，USAGE表不授予任何权限。</p>
+
+<pre><code>         ‘数据库名称.表名称’处可以使用通配符“*”。如“abc.*”表数据库abc中所有表
+           ‘用户名@域名或IP地址’设置谁能连，从哪连。用户名 不能用通配符，但可以用‘ ’空字符串，表任何用户；域名或IP地址可以用通配符“%”，使用是用单引号括起来。
+</code></pre>
+
+<p>   授权用户不同级别的访问权限
+   如：新建用户tom,能从子网192.168.16.0访问数据库服务器，可以读
+取数据库xsxk,并能修改表course 中字段teacher的值
+   mysql>grant select on xsxd.* to tom@’192.168.16.%’ indentifiend by ‘123456’;</p>
+
+<p>   mysql>grant update(teacher) on xsxd.course to tom@’192.168.16.%’’</p>
+
+<p>   注意几点：数据库名称.表名称 用来设置权限运用的级别，有全局的（<em>.</em>）,指定数据库的（xsxd.*）</p>
+
+<pre><code>         和指定表的（xsxd.student）;
+
+         字段列表 设置权限运用中指定的表中的哪些字段，如update(cname,teacher)
+
+         权限列表 指定的权限与权限运行的级别有关，如有写权限（FILE、PROCESS、RELOAD、SHUTDOWN）作为管理权限用于全局级别；对于字段级别只能指定SELECT、INSERT、UPDATE、REFERENCES
+</code></pre>
+
+<p>授予用户管理权限的权利
+   如：管理员授予拥护admin可以从本地连接数据库服务器，对数据库
+xsxk具有完全访问权限，并可以
+       将拥有的权限赋予其他用户</p>
+
+<p>   mysql>grant all on xsxd.* to admin@localhost indentified by ‘123456’ with grant option;
+   其中with grant option 子句表示拥护拥有的权限可以赋予其他用户。</p>
+
+<p>   mysql>qrant select on xsxd.student to bill@localhost;  授予bill用户权限</p>
+
+<p>   mysql>show grants for admin@localhost;   查看用户权限</p>
+
+<p>使用REVOKE语句撤权</p>
+
+<p>   格式如下：</p>
+
+<p>   REVOKE 权限列表[(字段列表)] on数据库名称.表名称
+   FROM用户名@域名或IP地址
+   如：撤消用户admin@localhost 对数据库xsxd的创建、删除数据库及表的权限，不撤消用户赋予其它用户的权限</p>
+
+<p>   mysql>revoke create,drop on xsxd.* from admin@localhost;</p>
+
+<p>   mysql>revoke grant option on xsxd.* from admin@localhost;</p>
 </div>
 
 
@@ -334,7 +604,7 @@ ALTER TABLE 旧表名 RENAME (TO) 新表名 &hellip;">
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2016/08/31/php-arrays2/" title="Previous Post: 【转】php的数组各种用法（下）">&laquo; 【转】php的数组各种用法（下）</a>
+        <a class="basic-alignment left" href="/blog/2016/08/31/zhengzebiaodashio/" title="Previous Post: 关于php的正则表达式">&laquo; 关于php的正则表达式</a>
       
       
         <a class="basic-alignment right" href="/blog/2016/08/31/php-arrays/" title="Next Post: 【转】php的数组各种用法(上)">【转】php的数组各种用法(上) &raquo;</a>
@@ -381,15 +651,15 @@ var duoshuoQuery = {short_name:"hunter222"};
       </li>
     
       <li class="post">
+        <a href="/blog/2016/08/31/zhengzebiaodashio/">关于php的正则表达式</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2016/08/31/php-arrays2/">【转】php的数组各种用法（下）</a>
       </li>
     
       <li class="post">
         <a href="/blog/2016/08/31/Nginx-thinkphp/">linux下thinkphp的Nginx配置文件</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2016/08/31/centos-LNMP/">在Centos6.5下搭建LNMP的方法</a>
       </li>
     
   </ul>

@@ -622,6 +622,470 @@ natcasesort($arr);自然排序（忽略大小写，忽略键名）</p>
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class=''><span class='line'>DROP TRIGGER 触发器名</span></code></pre></td></tr></table></div></figure>
 
+
+<h4>附加：</h4>
+
+<p>MySQL服务的配置和使用</p>
+
+<p>修改MySQL管理员的口令：mysqladmin –u root password 密码字符串           <br/>
+如：mysqldmin –u root password 111111</p>
+
+<p>连接MySQL服务器，使用命令： mysql [-h 主机名或IP地址] [-u 用户名] [-p]    <br/>
+如：mysql –u root –p</p>
+
+<p>如已有密码需修改root密码用命令: mysqladmin –u root –p password 新密码字符串<br/>
+如：mysqladmin –u root –p password 111111</p>
+
+<p>创建数据库格式为：CREATE DATABASE 数据库名称；
+如：mysql>create database abc;    默认创建数据库保存在/var/lib/mysql中</p>
+
+<p>查看数据库是  mysql>show abc;</p>
+
+<p>选择数据库是  USE 数据库名称;  如：mysql>use abc;</p>
+
+<p>删除数据库是  DROP DATABASE 数据库名称； 如：mysql>drop database abc;</p>
+
+<p>数据库的创建和删除</p>
+
+<p>创建表是 CREATE TABLE 表名称(字段1，字段2，…[表级约束]) [TYPE=表类型]；</p>
+
+<p>其中字段(1,2 )格式为:字段名 字段类型 [字段约束]
+如创建一个表student，如下：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>mysql&gt;create table student (
+</span><span class='line'>sno varchar(7) not null,   字段不允许为空
+</span><span class='line'>sname varchar (20 )not null,
+</span><span class='line'>ssex char (1) default ‘t’,
+</span><span class='line'>sbirthday date,
+</span><span class='line'>sdepa char (20),
+</span><span class='line'>primary key (sno)       表的主键
+</span><span class='line'>);</span></code></pre></td></tr></table></div></figure>
+
+
+<p>可用describe命令查看表的结构。</p>
+
+<p>默认表的类型为MYISAM，并在/var/lib/mysql/abc 目录下建立student.frm(表定义文件)，student.MDY(数据文件)，stedent.MYI(索引文件)。</p>
+
+<p>复制表 CREATE TABLE 新表名称 LIKE 原表名称；
+如：mysql>create table xtable like student;</p>
+
+<p>删除表 DROP TABLE 表名称1[表名称2…];
+如：mysql> drop table xtale;</p>
+
+<p>修改表 ALTER TABLE 表名称 更改动作1[动作2]；
+动作有ADD(增加) DROP(删除)CHANGE、MODIFY(更改字段名和类型)RENAME</p>
+
+<p>增加字段：mysql>alter table student add saddress varchar(25);</p>
+
+<p>更改字段名和字段类型： mysql>alter table student change saddress sremark test;</p>
+
+<p>即使不更改字段类型也要给出字段类型如：
+mysql>alter table student change saddress sremark varchar (25);</p>
+
+<p>更改字段类型　：mysql> alter table student modify sremark varchar(25);</p>
+
+<p>删除字段：mysql>alter table student drop sremark；
+更改表名称： mysql>alter table student rename to xs；</p>
+
+<p>表中数据的插入、删除和修改</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>   插入记录： INSERT INTO 表名称（字段名1,字段名2…
+</span><span class='line'>               VALUES(字段1的值，字段2的值
+</span><span class='line'>   如：mysql&gt;insert into student (sno,sname,ssex,sbirthday,sdepa)
+</span><span class='line'>             values(‘0321001’,’Liu Tao’,dagault,19870201,’math’);
+</span><span class='line'>   查看表  mysql&gt;select * from student;</span></code></pre></td></tr></table></div></figure>
+
+
+<p>插入与前面相同的记录，可用insert命令的缩写格式，
+如: mysql>insert into student values (‘0321001’, ‘Liu Tao’, default, 19870201, ‘mth’);</p>
+
+<p>如果字段名列表中没有给出表中的某些字段，那么这些字段设置为默认值，
+如：mysql>insert into student (sno,sname,sbirthday)
+          values(‘0321002’,’Wang Jun’,1870112);</p>
+
+<p>一个单独的insert语句中可使用多个valuse字句，插入多条记录，
+如：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>mysql&gt;insert into  student values
+</span><span class='line'>         (‘0322001’, ‘Zhang Liaoyun’, ‘f’ 1971102,’computer’),
+</span><span class='line'>         (‘0322002’, ‘Li Ming’, ‘t’ 1971105,’computer’);</span></code></pre></td></tr></table></div></figure>
+
+
+<p>   删除记录： DELETE FROM 表名称 WHERE 条件表达式；
+   如：mysql>delete from student where sno=’0321002’;</p>
+
+<p>   删除student表中sno字段值前4位为‘0322’的记录
+   如：mysql>delete from student where left (sno,4)=’0322’;</p>
+
+<p>   删除所以记录，可以不带where字句
+   如：mysql>delete from student;</p>
+
+<p>   删除所以记录可以用命令truncate     删除表，然后重建表，所以比delete命令快
+   如：mysql>truncate table student;</p>
+
+<p>   修改记录 UPDATE 表名称 SET 字段名1=字段值1
+            WHERE 条件表达式
+   如： mysql>update student set sbirthday=1920113, sdepa=’math’ where sno=’0321002’;</p>
+
+<p>索引的创建与删除</p>
+
+<p>   在创建表的同时创建索引</p>
+
+<p>  创建表时，可用INDEX字句或UNIQUE(字段值必须惟一)字句创建索引
+   如：创建课程表course, 课程编号cno字段为主键，课程名称cname字段创建一个名为can的索引</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>mysql&gt;create table course(
+</span><span class='line'>cno varchar(5) not null,
+</span><span class='line'>cname varchar(30) not null,
+</span><span class='line'>teacher varchar(20),
+</span><span class='line'>primary key (cno),
+</span><span class='line'>index can (cname)
+</span><span class='line'>);</span></code></pre></td></tr></table></div></figure>
+
+
+<p>   向已存在的表添加索引   CREATE [UNIQUE ] INDEX 索引名ON表名称 (字段名1[(长度)])；
+   如：mysql>create index sna on student (sname);</p>
+
+<p>对于类型为CHAR和VARCHAR的字段建立索引时还可指定长度值，类型为BLOB和TEXT的字段索引时必须指定长度值。
+   如mysql>create index sna on student (sname(10));</p>
+
+<p>删除索引  DROP INDEX 索引 ON表名称；
+   如：mysql>drop index sna on student;</p>
+
+<p>用户的创建和删除</p>
+
+<p>初始化时有5个MySQL授权表，其中host、tables_priv和columnts_priv 是空的，表user和db决定了MySQL默认的访问规则。默认有mysql和test两个数据库。</p>
+
+<p>授权表：user  用户从哪些主机可以连接到数据库服务器，以及对所以数据库的访问权限（全局权限）</p>
+
+<pre><code>    db   用户可以使用哪些权限，以及对数据库执行哪些操作（数据库级权限）
+
+    host  当表db 中的host 字段值为空时，用户从哪些主机可以连接到数据库服务器。
+
+    tables_priv  连接的用户可以访问哪些表（表级权限）
+
+    columnts_priv  连接的用户可以访问哪些字段 （字段级权限）
+</code></pre>
+
+<p>创建新用户</p>
+
+<p>以MySQL管理员连接到数据库服务器： #mysql –u root –p</p>
+
+<p>创建新用户guess并设置密码，同时可以从任何主机连接数据库服务器：</p>
+
+<p>mysql>insert into mysql.user (host,user,password)
+values (‘%’,’gusee’,password(‘guest’));      使用password()函数，密码是加密的</p>
+
+<p>重载MySQL授权表：mysql>flush privileges;
+远程客户端连接数据库服务器 ：#mysql –h 192.168.0.50 –u guess –</p>
+
+<p>p      开放服务器的TCP断口3306</p>
+
+<p>查看当前用户可用数据库： show database</p>
+
+<p>删除用户</p>
+
+<p>mysql>delete from mysql.user where user=’guest’;</p>
+
+<p>mysql>flush privileges;      重载MySQL授权表</p>
+
+<p>更改用户密码</p>
+
+<p>如：更改guset密码为123456</p>
+
+<p>mysql>update mysql.user set password=password(‘123456’)
+      where user =’guset’;</p>
+
+<p>mysql>flush privileges;</p>
+
+<p>或者是 mysql>set password for guset@’%’=password(‘123456’);</p>
+
+<p>用户权限的设置</p>
+
+<p>   在表user、db和host中，所有字段声明为ENUM(‘N’,’Y’),默认是‘N’;</p>
+
+<p>   在表tables_priv和columns_priv中，权限字段声明为SET类型
+   修改授权表中的访问权限有两中方法，一是使用 INSERT、UPDATE和
+DELETE等DML语句，</p>
+
+<p>   另一中是GRANT和GRVOKE语句
+   使用GRANT语句授权：
+   格式如下：</p>
+
+<p>   GRANT 权限列表 [(字段列表)] on 数据库名称.表名称</p>
+
+<p>   TO 用户名@域名或IP地址</p>
+
+<p>   [INDETIFIED BY ‘密码值’] [WITH CRANT OPTION];</p>
+
+<p>   授权哪个用户能连接，从哪连接
+   如：授权用户guest从任意主机连接数据库服务器，并具有完全访问数据库abc的权限。</p>
+
+<p>   Mysql>grant all on abc.* to guset@’%’ identified by ‘guest’</p>
+
+<p>   注意几点：如指定用户不存在，则创建该新用户；
+             ‘权限列表’处ALL表示授予全部权限，USAGE表不授予任何权限。</p>
+
+<pre><code>         ‘数据库名称.表名称’处可以使用通配符“*”。如“abc.*”表数据库abc中所有表
+           ‘用户名@域名或IP地址’设置谁能连，从哪连。用户名 不能用通配符，但可以用‘ ’空字符串，表任何用户；域名或IP地址可以用通配符“%”，使用是用单引号括起来。
+</code></pre>
+
+<p>   授权用户不同级别的访问权限
+   如：新建用户tom,能从子网192.168.16.0访问数据库服务器，可以读
+取数据库xsxk,并能修改表course 中字段teacher的值
+   mysql>grant select on xsxd.* to tom@’192.168.16.%’ indentifiend by ‘123456’;</p>
+
+<p>   mysql>grant update(teacher) on xsxd.course to tom@’192.168.16.%’’</p>
+
+<p>   注意几点：数据库名称.表名称 用来设置权限运用的级别，有全局的（<em>.</em>）,指定数据库的（xsxd.*）</p>
+
+<pre><code>         和指定表的（xsxd.student）;
+
+         字段列表 设置权限运用中指定的表中的哪些字段，如update(cname,teacher)
+
+         权限列表 指定的权限与权限运行的级别有关，如有写权限（FILE、PROCESS、RELOAD、SHUTDOWN）作为管理权限用于全局级别；对于字段级别只能指定SELECT、INSERT、UPDATE、REFERENCES
+</code></pre>
+
+<p>授予用户管理权限的权利
+   如：管理员授予拥护admin可以从本地连接数据库服务器，对数据库
+xsxk具有完全访问权限，并可以
+       将拥有的权限赋予其他用户</p>
+
+<p>   mysql>grant all on xsxd.* to admin@localhost indentified by ‘123456’ with grant option;
+   其中with grant option 子句表示拥护拥有的权限可以赋予其他用户。</p>
+
+<p>   mysql>qrant select on xsxd.student to bill@localhost;  授予bill用户权限</p>
+
+<p>   mysql>show grants for admin@localhost;   查看用户权限</p>
+
+<p>使用REVOKE语句撤权</p>
+
+<p>   格式如下：</p>
+
+<p>   REVOKE 权限列表[(字段列表)] on数据库名称.表名称
+   FROM用户名@域名或IP地址
+   如：撤消用户admin@localhost 对数据库xsxd的创建、删除数据库及表的权限，不撤消用户赋予其它用户的权限</p>
+
+<p>   mysql>revoke create,drop on xsxd.* from admin@localhost;</p>
+
+<p>   mysql>revoke grant option on xsxd.* from admin@localhost;</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2016/08/31/zhengzebiaodashio/">关于php的正则表达式</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2016-08-31T18:19:28+08:00'><span class='date'><span class='date-month'>Aug</span> <span class='date-day'>31</span><span class='date-suffix'>st</span>, <span class='date-year'>2016</span></span> <span class='time'>6:19 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>&ldquo;^[0-9]<em>[1-9][0-9]</em>$"　　 //正整数</p>
+
+<p>&ldquo;^((-\d+)|(0+))$"　　 //非正整数（负整数 + 0）</p>
+
+<p>&ldquo;^-[0-9]<em>[1-9][0-9]</em>$"　　 //负整数</p>
+
+<p>&ldquo;^-?\d+$"　　　　 //整数</p>
+
+<p>&ldquo;^\d+(.\d+)?$"　　 //非负浮点数（正浮点数 + 0）</p>
+
+<p>&ldquo;^(([0-9]+.[0-9]<em>[1-9][0-9]</em>)|([0-9]<em>[1-9][0-9]</em>.[0-9]+)|([0-9]<em>[1-9][0-9]</em>))$"　　 //正浮点数</p>
+
+<p>&ldquo;^((-\d+(.\d+)?)|(0+(.0+)?))$&rdquo;//非正浮点数（负浮点数 + 0）
+&ldquo;^(-(([0-9]+.[0-9]<em>[1-9][0-9]</em>)|([0-9]<em>[1-9][0-9]</em>.[0-9]+)|([0-9]<em>[1-9][0-9]</em>)))$"　　 //负浮点数</p>
+
+<p>&ldquo;^(-?\d+)(.\d+)?$"　　 //浮点数</p>
+
+<p>&ldquo;^[A-Za-z]+$"　　 //由26个英文字母组成的字符串</p>
+
+<p>&ldquo;^[A-Z]+$"　　 //由26个英文字母的大写组成的字符串</p>
+
+<p>&ldquo;^[a-z]+$"　　 //由26个英文字母的小写组成的字符串</p>
+
+<p>&ldquo;^[A-Za-z0-9]+$"　　 //由数字和26个英文字母组成的字符串</p>
+
+<p>&ldquo;^\w+$"　　 //由数字、26个英文字母或者下划线组成的字符串</p>
+
+<p>&ldquo;^[\w-]+(.[\w-]+)*@[\w-]+(.[\w-]+)+$"　　　　//email地址</p>
+
+<p>&ldquo;^[a-zA-z]+://(\w+(-\w+)<em>)(.(\w+(-\w+)</em>))<em>(\?\S</em>)?$&rdquo;//url
+/^(d{2}|d{4})-((0([1-9]{1}))|(1[1|2]))-((<a href="[1-9]{1}">0-2</a>)|(3[0|1]))$/ // 年-月-日
+/^((0([1-9]{1}))|(1[1|2]))/((<a href="[1-9]{1}">0-2</a>)|(3[0|1]))/(d{2}|d{4})$/ // 月/日/年</p>
+
+<p>&ldquo;^([w-.]+)@(([[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.)|(([w-]+.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(]?)$&rdquo; //Emil
+/^((+?[0-9]{2,4}-[0-9]{3,4}-)|([0-9]{3,4}-))?([0-9]{7,8})(-[0-9]+)?$/ //电话号码</p>
+
+<p>&ldquo;^(d{1,2}|1dd|2[0-4]d|25[0-5]).(d{1,2}|1dd|2[0-4]d|25[0-5]).(d{1,2}|1dd|2[0-4]d|25[0-5]).(d{1,2}|1dd|2[0-4]d|25[0-5])$&rdquo; //IP地址</p>
+
+<p>匹配中文字符的正则表达式： [\u4e00-\u9fa5]</p>
+
+<p>匹配双字节字符(包括汉字在内)：[^\x00-\xff]</p>
+
+<p>匹配空行的正则表达式：\n[\s| ]*\r</p>
+
+<p>匹配HTML标记的正则表达式：/&lt;(.<em>)>.</em>&lt;\/\1>|&lt;(.*) \/>/</p>
+
+<p>匹配首尾空格的正则表达式：(^\s<em>)|(\s</em>$)</p>
+
+<p>匹配Email地址的正则表达式：\w+([-+.]\w+)<em>@\w+([-.]\w+)</em>.\w+([-.]\w+)*</p>
+
+<p>匹配网址URL的正则表达式：^[a-zA-z]+://(\w+(-\w+)<em>)(\.(\w+(-\w+)</em>))<em>(\?\S</em>)?$</p>
+
+<p>匹配帐号是否合法(字母开头，允许5-16字节，允许字母数字下划线)：^[a-zA-Z][a-zA-Z0-9_]{4,15}$</p>
+
+<p>匹配国内电话号码：(\d{3}-|\d{4}-)?(\d{8}|\d{7})?</p>
+
+<p>匹配腾讯QQ号：^[1-9]<em>[1-9][0-9]</em>$</p>
+
+<p>利用正则表达式限制网页表单里的文本框输入内容：</p>
+
+<p>用正则表达式限制只能输入中文：onkeyup=&ldquo;value=value.replace(/[^u4E00-u9FA5]/g,&lsquo;&rsquo;)&rdquo; onbeforepaste=&ldquo;clipboardData.setData(&lsquo;text&rsquo;,clipboardData.getData(&lsquo;text&rsquo;).replace(/[^u4E00-u9FA5]/g,&lsquo;&rsquo;))&rdquo;</p>
+
+<p>用正则表达式限制只能输入全角字符：
+onkeyup=&ldquo;value=value.replace(/[^uFF00-uFFFF]/g,&lsquo;&rsquo;)&rdquo;</p>
+
+<p>onbeforepaste=&ldquo;clipboardData.setData(&lsquo;text&rsquo;,clipboardData.getData(&lsquo;text&rsquo;).replace(/[^uFF00-uFFFF]/g,&lsquo;&rsquo;))&rdquo;</p>
+
+<p>用正则表达式限制只能输入数字：onkeyup=&ldquo;value=value.replace(/[^d]/g,&lsquo;&rsquo;) "onbeforepaste="clipboardData.setData(&lsquo;text&rsquo;,clipboardData.getData(&lsquo;text&rsquo;).replace(/[^d]/g,&lsquo;&rsquo;))&rdquo;</p>
+
+<p>用正则表达式限制只能输入数字和英文：
+onkeyup=&ldquo;value=value.replace(/[W]/g,&lsquo;&rsquo;) "onbeforepaste="clipboardData.setData(&lsquo;text&rsquo;,clipboardData.getData(&lsquo;text&rsquo;).replace(/[^d]/g,&lsquo;&rsquo;))&rdquo;</p>
+
+<p>=========常用正则式</p>
+
+<p>匹配中文字符的正则表达式： [\u4e00-\u9fa5]</p>
+
+<p>匹配双字节字符(包括汉字在内)：[^\x00-\xff]</p>
+
+<p>匹配空行的正则表达式：\n[\s| ]*\r</p>
+
+<p>匹配HTML标记的正则表达式：/&lt;(.<em>)>.</em>&lt;\/\1>|&lt;(.*) \/>/</p>
+
+<p>匹配首尾空格的正则表达式：(^\s<em>)|(\s</em>$)</p>
+
+<p>匹配IP地址的正则表达式：/(\d+).(\d+).(\d+).(\d+)/g //</p>
+
+<p>匹配Email地址的正则表达式：\w+([-+.]\w+)<em>@\w+([-.]\w+)</em>.\w+([-.]\w+)*</p>
+
+<p>匹配网址URL的正则表达式：<a href="http://">http://</a>(/[\w-]+.)+[\w-]+(/[\w- ./?%&amp;=]*)?</p>
+
+<p>sql语句：<sup>select|drop|delete|create|update|insert</sup>.*$</p>
+
+<p>非负整数：^\d+$</p>
+
+<p>正整数：^[0-9]<em>[1-9][0-9]</em>$</p>
+
+<p>非正整数：<sup>(-\d+)|(0+)</sup>$</p>
+
+<p>负整数：^-[0-9]<em>[1-9][0-9]</em>$</p>
+
+<p>整数：^-?\d+$</p>
+
+<p>非负浮点数：^\d+(.\d+)?$</p>
+
+<p>正浮点数：<sup>(0-9)+.[0-9]<em>[1-9][0-9]</em></sup>|([0-9]<em>[1-9][0-9]</em>.[0-9]+)|([0-9]<em>[1-9][0-9]</em>))$</p>
+
+<p>非正浮点数：<sup>(-\d+.\d+)?</sup>|(0+(.0+)?))$</p>
+
+<p>负浮点数：<sup>-((正浮点数正则式))</sup>$</p>
+
+<p>英文字符串：^[A-Za-z]+$</p>
+
+<p>英文大写串：^[A-Z]+$</p>
+
+<p>英文小写串：^[a-z]+$</p>
+
+<p>英文字符数字串：^[A-Za-z0-9]+$</p>
+
+<p>英数字加下划线串：^\w+$</p>
+
+<p>E-mail地址：^[\w-]+(.[\w-]+)<em>@[\w-]+(.[\w-]+)+$
+URL：^[a-zA-Z]+://(\w+(-\w+)</em>)(.(\w+(-\w+)<em>))</em>(\?\s<em>)?$ 或：<sup>http</sup>:\/\/[A-Za-z0-9]+.[A-Za-z0-9]+[\/=\?%-&amp;_~`@[]\&lsquo;:+!]</em>([^&lt;>\&ldquo;\&rdquo;])*$</p>
+
+<p>邮政编码：^[1-9]\d{5}$ 中文：^[\u0391-\uFFE5]+$</p>
+
+<p>电话号码：<sup>((\d{2,3}))|(\d{3}-)</sup>?((0\d{2,3})|0\d{2,3}-)?[1-9]\d{6,7}(-\d{1,4})?$</p>
+
+<p>手机号码：<sup>((\d{2,3}))|(\d{3}-)</sup>?13\d{9}$</p>
+
+<p>双字节字符(包括汉字在内)：^\x00-\xff</p>
+
+<p>匹配首尾空格：(^\s<em>)|(\s</em>$)（像vbscript那样的trim函数）</p>
+
+<p>匹配HTML标记：&lt;(.<em>)>.</em>&lt;\/\1>|&lt;(.*) \/></p>
+
+<p>匹配空行：\n[\s| ]*\r</p>
+
+<p>提取信息中的网络链接：(h|H)(r|R)(e|E)(f|F) <em>= </em>(&lsquo;|&ldquo;)?(\w|\|\/|.)+(&rsquo;|&rdquo;| *|>)?</p>
+
+<p>提取信息中的邮件地址：\w+([-+.]\w+)<em>@\w+([-.]\w+)</em>.\w+([-.]\w+)*</p>
+
+<p>提取信息中的图片链接：(s|S)(r|R)(c|C) <em>= </em>(&lsquo;|&ldquo;)?(\w|\|\/|.)
++(&rsquo;|&rdquo;| *|>)?</p>
+
+<p>提取信息中的IP地址：(\d+).(\d+).(\d+).(\d+)</p>
+
+<p>提取信息中的中国手机号码：(86)<em>0</em>13\d{9}</p>
+
+<p>提取信息中的中国固定电话号码：((\d{3,4})|\d{3,4}-|\s)?\d{8}</p>
+
+<p>提取信息中的中国电话号码（包括移动和固定电话):((\d{3,4})|\d{3,4}-|\s)?\d{7,14}</p>
+
+<p>提取信息中的中国邮政编码：[1-9]{1}(\d+){5}</p>
+
+<p>提取信息中的浮点数（即小数):(-?\d*).?\d+</p>
+
+<p>提取信息中的任何数字:(-?\d*)(.\d+)? IP：(\d+).(\d+).(\d+).(\d+)</p>
+
+<p>电话区号：/^0\d{2,3}$/</p>
+
+<p>腾讯QQ号：^[1-9]<em>[1-9][0-9]</em>$</p>
+
+<p>帐号(字母开头，允许5-16字节，允许字母数字下划线)：
+^[a-zA-Z][a-zA-Z0-9_]{4,15}$</p>
+
+<p>中文、英文、数字及下划线：^[\u4e00-\u9fa5_a-zA-Z0-9]+$</p>
 </div>
   
   
@@ -2521,134 +2985,9 @@ comments: true</p>
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2016/07/27/mysqli/">PHP mysql函数及其Mysqli函数代替用法</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2016-07-27T10:27:18+08:00'><span class='date'><span class='date-month'>Jul</span> <span class='date-day'>27</span><span class='date-suffix'>th</span>, <span class='date-year'>2016</span></span> <span class='time'>10:27 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><h4>由于MySQL扩展从php 5.5开始弃用，所以以后不推荐大家再用MySQL扩展，请用MySQLi或PDO代替，以下是MySQL对应的MySQLi函数（绿色字体）供大家参考。（注：PHP手册上的有误，这里是最准的）</h4>
-
-<h4>MySQL>>(从PHP 5.5开始弃用)</h4>
-
-<h4>mysql_affected_rows — （mysqli_affected_rows()）取得前一次 MySQL 操作所影响的记录行数</h4>
-
-<h4>mysql_client_encoding — （mysqli_character_set_name()）返回字符集的名称(返回当前连接的默认字符集名称。)</h4>
-
-<h4>mysql_close — （mysqli_close()）关闭 MySQL 连接</h4>
-
-<h4>mysql_connect — （mysqli_connect()）打开一个到 MySQL 服务器的连接</h4>
-
-<h4>mysql_create_db — （mysqli_query() then CREATE DATABASE）新建一个 MySQL 数据库(废弃)(用 mysql_query() 来提交一条 SQL 的 CREATE DATABASE 语句来代替)</h4>
-
-<h4>mysql_data_seek — （mysqli_data_seek()）移动内部结果的指针</h4>
-
-<h4>mysql_db_name — （Query: SELECT DATABASE()非全等）取得 mysql_list_dbs() 调用所返回的数据库名</h4>
-
-<h4>mysql_db_query — （mysqli_select_db() then the mysqli_query()）选择一个数据库并在它上面执行一个查询 从 PHP 5.3.0 起弃用 用 mysql_select_db() 和 mysql_query() 代替</h4>
-
-<h4>mysql_drop_db — （Execute a DROP DATABASE query）丢弃（删除）一个 MySQL 数据库(废弃)(用 mysql_query() 提交一条 SQL DROP DATABASE 语句来替代)</h4>
-
-<h4>mysql_errno — （mysqli_errno()）返回上一个 MySQL 操作中的错误信息的数字编码</h4>
-
-<h4>mysql_error — （mysqli_error()）返回上一个 MySQL 操作产生的文本错误信息</h4>
-
-<h4>mysql_escape_string — （mysqli_escape_string()）转义一个字符串用于mysql_query从PHP 5.3.0起弃用用 mysql_real_escape_string() 代替</h4>
-
-<h4>mysql_fetch_array — （mysqli_fetch_array()）从结果集中取得一行作为关联数组，或数字数组，或二者兼有</h4>
-
-<h4>mysql_fetch_assoc — （mysqli_fetch_assoc()）从结果集中取得一行作为关联数组</h4>
-
-<h4>mysql_fetch_field — （mysqli_fetch_field()）从结果集中取得列信息并作为对象返回</h4>
-
-<h4>mysql_fetch_lengths — （mysqli_fetch_lengths()）取得结果集中每个输出的长度</h4>
-
-<h4>mysql_fetch_object — （mysqli_fetch_object()）从结果集中取得一行作为对象</h4>
-
-<h4>mysql_fetch_row — （mysqli_fetch_row()）从结果集中取得一行作为枚举数组</h4>
-
-<h4>mysql_field_flags — （mysqli_fetch_fields() [flags]?）从结果中取得和指定字段关联的标志</h4>
-
-<h4>mysql_field_len — （mysqli_fetch_field_direct() [length]）返回指定字段的长度</h4>
-
-<h4>mysql_field_name — （mysqli_fetch_field_direct() [name] or [orgname]）取得结果中指定字段的字段名</h4>
-
-<h4>mysql_field_seek — （mysqli_field_seek()）将结果集中的指针设定为指定的字段偏移量</h4>
-
-<h4>mysql_field_table — （mysqli_fetch_field_direct() [table] or [orgtable]）取得指定字段所在的表名</h4>
-
-<h4>mysql_field_type — （mysqli_fetch_field_direct() [type]）取得结果集中指定字段的类型</h4>
-
-<h4>mysql_free_result — （mysqli_free_result()）释放结果内存</h4>
-
-<h4>mysql_get_client_info — （mysqli_get_client_info()）取得 MySQL 客户端信息</h4>
-
-<h4>mysql_get_host_info — （mysqli_get_host_info()）取得 MySQL 主机信息</h4>
-
-<h4>mysql_get_proto_info — （mysqli_get_proto_info()）取得 MySQL 协议信息</h4>
-
-<h4>mysql_get_server_info — （mysqli_get_server_info()）取得 MySQL 服务器信息</h4>
-
-<h4>mysql_info — （mysqli_info()）取得最近一条查询的信息</h4>
-
-<h4>mysql_insert_id — （mysqli_insert_id()）取得上一步 INSERT 操作产生的 ID（得到在最后一次查询生成的id）</h4>
-
-<h4>mysql_list_dbs — （SQL Query: SHOW DATABASES）列出 MySQL 服务器中所有可用的数据库（从php5.4.0弃用）(用SQL 查询: SHOW DATABASES代替)</h4>
-
-<h4>mysql_list_fields — （SQL Query: SHOW COLUMNS FROM sometable）列出 MySQL 表字段（取得给定表名的信息）（弃用）(已过时。最好用 mysql_query() 来发出一条 SHOW COLUMNS FROM table [LIKE &lsquo;name&rsquo;] 的 SQL 语句来代替。)</h4>
-
-<h4>mysql_list_processes — （mysqli_thread_id()不全等）列出 MySQL 进程</h4>
-
-<h4>mysql_list_tables —（SQL Query: SHOW TABLES FROM db_name） 列出 MySQL 数据库中的表（弃用）(已弃用。 使用 mysql_query() 发出一个SQL SHOW TABLES [FROM db_name] [LIKE &lsquo;pattern&rsquo;]语句代替. )</h4>
-
-<h4>mysql_num_fields — （mysqli_field_count()）取得结果集中字段的数目</h4>
-
-<h4>mysql_num_rows — （mysqli_num_rows(),mysqli_stmt_num_rows()）取得结果集中行的数目</h4>
-
-<h4>mysql_pconnect — （mysqli_connect() with p: host prefix）打开一个到 MySQL 服务器的持久连接</h4>
-
-<h4>mysql_ping — （mysqli_ping()）Ping 一个服务器连接，如果没有连接则重新连接</h4>
-
-<h4>mysql_query — （mysqli_query()）发送一条 MySQL 查询</h4>
-
-<h4>mysql_real_escape_string — （mysqli_real_escape_string()）转义 SQL 语句中使用的字符串中的特殊字符，并考虑到连接的当前字符集</h4>
-
-<h4>mysql_result — （mysqli_data_seek() 联合 mysqli_field_seek() and mysqli_fetch_field()）取得结果数据</h4>
-
-<h4>mysql_select_db — （mysqli_select_db()）选择 MySQL 数据库</h4>
-
-<h4>mysql_set_charset — （mysqli_set_charset()）设置客户端字符集</h4>
-
-<h4>mysql_stat — （mysqli_stat()）取得当前系统状态</h4>
-
-<h4>mysql_tablename — （SQL Query: SHOW TABLES）取得表名（取得字段的表名）（弃用）(已弃用。 使用 mysql_query() 发出一个 SQL SHOW TABLES [FROM db_name] [LIKE &lsquo;pattern&rsquo;] 语句代替. )</h4>
-
-<h4>mysql_thread_id — （mysqli_thread_id()）返回当前线程的 ID</h4>
-
-<h4>mysql_unbuffered_query — （mysqli_query(“SQL语句”, MYSQLI_USE_RESULT); ）向 MySQL 发送一条 SQL 查询，并不获取和缓存结果的行</h4>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
+    
+      <a class="prev" href="/posts/2">&larr; Older</a>
     
     <a href="/blog/archives">Blog Archives</a>
     
@@ -2669,15 +3008,15 @@ comments: true</p>
       </li>
     
       <li class="post">
+        <a href="/blog/2016/08/31/zhengzebiaodashio/">关于php的正则表达式</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2016/08/31/php-arrays2/">【转】php的数组各种用法（下）</a>
       </li>
     
       <li class="post">
         <a href="/blog/2016/08/31/Nginx-thinkphp/">linux下thinkphp的Nginx配置文件</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2016/08/31/centos-LNMP/">在Centos6.5下搭建LNMP的方法</a>
       </li>
     
   </ul>
