@@ -9,7 +9,7 @@
   <meta name="author" content="小黄鸡">
 
   
-  <meta name="description" content="【转】php的数组各种用法（上） 一、数组操作的基本函数 数组的键名和值 array_values($arr);获得数组的值 array_keys($arr);获得数组的键名 array_flip($arr);数组中的值与键名互换（如果有重复前面的会被后面的覆盖） in_array(&ldquo; &hellip;">
+  <meta name="description" content="一、数组操作的基本函数 数组的键名和值 array_values($arr);获得数组的值 array_keys($arr);获得数组的键名 array_flip($arr);数组中的值与键名互换（如果有重复前面的会被后面的覆盖） in_array(&ldquo;apple&rdquo;,$arr &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -86,9 +86,7 @@
   </header>
 
 
-<div class="entry-content"><h5>【转】php的数组各种用法（上）</h5>
-
-<p>一、数组操作的基本函数</p>
+<div class="entry-content"><h5>一、数组操作的基本函数</h5>
 
 <p>数组的键名和值</p>
 
@@ -131,7 +129,7 @@ isset($arr[apple]):检索给定的键名是否存在数组中</p>
 <p>注：（第二个参数很重要，可以看手册使用）使用方法  echo $a;
 compact(var1,var2,var3);用给定的变量名创建一个数组</p>
 
-<p>二、数组的分段和填充</p>
+<h5>二、数组的分段和填充</h5>
 
 <p>数组的分段</p>
 
@@ -150,16 +148,18 @@ compact(var1,var2,var3);用给定的变量名创建一个数组</p>
 
 <p>array_pad($arr,5,&lsquo;x&rsquo;);将一个数组填补到制定长度</p>
 
-<p>三、数组与栈
-array_push($arr,&ldquo;apple&rdquo;,&ldquo;pear&rdquo;);将一个或多个元素压入数组栈的末尾（入栈），返回入栈元素的个数
+<h5>三、数组与栈</h5>
+
+<p>array_push($arr,&ldquo;apple&rdquo;,&ldquo;pear&rdquo;);将一个或多个元素压入数组栈的末尾（入栈），返回入栈元素的个数
 array_pop($arr);将数组栈的最后一个元素弹出（出栈）</p>
 
-<p>四、数组与列队
-array_shift($arr);数组中的第一个元素移出并作为结果返回（数组长度减1，其他元素向前移动一位，数字键名改为从零技术，文字键名不变）</p>
+<h5>四、数组与列队</h5>
+
+<p>array_shift($arr);数组中的第一个元素移出并作为结果返回（数组长度减1，其他元素向前移动一位，数字键名改为从零技术，文字键名不变）</p>
 
 <p>array_unshift($arr,&ldquo;a&rdquo;,array(1,2));在数组的开头插入一个或多个元素</p>
 
-<p>五、回调函数</p>
+<h5>五、回调函数</h5>
 
 <p>array_walk($arr,&lsquo;function&rsquo;,&lsquo;words&rsquo;);使用用户函数对数组中的每个成员进行处理（第三个参数传递给回调函数function）</p>
 
@@ -169,7 +169,7 @@ array_shift($arr);数组中的第一个元素移出并作为结果返回（数�
 
 <p>array_reduce($arr,&ldquo;function&rdquo;,&ldquo;<em>&rdquo;);转化为单值函数（</em>为数组的第一个值）</p>
 
-<p>六、数组的排序</p>
+<h5>六、数组的排序</h5>
 
 <p>通过元素值对数组排序</p>
 
@@ -199,7 +199,7 @@ array_shift($arr);数组中的第一个元素移出并作为结果返回（数�
 natsort($arr);自然排序（忽略键名）
 natcasesort($arr);自然排序（忽略大小写，忽略键名）</p>
 
-<p>七、数组的计算</p>
+<h5>七、数组的计算</h5>
 
 <p>数组元素的求和</p>
 
@@ -226,7 +226,7 @@ natcasesort($arr);自然排序（忽略大小写，忽略键名）</p>
 
 <p>array_intersect_assoc($arr1,$arr2);返回交集结果数组，键名也做比较</p>
 
-<p>八、其他的数组函数</p>
+<h5>八、其他的数组函数</h5>
 
 <p>range(0,12);创建一个包含指定范围单元的数组</p>
 
