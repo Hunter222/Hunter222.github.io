@@ -1,0 +1,433 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>在Centos6.5下搭建LNMP的方法 - 小黄鸡</title>
+  <meta name="author" content="小黄鸡">
+
+  
+  <meta name="description" content="在Centos6.5下搭建LNMP的方法 1：查看环境 1
+2
+[root@10-4-14-168 html]# cat /etc/redhat-release
+CentOS release 6.5 (Final) 2：关掉防火墙 1
+[root@10-4-14-168 html]# &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://hunter222.github.io/blog/2016/08/31/centos-LNMP/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="小黄鸡" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="/javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">小黄鸡</a></h1>
+  
+    <h2>Achieve something what I think.</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="sitesearch" value="hunter222.github.io">
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/category">Category</a></li>
+  <li><a href="/aboutme">AboutMe</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">在Centos6.5下搭建LNMP的方法</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2016-08-31T17:19:26+08:00'><span class='date'><span class='date-month'>Aug</span> <span class='date-day'>31</span><span class='date-suffix'>st</span>, <span class='date-year'>2016</span></span> <span class='time'>5:19 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><h5>在Centos6.5下搭建LNMP的方法</h5>
+
+<p>1：查看环境</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>[root@10-4-14-168 html]# cat /etc/redhat-release
+</span><span class='line'>CentOS release 6.5 (Final)</span></code></pre></td></tr></table></div></figure>
+
+
+<p>2：关掉防火墙</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>[root@10-4-14-168 html]# chkconfig iptables off</span></code></pre></td></tr></table></div></figure>
+
+
+<p>3：配置CentOS 6.0 第三方yum源（CentOS默认的标准源里没有nginx软件包）</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>#wget http://www.atomicorp.com/installers/atomic
+</span><span class='line'>#sh ./atomic
+</span><span class='line'>#yum check-update</span></code></pre></td></tr></table></div></figure>
+
+
+<p>4：安装开发包和库文件　(安装下面四个)</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>#yum -y install ntp make openssl openssl-devel pcre pcre-devel libpng
+</span><span class='line'>
+</span><span class='line'>libpng-devel libjpeg-6b libjpeg-devel-6b freetype freetype-devel gd gd-devel zlib zlib-devel
+</span><span class='line'>
+</span><span class='line'>gcc gcc-c++ libXpm libXpm-devel ncurses ncurses-devel libmcrypt libmcrypt-devel libxml2
+</span><span class='line'>
+</span><span class='line'>libxml2-devel imake autoconf automake screen sysstat compat-libstdc++-33 curl curl-devel</span></code></pre></td></tr></table></div></figure>
+
+
+<p>5：卸载已安装的apache、mysql、php</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'># yum remove httpd
+</span><span class='line'># yum remove mysql
+</span><span class='line'># yum remove php</span></code></pre></td></tr></table></div></figure>
+
+
+<p>6：安装nginx</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'># yum install nginx
+</span><span class='line'># service nginx start
+</span><span class='line'># chkconfig --levels 235 nginx on
+</span><span class='line'>//设2、3、5级别开机启动</span></code></pre></td></tr></table></div></figure>
+
+
+<p>7：安装mysql</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'># yum install mysql mysql-server mysql-devel
+</span><span class='line'># service mysqld start
+</span><span class='line'># chkconfig --levels 235 mysqld on
+</span><span class='line'>登陆MySQL删除空用户，修改root密码
+</span><span class='line'>mysql&gt;select user,host,password from mysql.user;
+</span><span class='line'> 
+</span><span class='line'>mysql&gt;drop user ''@localhost;
+</span><span class='line'> 
+</span><span class='line'>mysql&gt;update mysql.user set password = PASSWORD('*********') where user='root';
+</span><span class='line'> 
+</span><span class='line'>mysql&gt;flush privileges;</span></code></pre></td></tr></table></div></figure>
+
+
+<p>8：安装php</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'># yum install php lighttpd-fastcgi php-cli php-mysql php-gd php-imap php-ldap
+</span><span class='line'>php-odbc php-pear php-xml php-xmlrpc php-mbstring php-mcrypt php-mssql php-snmp php-soap
+</span><span class='line'>//安装php和所需组件使PHP支持MySQL、FastCGI模式
+</span><span class='line'>#yum install  php-tidy php-common php-devel php-fpm php-mysql
+</span><span class='line'>
+</span><span class='line'># service php-fpm start
+</span><span class='line'># chkconfig --levels 235 php-fpm on</span></code></pre></td></tr></table></div></figure>
+
+
+<p>9：配置nginx支持php</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'># mv /etc/nginx/nginx.conf /etc/nginx/nginx.confbak
+</span><span class='line'>//将配置文件改为备份文件
+</span><span class='line'> 
+</span><span class='line'># cp /etc/nginx/nginx.conf.default /etc/nginx/nginx.conf
+</span><span class='line'>//由于原配置文件要自己去写因此可以使用默认的配置文件作为配置文件
+</span><span class='line'> 
+</span><span class='line'>//修改nginx配置文件，添加fastcgi支持
+</span><span class='line'># vi /etc/nginx/nginx.conf
+</span><span class='line'>index index.php index.html index.htm;
+</span><span class='line'>//加入index.php
+</span><span class='line'> 
+</span><span class='line'>location ~ \.php$ {
+</span><span class='line'>            root           /usr/share/nginx/html;
+</span><span class='line'>            fastcgi_pass   127.0.0.1:9000;
+</span><span class='line'>            fastcgi_index  index.php;
+</span><span class='line'>            fastcgi_param  SCRIPT_FILENAME  /usr/share/nginx/html$fastcgi_script_name;
+</span><span class='line'>            include        fastcgi_params;
+</span><span class='line'>        }
+</span><span class='line'>//将以上代码注释去掉，并修改成nginx默认路径</span></code></pre></td></tr></table></div></figure>
+
+
+<p>10：配置php</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>//编辑文件php.ini，在文件末尾添加cgi.fix_pathinfo = 1
+</span><span class='line'>[root@CentOS ~]# vi /etc/php.ini</span></code></pre></td></tr></table></div></figure>
+
+
+<p>11：重启nginx php-fpm</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'># service nginx restart
+</span><span class='line'># service php-fpm restart</span></code></pre></td></tr></table></div></figure>
+
+
+<p>　　
+12：建立info.php文件</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'># vi /usr/share/nginx/html/info.php
+</span><span class='line'>&lt;?php
+</span><span class='line'>   phpinfo();
+</span><span class='line'>?&gt;</span></code></pre></td></tr></table></div></figure>
+
+
+<p>13：测试nginx是否解析php</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>本地浏览器输入：192.168.12.103/info.php
+</span><span class='line'>显示php界面  环境搭建成功</span></code></pre></td></tr></table></div></figure>
+
+
+<p>注：原文参考：<a href="http://www.cnblogs.com/xiaoit/p/3991037.html">http://www.cnblogs.com/xiaoit/p/3991037.html</a></p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">小黄鸡</span></span>
+
+      
+
+
+
+
+<time class='entry-date' datetime='2016-08-31T17:19:26+08:00'><span class='date'><span class='date-month'>Aug</span> <span class='date-day'>31</span><span class='date-suffix'>st</span>, <span class='date-year'>2016</span></span> <span class='time'>5:19 pm</span></time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/linux/'>linux</a>, <a class='category' href='/blog/categories/lnmp/'>lnmp</a>, <a class='category' href='/blog/categories/php/'>php</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://hunter222.github.io/blog/2016/08/31/centos-LNMP/" data-via="" data-counturl="http://hunter222.github.io/blog/2016/08/31/centos-LNMP/" >Tweet</a>
+  
+  
+  
+  
+    <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style_32x32">
+	<a class="jiathis_button_qzone"></a>
+	<a class="jiathis_button_tsina"></a>
+	<a class="jiathis_button_tqq"></a>
+	<a class="jiathis_button_weixin"></a>
+	<a class="jiathis_button_renren"></a>
+	<a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
+	<a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2016/07/27/ajax-xml/" title="Previous Post: ajax对xml接收">&laquo; ajax对xml接收</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><!-- 多说评论框 start -->
+	<div class="ds-thread" data-thread-key="/blog/2016/08/31/centos-LNMP" data-title="在Centos6.5下搭建LNMP的方法" data-url="http://hunter222.github.io/blog/2016/08/31/centos-LNMP/"></div>
+<!-- 多说评论框 end -->
+<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+<script type="text/javascript">
+var duoshuoQuery = {short_name:"hunter222"};
+	(function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] 
+		 || document.getElementsByTagName('body')[0]).appendChild(ds);
+	})();
+	</script>
+<!-- 多说公共JS代码 end -->
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2016/08/31/centos-LNMP/">在Centos6.5下搭建LNMP的方法</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016/07/27/ajax-xml/">Ajax对xml接收</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016/07/27/ajax-page/">Ajax的无刷新分页显示</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016/07/27/ajax-get-post/">Ajax的get和post请求方式示例</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016/07/27/php/">49点php编程重点知识</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2016 - 小黄鸡 -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

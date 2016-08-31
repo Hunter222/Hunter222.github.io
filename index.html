@@ -9,41 +9,11 @@
   <meta name="author" content="小黄鸡">
 
   
-  <meta name="description" content="ajax负责请求xml和接收xml信息，dom负责处理xml信息 效果： 代码如下： 1
+  <meta name="description" content="在Centos6.5下搭建LNMP的方法 1：查看环境 1
 2
-3
-4
-5
-6
-7
-8
-9
-10
-11
-12
-13
-14
-15
-16
-17
-18
-19
-20
-21
-22
-23
-24
-25
-26
-27
-28
-29
-30
-31
-32
-33
-34
-&lt;!DOCTYPE &hellip;">
+[root@10-4-14-168 html]# cat /etc/redhat-release
+CentOS release 6.5 (Final) 2：关掉防火墙 1
+[root@10-4-14-168 html]# &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -101,6 +71,224 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2016/08/31/centos-LNMP/">在Centos6.5下搭建LNMP的方法</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2016-08-31T17:19:26+08:00'><span class='date'><span class='date-month'>Aug</span> <span class='date-day'>31</span><span class='date-suffix'>st</span>, <span class='date-year'>2016</span></span> <span class='time'>5:19 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h5>在Centos6.5下搭建LNMP的方法</h5>
+
+<p>1：查看环境</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>[root@10-4-14-168 html]# cat /etc/redhat-release
+</span><span class='line'>CentOS release 6.5 (Final)</span></code></pre></td></tr></table></div></figure>
+
+
+<p>2：关掉防火墙</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>[root@10-4-14-168 html]# chkconfig iptables off</span></code></pre></td></tr></table></div></figure>
+
+
+<p>3：配置CentOS 6.0 第三方yum源（CentOS默认的标准源里没有nginx软件包）</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>#wget http://www.atomicorp.com/installers/atomic
+</span><span class='line'>#sh ./atomic
+</span><span class='line'>#yum check-update</span></code></pre></td></tr></table></div></figure>
+
+
+<p>4：安装开发包和库文件　(安装下面四个)</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>#yum -y install ntp make openssl openssl-devel pcre pcre-devel libpng
+</span><span class='line'>
+</span><span class='line'>libpng-devel libjpeg-6b libjpeg-devel-6b freetype freetype-devel gd gd-devel zlib zlib-devel
+</span><span class='line'>
+</span><span class='line'>gcc gcc-c++ libXpm libXpm-devel ncurses ncurses-devel libmcrypt libmcrypt-devel libxml2
+</span><span class='line'>
+</span><span class='line'>libxml2-devel imake autoconf automake screen sysstat compat-libstdc++-33 curl curl-devel</span></code></pre></td></tr></table></div></figure>
+
+
+<p>5：卸载已安装的apache、mysql、php</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'># yum remove httpd
+</span><span class='line'># yum remove mysql
+</span><span class='line'># yum remove php</span></code></pre></td></tr></table></div></figure>
+
+
+<p>6：安装nginx</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'># yum install nginx
+</span><span class='line'># service nginx start
+</span><span class='line'># chkconfig --levels 235 nginx on
+</span><span class='line'>//设2、3、5级别开机启动</span></code></pre></td></tr></table></div></figure>
+
+
+<p>7：安装mysql</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'># yum install mysql mysql-server mysql-devel
+</span><span class='line'># service mysqld start
+</span><span class='line'># chkconfig --levels 235 mysqld on
+</span><span class='line'>登陆MySQL删除空用户，修改root密码
+</span><span class='line'>mysql&gt;select user,host,password from mysql.user;
+</span><span class='line'> 
+</span><span class='line'>mysql&gt;drop user ''@localhost;
+</span><span class='line'> 
+</span><span class='line'>mysql&gt;update mysql.user set password = PASSWORD('*********') where user='root';
+</span><span class='line'> 
+</span><span class='line'>mysql&gt;flush privileges;</span></code></pre></td></tr></table></div></figure>
+
+
+<p>8：安装php</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'># yum install php lighttpd-fastcgi php-cli php-mysql php-gd php-imap php-ldap
+</span><span class='line'>php-odbc php-pear php-xml php-xmlrpc php-mbstring php-mcrypt php-mssql php-snmp php-soap
+</span><span class='line'>//安装php和所需组件使PHP支持MySQL、FastCGI模式
+</span><span class='line'>#yum install  php-tidy php-common php-devel php-fpm php-mysql
+</span><span class='line'>
+</span><span class='line'># service php-fpm start
+</span><span class='line'># chkconfig --levels 235 php-fpm on</span></code></pre></td></tr></table></div></figure>
+
+
+<p>9：配置nginx支持php</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'># mv /etc/nginx/nginx.conf /etc/nginx/nginx.confbak
+</span><span class='line'>//将配置文件改为备份文件
+</span><span class='line'> 
+</span><span class='line'># cp /etc/nginx/nginx.conf.default /etc/nginx/nginx.conf
+</span><span class='line'>//由于原配置文件要自己去写因此可以使用默认的配置文件作为配置文件
+</span><span class='line'> 
+</span><span class='line'>//修改nginx配置文件，添加fastcgi支持
+</span><span class='line'># vi /etc/nginx/nginx.conf
+</span><span class='line'>index index.php index.html index.htm;
+</span><span class='line'>//加入index.php
+</span><span class='line'> 
+</span><span class='line'>location ~ \.php$ {
+</span><span class='line'>            root           /usr/share/nginx/html;
+</span><span class='line'>            fastcgi_pass   127.0.0.1:9000;
+</span><span class='line'>            fastcgi_index  index.php;
+</span><span class='line'>            fastcgi_param  SCRIPT_FILENAME  /usr/share/nginx/html$fastcgi_script_name;
+</span><span class='line'>            include        fastcgi_params;
+</span><span class='line'>        }
+</span><span class='line'>//将以上代码注释去掉，并修改成nginx默认路径</span></code></pre></td></tr></table></div></figure>
+
+
+<p>10：配置php</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>//编辑文件php.ini，在文件末尾添加cgi.fix_pathinfo = 1
+</span><span class='line'>[root@CentOS ~]# vi /etc/php.ini</span></code></pre></td></tr></table></div></figure>
+
+
+<p>11：重启nginx php-fpm</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'># service nginx restart
+</span><span class='line'># service php-fpm restart</span></code></pre></td></tr></table></div></figure>
+
+
+<p>　　
+12：建立info.php文件</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'># vi /usr/share/nginx/html/info.php
+</span><span class='line'>&lt;?php
+</span><span class='line'>   phpinfo();
+</span><span class='line'>?&gt;</span></code></pre></td></tr></table></div></figure>
+
+
+<p>13：测试nginx是否解析php</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>本地浏览器输入：192.168.12.103/info.php
+</span><span class='line'>显示php界面  环境搭建成功</span></code></pre></td></tr></table></div></figure>
+
+
+<p>注：原文参考：<a href="http://www.cnblogs.com/xiaoit/p/3991037.html">http://www.cnblogs.com/xiaoit/p/3991037.html</a></p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1436,6 +1624,10 @@ comments: true</p>
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2016/08/31/centos-LNMP/">在Centos6.5下搭建LNMP的方法</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2016/07/27/ajax-xml/">Ajax对xml接收</a>
       </li>
     
@@ -1449,10 +1641,6 @@ comments: true</p>
     
       <li class="post">
         <a href="/blog/2016/07/27/php/">49点php编程重点知识</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2016/07/27/mysqli/">PHP mysql函数及其Mysqli函数代替用法</a>
       </li>
     
   </ul>
