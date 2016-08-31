@@ -4,7 +4,7 @@
   <title><![CDATA[小黄鸡]]></title>
   <link href="http://hunter222.github.io/atom.xml" rel="self"/>
   <link href="http://hunter222.github.io/"/>
-  <updated>2016-08-31T19:26:16+08:00</updated>
+  <updated>2016-08-31T19:35:55+08:00</updated>
   <id>http://hunter222.github.io/</id>
   <author>
     <name><![CDATA[小黄鸡]]></name>
@@ -14,13 +14,214 @@
 
   
   <entry>
+    <title type="html"><![CDATA[简单的mysql基本操作]]></title>
+    <link href="http://hunter222.github.io/blog/2016/08/31/Mysql-base/"/>
+    <updated>2016-08-31T18:19:30+08:00</updated>
+    <id>http://hunter222.github.io/blog/2016/08/31/Mysql-base</id>
+    <content type="html"><![CDATA[<h5>简单的mysql基本操作</h5>
+
+<p>mysql 查看默认引擎</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>show variables like 'storage_engine';</span></code></pre></td></tr></table></div></figure>
+
+
+<p>查看表详细结构语句</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>SHOW CREARTE TABLE 表名 \G</span></code></pre></td></tr></table></div></figure>
+
+
+<p>修改表名</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>ALTER TABLE 旧表名 RENAME (TO) 新表名</span></code></pre></td></tr></table></div></figure>
+
+
+<p>修改字段的数据类型</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>ALTER TABLE 表名 MODIFY 属性名 数据类型;
+</span><span class='line'>
+</span><span class='line'>eg：ALTER TABLE user MODIFY name varchar(30);</span></code></pre></td></tr></table></div></figure>
+
+
+<p>修改字段名(属性名)</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>ALTER TABLE 表名 CHANGE 旧属性名 新属性名 新数据类型;</span></code></pre></td></tr></table></div></figure>
+
+
+<p>增加字段（属性）</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>ALTER TABLE  表名 ADD 属性名1 数据类型【完整性约束条件】[FIRST] AFTER 属性名2</span></code></pre></td></tr></table></div></figure>
+
+
+<p>删除字段（属性）</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>ALTER TABLE 表名 DROP 属性名;</span></code></pre></td></tr></table></div></figure>
+
+
+<p>修改字段的排列位置</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>ALTER TABLE 表名 MODIFY 属性名1 数据类型 [FIRST] AFTER 属性名2;</span></code></pre></td></tr></table></div></figure>
+
+
+<p>更改表的存储引擎</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>ALTER TABLE 表名 engine=存储引擎名;</span></code></pre></td></tr></table></div></figure>
+
+
+<p>删除表的外键约束</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>ALTER TABLE 表名 DROP FOREIGN KEY 外键别名;</span></code></pre></td></tr></table></div></figure>
+
+
+<p>索引的优点：可以提高检索数据的速度</p>
+
+<p>缺点：创建和维护索引需要耗费时间，占用物理空间，</p>
+
+<p>在已经存在的表创建索引</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>CREARTE [UNIQUE | FULLTEXT | SPATIAL] INDEX 索引名 ON 表名(属性名[(长度)] [ASC|DESC]);</span></code></pre></td></tr></table></div></figure>
+
+
+<p>用ALTER TABLE 来创建索引</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>ALTER TABLE 表名 ADD [UNIQUE | FULLTEXT | SPATIAL] INDEX 索引名(属性名[(长度)] [ASC|DESC]);</span></code></pre></td></tr></table></div></figure>
+
+
+<p>删除索引</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>DROP INDEX 索引名 ON 表名</span></code></pre></td></tr></table></div></figure>
+
+
+<p>创建视图的语法</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>CREARTE [ALGORITHM = { UNDEFINED | MERGE | TEMPTABLE}] VIEW  视图名 [(属性名字)] AS SELECT  语句
+</span><span class='line'>
+</span><span class='line'>[WITH [CASCADED | LOCAL] CHECK OPTION];</span></code></pre></td></tr></table></div></figure>
+
+
+<p>查看视图</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>DESC 视图名
+</span><span class='line'>
+</span><span class='line'>SHOW TABLES STATUS 查看视图基本信息
+</span><span class='line'>
+</span><span class='line'>SHOW TABLES STATUS LIKE ‘视图名’
+</span><span class='line'>
+</span><span class='line'>SHOW CREARTE VIEW 查看视图详细信息
+</span><span class='line'>
+</span><span class='line'>SHOW CREARTE VIEW  视图;</span></code></pre></td></tr></table></div></figure>
+
+
+<p>修改视图</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>CREARTE OR REPLACE [ALGORITHM = { UNDEFINED | MERGE | TEMPTABLE}] VIEW  视图名 [(属性名字)] AS SELECT  语句
+</span><span class='line'>
+</span><span class='line'>[WITH [CASCADED | LOCAL] CHECK OPTION];
+</span><span class='line'>
+</span><span class='line'>ALTER [ALGORITHM = { UNDEFINED | MERGE | TEMPTABLE}] VIEW  视图名 [(属性名字)] AS SELECT  语句
+</span><span class='line'>
+</span><span class='line'>[WITH [CASCADED | LOCAL] CHECK OPTION];</span></code></pre></td></tr></table></div></figure>
+
+
+<p>更新视图</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>UPDATE 视图 SET 属性名；</span></code></pre></td></tr></table></div></figure>
+
+
+<p>删除视图</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>DROP VIEW [IF EXISTS] 视图名列表 [RESTRICT|CASCADE]</span></code></pre></td></tr></table></div></figure>
+
+
+<p>创建只有一种执行语句的触发器的形式如下：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>CREARTE TRIGGER 触发器名 BEFORE | AFTER 触发事件 ON 表名
+</span><span class='line'>
+</span><span class='line'>FOR EACH ROW 执行语句</span></code></pre></td></tr></table></div></figure>
+
+
+<p>创建有多个执行语句的触发器的形式：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>CREARTE TRIGGER 触发器名 BEFORE | AFTER 触发事件 ON 表名
+</span><span class='line'>
+</span><span class='line'>FOR EACH ROW
+</span><span class='line'>
+</span><span class='line'>BEGINE
+</span><span class='line'>
+</span><span class='line'>执行语句列表
+</span><span class='line'>
+</span><span class='line'>END</span></code></pre></td></tr></table></div></figure>
+
+
+<p>查看触发器</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>SHOW TRIGGER 触发器名</span></code></pre></td></tr></table></div></figure>
+
+
+<p>删除触发器</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>DROP TRIGGER 触发器名</span></code></pre></td></tr></table></div></figure>
+
+]]></content>
+  </entry>
+  
+  <entry>
     <title type="html"><![CDATA[linux下thinkphp的Nginx配置文件]]></title>
     <link href="http://hunter222.github.io/blog/2016/08/31/Nginx-thinkphp/"/>
     <updated>2016-08-31T18:19:26+08:00</updated>
     <id>http://hunter222.github.io/blog/2016/08/31/Nginx-thinkphp</id>
-    <content type="html"><![CDATA[<h5>linux下thinkphp的Nginx配置文件</h5>
+    <content type="html"><![CDATA[<h5>linux下thinkphp的Nginx配置文件(亲测有效)</h5>
 
-<p>一个配置文件，完美支持普通,兼容,pathinfo,rewrite4种url模式，别怪我没提醒你收藏哦. 常见的静态文件404时也不会再去跑一遍fastcgi浪费资源。</p>
+<p>一个配置文件，完美支持普通,兼容,pathinfo,rewrite4种url模式，常见的静态文件404时也不会再去跑一遍fastcgi浪费资源。</p>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>

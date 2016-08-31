@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Nginx | 小黄鸡]]></title>
   <link href="http://hunter222.github.io/blog/categories/nginx/atom.xml" rel="self"/>
   <link href="http://hunter222.github.io/"/>
-  <updated>2016-08-31T19:26:16+08:00</updated>
+  <updated>2016-08-31T19:35:55+08:00</updated>
   <id>http://hunter222.github.io/</id>
   <author>
     <name><![CDATA[小黄鸡]]></name>
@@ -18,9 +18,9 @@
     <link href="http://hunter222.github.io/blog/2016/08/31/Nginx-thinkphp/"/>
     <updated>2016-08-31T18:19:26+08:00</updated>
     <id>http://hunter222.github.io/blog/2016/08/31/Nginx-thinkphp</id>
-    <content type="html"><![CDATA[<h5>linux下thinkphp的Nginx配置文件</h5>
+    <content type="html"><![CDATA[<h5>linux下thinkphp的Nginx配置文件(亲测有效)</h5>
 
-<p>一个配置文件，完美支持普通,兼容,pathinfo,rewrite4种url模式，别怪我没提醒你收藏哦. 常见的静态文件404时也不会再去跑一遍fastcgi浪费资源。
+<p>一个配置文件，完美支持普通,兼容,pathinfo,rewrite4种url模式，常见的静态文件404时也不会再去跑一遍fastcgi浪费资源。
 ```
 server {
     listen       80;
