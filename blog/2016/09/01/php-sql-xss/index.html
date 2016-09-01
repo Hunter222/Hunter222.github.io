@@ -1,0 +1,309 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Php常用的防黑客攻击的几种情况 - 小黄鸡</title>
+  <meta name="author" content="chenjingxiu">
+
+  
+  <meta name="description" content="1.防止暴力破解 Get方式恶意攻击，（dos），通常硬件的方式来防止，防火墙。
+Post方式暴力破解，从程序的角度来防止，最通用的方法就是增加验证码(验证码使用文章：http://hunter222.github.io/blog/2016/09/01/php-yanzhengma)。 注意： &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://hunter222.github.io/blog/2016/09/01/php-sql-xss/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="小黄鸡" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="/javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">小黄鸡</a></h1>
+  
+    <h2>Achieve something what I think.</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://www.baidu.com" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="sitesearch" value="hunter222.github.io">
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/blog/categories/php">PHP</a></li>
+  <li><a href="/blog/categories/mysql">Mysql</a></li>
+  <li><a href="/blog/categories/html">HTML&CSS</a></li>
+  <li><a href="/blog/categories/javascritp">JS&JQ</a></li>
+  <li><a href="/blog/categories/linux">Linux</a></li>
+  <li><a href="/blog/categories/frame">Frame</a></li>
+  <li><a href="/blog/categories/other">Other</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Php常用的防黑客攻击的几种情况</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2016-09-01T18:19:26+08:00'><span class='date'><span class='date-month'>Sep</span> <span class='date-day'>1</span><span class='date-suffix'>st</span>, <span class='date-year'>2016</span></span> <span class='time'>6:19 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><h6>1.防止暴力破解</h6>
+
+<p>Get方式恶意攻击，（dos），通常硬件的方式来防止，防火墙。
+Post方式暴力破解，从程序的角度来防止，最通用的方法就是增加验证码(验证码使用文章：<a href="http://hunter222.github.io/blog/2016/09/01/php-yanzhengma">http://hunter222.github.io/blog/2016/09/01/php-yanzhengma</a>)。</p>
+
+<p>注意：验证码常见错误：</p>
+
+<ol>
+<li><p>字体文件的位置不对</p></li>
+<li><p>由于在生成验证码的时候，使用了header()函数，它有一个特点，它之前不能有任何的输出，包括空格。解决办法，从index.php开始查找，凡是被包含进来的文件都需要查找</p></li>
+<li><p>还需要注意一个的，就是你的文件编码要确保是 utf-8的，而不是带BOM头的utf-8。</p></li>
+</ol>
+
+
+<h6>2.防sql注入</h6>
+
+<p>黑客通过在表单中填入特殊的字符或者是url中增加特殊的字符，然后想数据库发起请求，拼凑出sql语句，达到攻击的目的。</p>
+
+<p>有两种形式：</p>
+
+<p>Post表单提交；防止方式：1.MD5加密密码，2.使用addslashes函数给特殊字符单引号添加反斜杠</p>
+
+<p>Get，url传参；防止方式：url传回的<em>GET[&lsquo;&rsquo;]加上1，如：$pages = $</em>GET[&lsquo;id&rsquo;]+1</p>
+
+<p>凡是是用户提交的信息，都是不能相信的，都需要进行处理，其中之一就是转义。
+也就意味着在所有的 收集表单信息的地方，都要调用 addslashes函数。当要转义数组时需要批量处理，代码如下：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>//批量转义
+</span><span class='line'>function  deepslashes($data){
+</span><span class='line'>    //判断$data形式
+</span><span class='line'>    if (empty($data)){
+</span><span class='line'>        return $data;
+</span><span class='line'>    }
+</span><span class='line'>    //遍历数组
+</span><span class='line'>    return is_array($data) ? array_map('deepslashes', $data) : addslashes($data);
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+
+<h6>3.xss攻击</h6>
+
+<p>Xss: cross site script 跨站脚本攻击</p>
+
+<p>Css 被占用，表示样式表</p>
+
+<p>恶意攻击者往Web页面里插入恶意html代码，当用户浏览该页之时，嵌入其中Web里面的html代码会被执行，从而达到恶意攻击用户的特殊目的。</p>
+
+<p>防止方法：使用Htmlspecialchars函数 和  htmlentites函数把特殊字符转义，批量处理的示例代码如下：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>//批量实体转义
+</span><span class='line'>   function deepspecialchars($data){
+</span><span class='line'>       if (empty($data)){
+</span><span class='line'>           return $data;
+</span><span class='line'>       }
+</span><span class='line'>       return is_array($data) ? array_map('deepspecialchars', $data) : htmlspecialchars($data);
+</span><span class='line'>   }</span></code></pre></td></tr></table></div></figure>
+
+
+
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">chenjingxiu</span></span>
+
+      
+
+
+
+
+<time class='entry-date' datetime='2016-09-01T18:19:26+08:00'><span class='date'><span class='date-month'>Sep</span> <span class='date-day'>1</span><span class='date-suffix'>st</span>, <span class='date-year'>2016</span></span> <span class='time'>6:19 pm</span></time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/html/'>html</a>, <a class='category' href='/blog/categories/mysql/'>mysql</a>, <a class='category' href='/blog/categories/other/'>other</a>, <a class='category' href='/blog/categories/php/'>php</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  
+  
+  
+    <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style_32x32">
+	<a class="jiathis_button_qzone"></a>
+	<a class="jiathis_button_tsina"></a>
+	<a class="jiathis_button_tqq"></a>
+	<a class="jiathis_button_weixin"></a>
+	<a class="jiathis_button_renren"></a>
+	<a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
+	<a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2016/08/31/php-files/" title="Previous Post: 关于php文件操作示例">&laquo; 关于php文件操作示例</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2016/09/01/php-yanzhengma/" title="Next Post: 验证码工具类的使用">验证码工具类的使用 &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><!-- 多说评论框 start -->
+	<div class="ds-thread" data-thread-key="/blog/2016/09/01/php-sql-xss" data-title="php常用的防黑客攻击的几种情况" data-url="http://hunter222.github.io/blog/2016/09/01/php-sql-xss/"></div>
+<!-- 多说评论框 end -->
+<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+<script type="text/javascript">
+var duoshuoQuery = {short_name:"hunter222"};
+	(function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] 
+		 || document.getElementsByTagName('body')[0]).appendChild(ds);
+	})();
+	</script>
+<!-- 多说公共JS代码 end -->
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2016/09/01/php-yanzhengma/">验证码工具类的使用</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016/09/01/php-sql-xss/">Php常用的防黑客攻击的几种情况</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016/08/31/php-files/">关于php文件操作示例</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016/08/31/linux-base/">Linux的基础语法</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016/08/31/php-arrays/">【转】php的数组各种用法(上)</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2016 - chenjingxiu -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

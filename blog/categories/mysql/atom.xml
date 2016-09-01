@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Mysql | 小黄鸡]]></title>
   <link href="http://hunter222.github.io/blog/categories/mysql/atom.xml" rel="self"/>
   <link href="http://hunter222.github.io/"/>
-  <updated>2016-09-01T16:23:35+08:00</updated>
+  <updated>2016-09-01T22:20:14+08:00</updated>
   <id>http://hunter222.github.io/</id>
   <author>
     <name><![CDATA[chenjingxiu]]></name>
@@ -12,6 +12,70 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Php常用的防黑客攻击的几种情况]]></title>
+    <link href="http://hunter222.github.io/blog/2016/09/01/php-sql-xss/"/>
+    <updated>2016-09-01T18:19:26+08:00</updated>
+    <id>http://hunter222.github.io/blog/2016/09/01/php-sql-xss</id>
+    <content type="html"><![CDATA[<h6>1.防止暴力破解</h6>
+
+<p>Get方式恶意攻击，（dos），通常硬件的方式来防止，防火墙。
+Post方式暴力破解，从程序的角度来防止，最通用的方法就是增加验证码(验证码使用文章：<a href="http://hunter222.github.io/blog/2016/09/01/php-yanzhengma">http://hunter222.github.io/blog/2016/09/01/php-yanzhengma</a>)。</p>
+
+<p>注意：验证码常见错误：</p>
+
+<ol>
+<li><p>字体文件的位置不对</p></li>
+<li><p>由于在生成验证码的时候，使用了header()函数，它有一个特点，它之前不能有任何的输出，包括空格。解决办法，从index.php开始查找，凡是被包含进来的文件都需要查找</p></li>
+<li><p>还需要注意一个的，就是你的文件编码要确保是 utf-8的，而不是带BOM头的utf-8。</p></li>
+</ol>
+
+
+<h6>2.防sql注入</h6>
+
+<p>黑客通过在表单中填入特殊的字符或者是url中增加特殊的字符，然后想数据库发起请求，拼凑出sql语句，达到攻击的目的。</p>
+
+<p>有两种形式：</p>
+
+<p>Post表单提交；防止方式：1.MD5加密密码，2.使用addslashes函数给特殊字符单引号添加反斜杠</p>
+
+<p>Get，url传参；防止方式：url传回的<em>GET[&lsquo;&rsquo;]加上1，如：$pages = $</em>GET[&lsquo;id&rsquo;]+1</p>
+
+<p>凡是是用户提交的信息，都是不能相信的，都需要进行处理，其中之一就是转义。
+也就意味着在所有的 收集表单信息的地方，都要调用 addslashes函数。当要转义数组时需要批量处理，代码如下：</p>
+
+<pre><code>//批量转义
+function  deepslashes($data){
+    //判断$data形式
+    if (empty($data)){
+        return $data;
+    }
+    //遍历数组
+    return is_array($data) ? array_map('deepslashes', $data) : addslashes($data);
+}
+</code></pre>
+
+<h6>3.xss攻击</h6>
+
+<p>Xss: cross site script 跨站脚本攻击</p>
+
+<p>Css 被占用，表示样式表</p>
+
+<p>恶意攻击者往Web页面里插入恶意html代码，当用户浏览该页之时，嵌入其中Web里面的html代码会被执行，从而达到恶意攻击用户的特殊目的。</p>
+
+<p>防止方法：使用Htmlspecialchars函数 和  htmlentites函数把特殊字符转义，批量处理的示例代码如下：</p>
+
+<pre><code>//批量实体转义
+   function deepspecialchars($data){
+       if (empty($data)){
+           return $data;
+       }
+       return is_array($data) ? array_map('deepspecialchars', $data) : htmlspecialchars($data);
+   }
+</code></pre>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[简单的mysql基本操作]]></title>

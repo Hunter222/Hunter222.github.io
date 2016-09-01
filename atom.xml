@@ -4,7 +4,7 @@
   <title><![CDATA[小黄鸡]]></title>
   <link href="http://hunter222.github.io/atom.xml" rel="self"/>
   <link href="http://hunter222.github.io/"/>
-  <updated>2016-09-01T16:23:35+08:00</updated>
+  <updated>2016-09-01T22:20:14+08:00</updated>
   <id>http://hunter222.github.io/</id>
   <author>
     <name><![CDATA[chenjingxiu]]></name>
@@ -12,6 +12,309 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[验证码工具类的使用]]></title>
+    <link href="http://hunter222.github.io/blog/2016/09/01/php-yanzhengma/"/>
+    <updated>2016-09-01T18:19:27+08:00</updated>
+    <id>http://hunter222.github.io/blog/2016/09/01/php-yanzhengma</id>
+    <content type="html"><![CDATA[<p>1.工具类：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+<span class='line-number'>53</span>
+<span class='line-number'>54</span>
+<span class='line-number'>55</span>
+<span class='line-number'>56</span>
+<span class='line-number'>57</span>
+<span class='line-number'>58</span>
+<span class='line-number'>59</span>
+<span class='line-number'>60</span>
+<span class='line-number'>61</span>
+<span class='line-number'>62</span>
+<span class='line-number'>63</span>
+<span class='line-number'>64</span>
+<span class='line-number'>65</span>
+<span class='line-number'>66</span>
+<span class='line-number'>67</span>
+<span class='line-number'>68</span>
+<span class='line-number'>69</span>
+<span class='line-number'>70</span>
+<span class='line-number'>71</span>
+<span class='line-number'>72</span>
+<span class='line-number'>73</span>
+<span class='line-number'>74</span>
+<span class='line-number'>75</span>
+<span class='line-number'>76</span>
+<span class='line-number'>77</span>
+<span class='line-number'>78</span>
+<span class='line-number'>79</span>
+<span class='line-number'>80</span>
+<span class='line-number'>81</span>
+<span class='line-number'>82</span>
+<span class='line-number'>83</span>
+<span class='line-number'>84</span>
+<span class='line-number'>85</span>
+<span class='line-number'>86</span>
+<span class='line-number'>87</span>
+<span class='line-number'>88</span>
+<span class='line-number'>89</span>
+<span class='line-number'>90</span>
+<span class='line-number'>91</span>
+<span class='line-number'>92</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;?php
+</span><span class='line'>class Captcha
+</span><span class='line'>{
+</span><span class='line'>    private $charset = 'abcdefghkmnprstuvwxyzABCDEFGHKMNPRSTUVWXYZ23456789';
+</span><span class='line'> // 随机因子，
+</span><span class='line'>    private $code;
+</span><span class='line'> // 验证码字符串
+</span><span class='line'>    private $codelen = 4;
+</span><span class='line'> // 验证码长度
+</span><span class='line'>    private $width = 150;
+</span><span class='line'> // 宽度
+</span><span class='line'>    private $height = 40;
+</span><span class='line'> // 高度
+</span><span class='line'>    private $img;
+</span><span class='line'> // 图形资源句柄
+</span><span class='line'>    private $font;
+</span><span class='line'> // 指定的字体
+</span><span class='line'>    private $fontsize = 20;
+</span><span class='line'> // 指定字体大小
+</span><span class='line'>    private $fontcolor;
+</span><span class='line'> // 指定字体颜色                        
+</span><span class='line'>    // 构造方法初始化
+</span><span class='line'>    public function __construct($codelen = 4, $width = 150, $height = 40, $fontsize = 20, $font = "elephant.ttf")
+</span><span class='line'>    {
+</span><span class='line'>        $this-&gt;codelen = $codelen;
+</span><span class='line'>        $this-&gt;width = $width;
+</span><span class='line'>        $this-&gt;height = $height;
+</span><span class='line'>        $this-&gt;fontsize = $fontsize;
+</span><span class='line'>        $this-&gt;font = $font;
+</span><span class='line'>    }
+</span><span class='line'>    // 生成随机码
+</span><span class='line'>    private function createCode()
+</span><span class='line'>    {
+</span><span class='line'>        $_len = strlen($this-&gt;charset) - 1;
+</span><span class='line'>        for ($i = 0; $i &lt; $this-&gt;codelen; $i ++) {
+</span><span class='line'>            $this-&gt;code .= $this-&gt;charset[mt_rand(0, $_len)];
+</span><span class='line'>        }
+</span><span class='line'>    }
+</span><span class='line'>    // 生成背景
+</span><span class='line'>    private function createBg()
+</span><span class='line'>    {
+</span><span class='line'>        $this-&gt;img = imagecreatetruecolor($this-&gt;width, $this-&gt;height);
+</span><span class='line'>        $color = imagecolorallocate($this-&gt;img, mt_rand(157, 255), mt_rand(157, 255), mt_rand(157, 255));
+</span><span class='line'>        imagefilledrectangle($this-&gt;img, 0, $this-&gt;height, $this-&gt;width, 0, $color);
+</span><span class='line'>    }  
+</span><span class='line'>    // 生成文字
+</span><span class='line'>    private function createFont()
+</span><span class='line'>    {
+</span><span class='line'>        $_x = $this-&gt;width / $this-&gt;codelen;
+</span><span class='line'>        for ($i = 0; $i &lt; $this-&gt;codelen; $i ++) {
+</span><span class='line'>            $this-&gt;fontcolor = imagecolorallocate($this-&gt;img, mt_rand(0, 156), mt_rand(0, 156), mt_rand(0, 156));
+</span><span class='line'>            imagettftext($this-&gt;img, $this-&gt;fontsize, mt_rand(- 30, 30), $_x * $i + mt_rand(1, 5), $this-&gt;height / 1.4, $this-&gt;fontcolor, $this-&gt;font, $this-&gt;code[$i]);
+</span><span class='line'>        }
+</span><span class='line'>    }
+</span><span class='line'>    // 生成线条、雪花
+</span><span class='line'>    private function createLine()
+</span><span class='line'>    {
+</span><span class='line'>        for ($i = 0; $i &lt; 6; $i ++) {
+</span><span class='line'>            $color = imagecolorallocate($this-&gt;img, mt_rand(0, 156), mt_rand(0, 156), mt_rand(0, 156));
+</span><span class='line'>            imageline($this-&gt;img, mt_rand(0, $this-&gt;width), mt_rand(0, $this-&gt;height), mt_rand(0, $this-&gt;width), mt_rand(0, $this-&gt;height), $color);
+</span><span class='line'>        }
+</span><span class='line'>        for ($i = 0; $i &lt; 100; $i ++) {
+</span><span class='line'>            $color = imagecolorallocate($this-&gt;img, mt_rand(200, 255), mt_rand(200, 255), mt_rand(200, 255));
+</span><span class='line'>            imagestring($this-&gt;img, mt_rand(1, 5), mt_rand(0, $this-&gt;width), mt_rand(0, $this-&gt;height), '*', $color);
+</span><span class='line'>        }
+</span><span class='line'>    }
+</span><span class='line'>    // 输出
+</span><span class='line'>    private function outPut()
+</span><span class='line'>    {
+</span><span class='line'>        header('Content-type:image/png');
+</span><span class='line'>        imagepng($this-&gt;img);
+</span><span class='line'>        imagedestroy($this-&gt;img);
+</span><span class='line'>    }
+</span><span class='line'>    // 对外生成
+</span><span class='line'>    public function generateCode()
+</span><span class='line'>    {
+</span><span class='line'>        $this-&gt;createBg();
+</span><span class='line'>        $this-&gt;createCode();
+</span><span class='line'>        $this-&gt;createLine();
+</span><span class='line'>        $this-&gt;createFont();
+</span><span class='line'>        $this-&gt;outPut();
+</span><span class='line'>    }   
+</span><span class='line'>    // 获取验证码
+</span><span class='line'>    public function getCode()
+</span><span class='line'>    {
+</span><span class='line'>        return strtolower($this-&gt;code);
+</span><span class='line'>    }
+</span><span class='line'>}
+</span><span class='line'>//调用实例
+</span><span class='line'>//$c = new Captcha();
+</span><span class='line'>//$c-&gt;generateCode();
+</span><span class='line'>//$_SESSION['captcha'] = $c-&gt;getCode();</span></code></pre></td></tr></table></div></figure>
+
+
+<p>2.在php代码中调用：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>//验证码
+</span><span class='line'>    public function yanzhengmaAction() {
+</span><span class='line'>      //调用Captcha类
+</span><span class='line'>        $this-&gt;library("Captcha");
+</span><span class='line'>        $c = new Captcha(4,142,30);
+</span><span class='line'>        $c-&gt;generateCode();
+</span><span class='line'>        $_SESSION['yanzhengma'] = $c-&gt;getCode();
+</span><span class='line'>    }</span></code></pre></td></tr></table></div></figure>
+
+
+<p>3.在HTML网页中代码：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;td colspan="2" align="right"&gt;&lt;img src="index.php?p=admin&c=login&a=yanzhengma" width="142" height="30" alt="验证码图片" border="1" onclick= this.src="index.php?p=admin&c=login&a=yanzhengma&"+Math.random() style="cursor: pointer;" title="看不清？点击更换另一个验证码。" /&gt;</span></code></pre></td></tr></table></div></figure>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Php常用的防黑客攻击的几种情况]]></title>
+    <link href="http://hunter222.github.io/blog/2016/09/01/php-sql-xss/"/>
+    <updated>2016-09-01T18:19:26+08:00</updated>
+    <id>http://hunter222.github.io/blog/2016/09/01/php-sql-xss</id>
+    <content type="html"><![CDATA[<h6>1.防止暴力破解</h6>
+
+<p>Get方式恶意攻击，（dos），通常硬件的方式来防止，防火墙。
+Post方式暴力破解，从程序的角度来防止，最通用的方法就是增加验证码(验证码使用文章：<a href="http://hunter222.github.io/blog/2016/09/01/php-yanzhengma">http://hunter222.github.io/blog/2016/09/01/php-yanzhengma</a>)。</p>
+
+<p>注意：验证码常见错误：</p>
+
+<ol>
+<li><p>字体文件的位置不对</p></li>
+<li><p>由于在生成验证码的时候，使用了header()函数，它有一个特点，它之前不能有任何的输出，包括空格。解决办法，从index.php开始查找，凡是被包含进来的文件都需要查找</p></li>
+<li><p>还需要注意一个的，就是你的文件编码要确保是 utf-8的，而不是带BOM头的utf-8。</p></li>
+</ol>
+
+
+<h6>2.防sql注入</h6>
+
+<p>黑客通过在表单中填入特殊的字符或者是url中增加特殊的字符，然后想数据库发起请求，拼凑出sql语句，达到攻击的目的。</p>
+
+<p>有两种形式：</p>
+
+<p>Post表单提交；防止方式：1.MD5加密密码，2.使用addslashes函数给特殊字符单引号添加反斜杠</p>
+
+<p>Get，url传参；防止方式：url传回的<em>GET[&lsquo;&rsquo;]加上1，如：$pages = $</em>GET[&lsquo;id&rsquo;]+1</p>
+
+<p>凡是是用户提交的信息，都是不能相信的，都需要进行处理，其中之一就是转义。
+也就意味着在所有的 收集表单信息的地方，都要调用 addslashes函数。当要转义数组时需要批量处理，代码如下：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>//批量转义
+</span><span class='line'>function  deepslashes($data){
+</span><span class='line'>    //判断$data形式
+</span><span class='line'>    if (empty($data)){
+</span><span class='line'>        return $data;
+</span><span class='line'>    }
+</span><span class='line'>    //遍历数组
+</span><span class='line'>    return is_array($data) ? array_map('deepslashes', $data) : addslashes($data);
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+
+<h6>3.xss攻击</h6>
+
+<p>Xss: cross site script 跨站脚本攻击</p>
+
+<p>Css 被占用，表示样式表</p>
+
+<p>恶意攻击者往Web页面里插入恶意html代码，当用户浏览该页之时，嵌入其中Web里面的html代码会被执行，从而达到恶意攻击用户的特殊目的。</p>
+
+<p>防止方法：使用Htmlspecialchars函数 和  htmlentites函数把特殊字符转义，批量处理的示例代码如下：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>//批量实体转义
+</span><span class='line'>   function deepspecialchars($data){
+</span><span class='line'>       if (empty($data)){
+</span><span class='line'>           return $data;
+</span><span class='line'>       }
+</span><span class='line'>       return is_array($data) ? array_map('deepspecialchars', $data) : htmlspecialchars($data);
+</span><span class='line'>   }</span></code></pre></td></tr></table></div></figure>
+
+
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[关于php文件操作示例]]></title>
