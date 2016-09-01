@@ -4,14 +4,257 @@
   <title><![CDATA[Category: Php | 小黄鸡]]></title>
   <link href="http://hunter222.github.io/blog/categories/php/atom.xml" rel="self"/>
   <link href="http://hunter222.github.io/"/>
-  <updated>2016-08-31T21:09:52+08:00</updated>
+  <updated>2016-09-01T16:07:29+08:00</updated>
   <id>http://hunter222.github.io/</id>
   <author>
-    <name><![CDATA[小黄鸡]]></name>
+    <name><![CDATA[chenjingxiu]]></name>
     
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[关于php文件操作示例]]></title>
+    <link href="http://hunter222.github.io/blog/2016/08/31/php-files/"/>
+    <updated>2016-08-31T18:19:32+08:00</updated>
+    <id>http://hunter222.github.io/blog/2016/08/31/php-files</id>
+    <content type="html"><![CDATA[<h6>一 、解析路径：</h6>
+
+<p>1 获得文件名:</p>
+
+<p>basename();</p>
+
+<p>给出一个包含有指向一个文件的全路径的字符串，本函数返回基本的文件名。如果文件名是以 suffix 结束的，那这一部分也会被去掉。
+eg:</p>
+
+<p>$path = &ldquo;/home/httpd/html/index.php&rdquo;;</p>
+
+<p>$file = basename($path,&ldquo;.php&rdquo;); // $file is set to &ldquo;index&rdquo;</p>
+
+<p>2 得到目录部分：</p>
+
+<p>dirname();</p>
+
+<p>给出一个包含有指向一个文件的全路径的字符串，本函数返回去掉文件名后的目录名。
+eg:</p>
+
+<p>$path = &ldquo;/etc/passwd&rdquo;;</p>
+
+<p>你$file = dirname($path); // $file is set to &ldquo;/etc&rdquo;</p>
+
+<p>3 得到路径关联数组
+pathinfo();
+得到一个指定路径中的三个部分：目录名，基本名，扩展名。
+eg:
+$pathinfo = pathinfo(&ldquo;www/test/index.html&rdquo;);
+var_dump($pathinfo);
+// $path[&lsquo;dirname&rsquo;]
+$path[&lsquo;basename&rsquo;]
+$path[&lsquo;extenssion&rsquo;]</p>
+
+<p>二、文件类型
+1. filetype();
+返回文件的类型。可能的值有 fifo，char，dir，block，link，file 和 unknown。
+eg:
+echo filetype(&lsquo;/etc/passwd&rsquo;); // file
+echo filetype(&lsquo;/etc/&rsquo;);        // dir</p>
+
+<p>三、得到给定文件有用信息数组(很有用)</p>
+
+<ol>
+<li>fstat();
+通过已打开的文件指针取得文件信息
+获取由文件指针 handle 所打开文件的统计信息。本函数和 stat() 函数相似，除了它是作用于已打开的文件指针而不是文件名。
+eg:</li>
+</ol>
+
+
+<p>// 打开文件
+$fp = fopen(&ldquo;/etc/passwd&rdquo;, &ldquo;r&rdquo;);
+// 取得统计信息
+$fstat = fstat($fp);
+// 关闭文件
+fclose($fp);
+// 只显示关联数组部分
+print_r(array_slice($fstat, 13));
+2. stat()
+获取由 filename 指定的文件的统计信息(类比fstat())#p#副标题#e#</p>
+
+<p>四、计算大小
+1. filesize()
+返回文件大小的字节数，如果出错返回 FALSE 并生成一条 E_WARNING 级的错误。
+eg:</p>
+
+<p>// 输出类似：somefile.txt: 1024 bytes
+$filename = &lsquo;somefile.txt&rsquo;;
+echo $filename . &lsquo;: &rsquo; . filesize($filename) . &lsquo; bytes&rsquo;;</p>
+
+<ol>
+<li>disk_free_space()
+获得目录所在磁盘分区的可用空间（字节单位）
+eg</li>
+</ol>
+
+
+<p>// $df 包含根目录下可用的字节数
+$df = disk_free_space(&ldquo;/&rdquo;);
+//在 Windows 下:
+disk_free_space(&ldquo;C:&rdquo;);
+disk_free_space(&ldquo;D:&rdquo;);</p>
+
+<ol>
+<li>disk_total_space()
+返回一个目录的磁盘总大小
+eg:(同上，换掉函数)</li>
+</ol>
+
+
+<p>另：如需要计算一个目录大小，可以编写一个递归函数来实现</p>
+
+<p>代码
+function dir_size($dir){
+    $dir_size = 0;
+    if($dh = @opendir($dir)){
+        while(($filename = readdir($dh)) != false){
+            if($filename !=&lsquo;.&rsquo; and $filename !=&lsquo;..&rsquo;){</p>
+
+<pre><code>            if(is_file($dir.'/'.$filename)){
+                $dir_size +=filesize($dir.'/'.$filename);
+
+            }elseif(is_dir($dir.'/'.$filename)){
+
+                $dir_size +=dir_size($dir.'/'.$filename);
+            }
+        }
+
+    }#end while
+
+}# end opendir
+
+@closedir($dh);
+return $dir_size;
+</code></pre>
+
+<p>} #end function</p>
+
+<p>五、 访问与修改时间
+1. fileatime(): 最后访问时间
+2. filectime(): 最后改变时间（任何数据的修改）
+3. filemtime(): 最后修改时间（指仅是内容修改）</p>
+
+<p>六、 文件的I/O操作</p>
+
+<ol>
+<li>fopen &ndash; 打开文件或者 URL</li>
+</ol>
+
+
+<p>mode 说明
+&lsquo;r&rsquo; 只读方式打开，将文件指针指向文件头。
+&lsquo;r+&rsquo; 读写方式打开，将文件指针指向文件头。
+&lsquo;w&rsquo; 写入方式打开，将文件指针指向文件头并将文件大小截为零。如果文件不存在则尝试创建之。
+&lsquo;w+&rsquo; 读写方式打开，将文件指针指向文件头并将文件大小截为零。如果文件不存在则尝试创建之。
+&lsquo;a&rsquo; 写入方式打开，将文件指针指向文件末尾。如果文件不存在则尝试创建之。
+&lsquo;a+&rsquo; 读写方式打开，将文件指针指向文件末尾。如果文件不存在则尝试创建之。
+&lsquo;x&rsquo; 创建并以写入方式打开，将文件指针指向文件头。如果文件已存在，则 fopen() 调用失败并返回 FALSE，
+&lsquo;x+&rsquo; 创建并以读写方式打开，将文件指针指向文件头。如果文件已存在，则 fopen() 调用失败并返回 FALSE
+eg:</p>
+
+<p>$handle = fopen(&ldquo;/home/rasmus/file.txt&rdquo;, &ldquo;r&rdquo;);#p#副标题#e#
+ 2. file &ndash; 把整个文件读入一个数组中(此函数是很有用的)</p>
+
+<p>和 file_get_contents() 一样，只除了 file() 将文件作为一个数组返回。数组中的每个单元都是文件中相应的一行，包括换行符在内。如果失败 file() 返回 FALSE。
+eg:</p>
+
+<p>代码
+$lines = file(&lsquo;<a href="http://www.example.com/">http://www.example.com/</a>&rsquo;);
+// 在数组中循环，显示 HTML 的源文件并加上行号。
+foreach ($lines as $line_num => $line) {
+    echo &ldquo;Line #<b>{$line_num}</b> : &rdquo; . htmlspecialchars($line) . &ldquo;<br />\n&rdquo;;
+}
+// 另一个例子将 web 页面读入字符串。参见 file_get_contents()。
+$html = implode(&lsquo;&rsquo;, file (&lsquo;<a href="http://www.example.com/">http://www.example.com/</a>&rsquo;));
+3. fgets &ndash; 从文件指针中读取一行</p>
+
+<p>从 handle 指向的文件中读取一行并返回长度最多为 length - 1 字节的字符串。碰到换行符（包括在返回值中）、EOF 或者已经读取了 length - 1 字节后停止（看先碰到那一种情况）。如果没有指定 length，则默认为 1K，或者说 1024 字节。
+eg:</p>
+
+<p>$handle = @fopen(&ldquo;/tmp/inputfile.txt&rdquo;, &ldquo;r&rdquo;);
+if ($handle) {
+    while (!feof($handle)) {
+        $buffer = fgets($handle, 4096);
+        echo $buffer;
+    }
+    fclose($handle);
+}
+ 4. fgetss &ndash; 从文件指针中读取一行并过滤掉 HTML 标记</p>
+
+<p>和 fgets() 相同，只除了 fgetss 尝试从读取的文本中去掉任何 HTML 和 PHP 标记。</p>
+
+<p>   可以用可选的第三个参数指定哪些标记不被去掉</p>
+
+<p>   另：对的目录的操作：
+1. opendir &ndash; 打开目录句柄，打开一个目录句柄，可用于之后的 closedir()，readdir() 和 rewinddir() 调用中。
+2. readdir &ndash; 从目录句柄中读取条目，返回目录中下一个文件的文件名。文件名以在文件系统中的排序返回。
+eg:</p>
+
+<p>代码
+// 注意在 4.0.0-RC2 之前不存在 !== 运算符</p>
+
+<p>if ($handle = opendir(&lsquo;/path/to/files&rsquo;)) {
+    echo &ldquo;Directory handle: $handle\n&rdquo;;
+    echo &ldquo;Files:\n&rdquo;;</p>
+
+<pre><code>while (false !== ($file = readdir($handle))) {
+    echo "$file\n";
+}
+
+while ($file = readdir($handle)) {
+    echo "$file\n";
+}
+ closedir($handle);
+</code></pre>
+
+<p>}
+3. scandir &ndash; 列出指定路径中的文件和目录(很有用),返回一个 array，包含有 directory 中的文件和目录。
+默认的排序顺序是按字母升序排列。如果使用了可选参数 sorting_order（设为 1），则排序顺序是按字母降序排列。
+eg:</p>
+
+<p>$dir    = &lsquo;/tmp&rsquo;;
+$files1 = scandir($dir);
+$files2 = scandir($dir, 1);</p>
+
+<p>print_r($files1);
+print_r($files2); <br/>
+另外注：</p>
+
+<p>七、 对文件属性的操作（操作系统环境不同，可能有所不一样，这点要注意）</p>
+
+<pre><code>1文件是否可读：
+
+   boolis_readable ( string filename )
+
+     如果由 filename 指定的文件或目录存在并且可读则返回 TRUE。
+
+    记住 PHP 也许只能以运行 webserver 的用户名（通常为 'nobody'）来访问文件。不计入安全模式的限制。
+
+2 文件是否可写
+
+     bool is_writable ( string filename )
+
+    如果文件存在并且可写则返回 TRUE。filename 参数可以是一个允许进行是否可写检查的目录名。
+
+     记住 PHP 也许只能以运行 webserver 的用户名（通常为 'nobody'）来访问文件。不计入安全模式的限制
+</code></pre>
+
+<p>   3  检查文件是否存在</p>
+
+<pre><code>boolfile_exists ( string filename )
+
+  如果由 filename 指定的文件或目录存在则返回 TRUE，否则返回 FALSE
+</code></pre>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[【转】php的数组各种用法(上)]]></title>
@@ -774,209 +1017,118 @@ array_walk(&amp;$array, 'my_multiply', 3);
     <content type="html"><![CDATA[<h5>linux下thinkphp的Nginx配置文件(亲测有效)</h5>
 
 <p>一个配置文件，完美支持普通,兼容,pathinfo,rewrite4种url模式，常见的静态文件404时也不会再去跑一遍fastcgi浪费资源。
-```
-server {
-    listen       80;
-    server_name  thinkphp.lo;
-    root /var/www;
-    index  index.html index.htm index.php;</p>
-
-<pre><code>error_page  404              /404.html;
-location = /404.html {
-    return 404 'Sorry, File not Found!';
-}
-error_page  500 502 503 504  /50x.html;
-location = /50x.html {
-    root   /usr/share/nginx/html; # windows用户替换这个目录
-}
-
-location / {
-    try_files $uri @rewrite;
-}
-
-location @rewrite {
-    set $static 0;
-    if  ($uri ~ \.(css|js|jpg|jpeg|png|gif|ico|woff|eot|svg|css\.map|min\.map)$) {
-        set $static 1;
-    }
-
-    if ($static = 0) {
-        rewrite ^/(.*)$ /index.php?s=/$1;
-    }
-
-}
-
-location ~ /Uploads/.*\.php$ {
-    deny all;
-}
-
-location ~ \.php/ {
-   if ($request_uri ~ ^(.+\.php)(/.+?)($|\?)) { }
-   fastcgi_pass 127.0.0.1:9000;
-   include fastcgi_params;
-   fastcgi_param SCRIPT_NAME     $1;
-   fastcgi_param PATH_INFO       $2;
-   fastcgi_param SCRIPT_FILENAME $document_root$1;
-}
-
-location ~ \.php$ {
-    fastcgi_pass 127.0.0.1:9000;
-    fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
-    include fastcgi_params;
-}
-
-location ~ /\.ht {
-    deny  all;
-}
-</code></pre>
-
-<p>}
-```</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[在Centos6.5下搭建LNMP的方法]]></title>
-    <link href="http://hunter222.github.io/blog/2016/08/31/centos-LNMP/"/>
-    <updated>2016-08-31T17:19:26+08:00</updated>
-    <id>http://hunter222.github.io/blog/2016/08/31/centos-LNMP</id>
-    <content type="html"><![CDATA[<h5>在Centos6.5下搭建LNMP的方法</h5>
-
-<p>1：查看环境
-<code>
-[root@10-4-14-168 html]# cat /etc/redhat-release
-CentOS release 6.5 (Final)
-</code>
-2：关掉防火墙
-<code>
-[root@10-4-14-168 html]# chkconfig iptables off
-</code>
-3：配置CentOS 6.0 第三方yum源（CentOS默认的标准源里没有nginx软件包）
-```</p>
-
-<h1>wget <a href="http://www.atomicorp.com/installers/atomic">http://www.atomicorp.com/installers/atomic</a></h1>
-
-<h1>sh ./atomic</h1>
-
-<h1>yum check-update</h1>
-
-<pre><code>4：安装开发包和库文件　(安装下面四个)
-</code></pre>
-
-<h1>yum -y install ntp make openssl openssl-devel pcre pcre-devel libpng</h1>
-
-<p>libpng-devel libjpeg-6b libjpeg-devel-6b freetype freetype-devel gd gd-devel zlib zlib-devel</p>
-
-<p>gcc gcc-c++ libXpm libXpm-devel ncurses ncurses-devel libmcrypt libmcrypt-devel libxml2</p>
-
-<p>libxml2-devel imake autoconf automake screen sysstat compat-libstdc++-33 curl curl-devel
-<code>
-5：卸载已安装的apache、mysql、php
-</code></p>
-
-<h1>yum remove httpd</h1>
-
-<h1>yum remove mysql</h1>
-
-<h1>yum remove php</h1>
-
-<pre><code>6：安装nginx
-</code></pre>
-
-<h1>yum install nginx</h1>
-
-<h1>service nginx start</h1>
-
-<h1>chkconfig &ndash;levels 235 nginx on</h1>
-
-<p>//设2、3、5级别开机启动
-<code>
-7：安装mysql
-</code></p>
-
-<h1>yum install mysql mysql-server mysql-devel</h1>
-
-<h1>service mysqld start</h1>
-
-<h1>chkconfig &ndash;levels 235 mysqld on</h1>
-
-<p>登陆MySQL删除空用户，修改root密码
-mysql>select user,host,password from mysql.user;</p>
-
-<p>mysql>drop user &lsquo;&rsquo;@localhost;</p>
-
-<p>mysql>update mysql.user set password = PASSWORD(&lsquo;*********&rsquo;) where user=&lsquo;root&rsquo;;</p>
-
-<p>mysql>flush privileges;
-<code>
-8：安装php
-</code></p>
-
-<h1>yum install php lighttpd-fastcgi php-cli php-mysql php-gd php-imap php-ldap</h1>
-
-<p>php-odbc php-pear php-xml php-xmlrpc php-mbstring php-mcrypt php-mssql php-snmp php-soap
-//安装php和所需组件使PHP支持MySQL、FastCGI模式</p>
-
-<h1>yum install  php-tidy php-common php-devel php-fpm php-mysql</h1>
-
-<h1>service php-fpm start</h1>
-
-<h1>chkconfig &ndash;levels 235 php-fpm on</h1>
-
-<pre><code>9：配置nginx支持php
-</code></pre>
-
-<h1>mv /etc/nginx/nginx.conf /etc/nginx/nginx.confbak</h1>
-
-<p>//将配置文件改为备份文件</p>
-
-<h1>cp /etc/nginx/nginx.conf.default /etc/nginx/nginx.conf</h1>
-
-<p>//由于原配置文件要自己去写因此可以使用默认的配置文件作为配置文件</p>
-
-<p>//修改nginx配置文件，添加fastcgi支持</p>
-
-<h1>vi /etc/nginx/nginx.conf</h1>
-
-<p>index index.php index.html index.htm;
-//加入index.php</p>
-
-<p>location ~ .php$ {
-            root           /usr/share/nginx/html;
-            fastcgi_pass   127.0.0.1:9000;
-            fastcgi_index  index.php;
-            fastcgi_param  SCRIPT_FILENAME  /usr/share/nginx/html$fastcgi_script_name;
-            include        fastcgi_params;
-        }
-//将以上代码注释去掉，并修改成nginx默认路径
-<code>
-10：配置php
-</code>
-//编辑文件php.ini，在文件末尾添加cgi.fix_pathinfo = 1
-[root@CentOS ~]# vi /etc/php.ini
-<code>
-11：重启nginx php-fpm
-</code></p>
-
-<h1>service nginx restart</h1>
-
-<h1>service php-fpm restart</h1>
-
-<pre><code class="　　">12：建立info.php文件
-</code></pre>
-
-<h1>vi /usr/share/nginx/html/info.php</h1>
-
-<p>&lt;?php
-   phpinfo();
-?>
-<code>
-13：测试nginx是否解析php
-</code>
-本地浏览器输入：192.168.12.103/info.php
-显示php界面  环境搭建成功
-```
-注：原文参考：<a href="http://www.cnblogs.com/xiaoit/p/3991037.html">http://www.cnblogs.com/xiaoit/p/3991037.html</a></p>
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+<span class='line-number'>53</span>
+<span class='line-number'>54</span>
+<span class='line-number'>55</span>
+<span class='line-number'>56</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>server {
+</span><span class='line'>    listen       80;
+</span><span class='line'>    server_name  thinkphp.lo;
+</span><span class='line'>    root /var/www;
+</span><span class='line'>    index  index.html index.htm index.php;&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;pre&gt;&lt;code&gt;error_page  404              /404.html;
+</span><span class='line'>location = /404.html {
+</span><span class='line'>    return 404 'Sorry, File not Found!';
+</span><span class='line'>}
+</span><span class='line'>error_page  500 502 503 504  /50x.html;
+</span><span class='line'>location = /50x.html {
+</span><span class='line'>    root   /usr/share/nginx/html; # windows用户替换这个目录
+</span><span class='line'>}
+</span><span class='line'>
+</span><span class='line'>location / {
+</span><span class='line'>    try_files $uri @rewrite;
+</span><span class='line'>}
+</span><span class='line'>
+</span><span class='line'>location @rewrite {
+</span><span class='line'>    set $static 0;
+</span><span class='line'>    if  ($uri ~ \.(css|js|jpg|jpeg|png|gif|ico|woff|eot|svg|css\.map|min\.map)$) {
+</span><span class='line'>        set $static 1;
+</span><span class='line'>    }
+</span><span class='line'>
+</span><span class='line'>    if ($static = 0) {
+</span><span class='line'>        rewrite ^/(.*)$ /index.php?s=/$1;
+</span><span class='line'>    }
+</span><span class='line'>
+</span><span class='line'>}
+</span><span class='line'>
+</span><span class='line'>location ~ /Uploads/.*\.php$ {
+</span><span class='line'>    deny all;
+</span><span class='line'>}
+</span><span class='line'>
+</span><span class='line'>location ~ \.php/ {
+</span><span class='line'>   if ($request_uri ~ ^(.+\.php)(/.+?)($|\?)) { }
+</span><span class='line'>   fastcgi_pass 127.0.0.1:9000;
+</span><span class='line'>   include fastcgi_params;
+</span><span class='line'>   fastcgi_param SCRIPT_NAME     $1;
+</span><span class='line'>   fastcgi_param PATH_INFO       $2;
+</span><span class='line'>   fastcgi_param SCRIPT_FILENAME $document_root$1;
+</span><span class='line'>}
+</span><span class='line'>
+</span><span class='line'>location ~ \.php$ {
+</span><span class='line'>    fastcgi_pass 127.0.0.1:9000;
+</span><span class='line'>    fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+</span><span class='line'>    include fastcgi_params;
+</span><span class='line'>}
+</span><span class='line'>
+</span><span class='line'>location ~ /\.ht {
+</span><span class='line'>    deny  all;
+</span><span class='line'>}
+</span><span class='line'>&lt;/code&gt;&lt;/pre&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;}</span></code></pre></td></tr></table></div></figure></p>
 ]]></content>
   </entry>
   

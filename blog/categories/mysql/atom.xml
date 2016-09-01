@@ -4,10 +4,10 @@
   <title><![CDATA[Category: Mysql | 小黄鸡]]></title>
   <link href="http://hunter222.github.io/blog/categories/mysql/atom.xml" rel="self"/>
   <link href="http://hunter222.github.io/"/>
-  <updated>2016-08-31T21:09:52+08:00</updated>
+  <updated>2016-09-01T16:07:29+08:00</updated>
   <id>http://hunter222.github.io/</id>
   <author>
-    <name><![CDATA[小黄鸡]]></name>
+    <name><![CDATA[chenjingxiu]]></name>
     
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
@@ -33,35 +33,60 @@ SHOW CREARTE TABLE 表名 \G
 ALTER TABLE 旧表名 RENAME (TO) 新表名
 </code>
 修改字段的数据类型
-```
-ALTER TABLE 表名 MODIFY 属性名 数据类型;</p>
-
-<p>eg：ALTER TABLE user MODIFY name varchar(30);
-<code>
-修改字段名(属性名)
-</code>
-ALTER TABLE 表名 CHANGE 旧属性名 新属性名 新数据类型;
-<code>
-增加字段（属性）
-</code>
-ALTER TABLE  表名 ADD 属性名1 数据类型【完整性约束条件】[FIRST] AFTER 属性名2
-<code>
-删除字段（属性）
-</code>
-ALTER TABLE 表名 DROP 属性名;
-<code>
-修改字段的排列位置
-</code>
-ALTER TABLE 表名 MODIFY 属性名1 数据类型 [FIRST] AFTER 属性名2;
-<code>
-更改表的存储引擎
-</code>
-ALTER TABLE 表名 engine=存储引擎名;
-<code>
-删除表的外键约束
-</code>
-ALTER TABLE 表名 DROP FOREIGN KEY 外键别名;
-```
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>ALTER TABLE 表名 MODIFY 属性名 数据类型;&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;eg：ALTER TABLE user MODIFY name varchar(30);
+</span><span class='line'>&lt;code&gt;
+</span><span class='line'>修改字段名(属性名)
+</span><span class='line'>&lt;/code&gt;
+</span><span class='line'>ALTER TABLE 表名 CHANGE 旧属性名 新属性名 新数据类型;
+</span><span class='line'>&lt;code&gt;
+</span><span class='line'>增加字段（属性）
+</span><span class='line'>&lt;/code&gt;
+</span><span class='line'>ALTER TABLE  表名 ADD 属性名1 数据类型【完整性约束条件】[FIRST] AFTER 属性名2
+</span><span class='line'>&lt;code&gt;
+</span><span class='line'>删除字段（属性）
+</span><span class='line'>&lt;/code&gt;
+</span><span class='line'>ALTER TABLE 表名 DROP 属性名;
+</span><span class='line'>&lt;code&gt;
+</span><span class='line'>修改字段的排列位置
+</span><span class='line'>&lt;/code&gt;
+</span><span class='line'>ALTER TABLE 表名 MODIFY 属性名1 数据类型 [FIRST] AFTER 属性名2;
+</span><span class='line'>&lt;code&gt;
+</span><span class='line'>更改表的存储引擎
+</span><span class='line'>&lt;/code&gt;
+</span><span class='line'>ALTER TABLE 表名 engine=存储引擎名;
+</span><span class='line'>&lt;code&gt;
+</span><span class='line'>删除表的外键约束
+</span><span class='line'>&lt;/code&gt;
+</span><span class='line'>ALTER TABLE 表名 DROP FOREIGN KEY 外键别名;</span></code></pre></td></tr></table></div></figure>
 索引的优点：可以提高检索数据的速度</p>
 
 <p>缺点：创建和维护索引需要耗费时间，占用物理空间，</p>
@@ -79,67 +104,124 @@ ALTER TABLE 表名 ADD [UNIQUE | FULLTEXT | SPATIAL] INDEX 索引名(属性名[(
 DROP INDEX 索引名 ON 表名
 </code>
 创建视图的语法
-```
-CREARTE [ALGORITHM = { UNDEFINED | MERGE | TEMPTABLE}] VIEW  视图名 [(属性名字)] AS SELECT  语句</p>
-
-<p>[WITH [CASCADED | LOCAL] CHECK OPTION];
-<code>
-查看视图
-</code>
-DESC 视图名</p>
-
-<p>SHOW TABLES STATUS 查看视图基本信息</p>
-
-<p>SHOW TABLES STATUS LIKE ‘视图名’</p>
-
-<p>SHOW CREARTE VIEW 查看视图详细信息</p>
-
-<p>SHOW CREARTE VIEW  视图;
-<code>
-修改视图
-</code>
-CREARTE OR REPLACE [ALGORITHM = { UNDEFINED | MERGE | TEMPTABLE}] VIEW  视图名 [(属性名字)] AS SELECT  语句</p>
-
-<p>[WITH [CASCADED | LOCAL] CHECK OPTION];</p>
-
-<p>ALTER [ALGORITHM = { UNDEFINED | MERGE | TEMPTABLE}] VIEW  视图名 [(属性名字)] AS SELECT  语句</p>
-
-<p>[WITH [CASCADED | LOCAL] CHECK OPTION];
-<code>
-更新视图
-</code>
-UPDATE 视图 SET 属性名；
-<code>
-删除视图
-</code>
-DROP VIEW [IF EXISTS] 视图名列表 [RESTRICT|CASCADE]
-<code>
-创建只有一种执行语句的触发器的形式如下：
-</code>
-CREARTE TRIGGER 触发器名 BEFORE | AFTER 触发事件 ON 表名</p>
-
-<p>FOR EACH ROW 执行语句
-<code>
-创建有多个执行语句的触发器的形式：
-</code>
-CREARTE TRIGGER 触发器名 BEFORE | AFTER 触发事件 ON 表名</p>
-
-<p>FOR EACH ROW</p>
-
-<p>BEGINE</p>
-
-<p>执行语句列表</p>
-
-<p>END
-<code>
-查看触发器
-</code>
-SHOW TRIGGER 触发器名
-<code>
-删除触发器
-</code>
-DROP TRIGGER 触发器名
-```</p>
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+<span class='line-number'>53</span>
+<span class='line-number'>54</span>
+<span class='line-number'>55</span>
+<span class='line-number'>56</span>
+<span class='line-number'>57</span>
+<span class='line-number'>58</span>
+<span class='line-number'>59</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>CREARTE [ALGORITHM = { UNDEFINED | MERGE | TEMPTABLE}] VIEW  视图名 [(属性名字)] AS SELECT  语句&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;[WITH [CASCADED | LOCAL] CHECK OPTION];
+</span><span class='line'>&lt;code&gt;
+</span><span class='line'>查看视图
+</span><span class='line'>&lt;/code&gt;
+</span><span class='line'>DESC 视图名&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;SHOW TABLES STATUS 查看视图基本信息&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;SHOW TABLES STATUS LIKE ‘视图名’&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;SHOW CREARTE VIEW 查看视图详细信息&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;SHOW CREARTE VIEW  视图;
+</span><span class='line'>&lt;code&gt;
+</span><span class='line'>修改视图
+</span><span class='line'>&lt;/code&gt;
+</span><span class='line'>CREARTE OR REPLACE [ALGORITHM = { UNDEFINED | MERGE | TEMPTABLE}] VIEW  视图名 [(属性名字)] AS SELECT  语句&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;[WITH [CASCADED | LOCAL] CHECK OPTION];&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;ALTER [ALGORITHM = { UNDEFINED | MERGE | TEMPTABLE}] VIEW  视图名 [(属性名字)] AS SELECT  语句&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;[WITH [CASCADED | LOCAL] CHECK OPTION];
+</span><span class='line'>&lt;code&gt;
+</span><span class='line'>更新视图
+</span><span class='line'>&lt;/code&gt;
+</span><span class='line'>UPDATE 视图 SET 属性名；
+</span><span class='line'>&lt;code&gt;
+</span><span class='line'>删除视图
+</span><span class='line'>&lt;/code&gt;
+</span><span class='line'>DROP VIEW [IF EXISTS] 视图名列表 [RESTRICT|CASCADE]
+</span><span class='line'>&lt;code&gt;
+</span><span class='line'>创建只有一种执行语句的触发器的形式如下：
+</span><span class='line'>&lt;/code&gt;
+</span><span class='line'>CREARTE TRIGGER 触发器名 BEFORE | AFTER 触发事件 ON 表名&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;FOR EACH ROW 执行语句
+</span><span class='line'>&lt;code&gt;
+</span><span class='line'>创建有多个执行语句的触发器的形式：
+</span><span class='line'>&lt;/code&gt;
+</span><span class='line'>CREARTE TRIGGER 触发器名 BEFORE | AFTER 触发事件 ON 表名&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;FOR EACH ROW&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;BEGINE&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;执行语句列表&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;END
+</span><span class='line'>&lt;code&gt;
+</span><span class='line'>查看触发器
+</span><span class='line'>&lt;/code&gt;
+</span><span class='line'>SHOW TRIGGER 触发器名
+</span><span class='line'>&lt;code&gt;
+</span><span class='line'>删除触发器
+</span><span class='line'>&lt;/code&gt;
+</span><span class='line'>DROP TRIGGER 触发器名</span></code></pre></td></tr></table></div></figure></p>
 
 <h4>附加：</h4>
 

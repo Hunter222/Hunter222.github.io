@@ -6,10 +6,11 @@
 <head>
   <meta charset="utf-8">
   <title>小黄鸡</title>
-  <meta name="author" content="小黄鸡">
+  <meta name="author" content="chenjingxiu">
 
   
-  <meta name="description" content="Linux的目录结构： /bin bin是Binary的缩写。这个目录存放着最经常使用的命令。 /boot这里存放的是启动Linux时使用的一些核心文件，包括一些连接文件以及镜像文件。 /dev dev是Device(设备)的缩写。该目录下存放的是Linux的外部设备， &hellip;">
+  <meta name="description" content="一 、解析路径： 1 获得文件名: basename(); 给出一个包含有指向一个文件的全路径的字符串，本函数返回基本的文件名。如果文件名是以 suffix 结束的，那这一部分也会被去掉。
+eg: $path = &ldquo;/home/httpd/html/index.php&rdquo &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -48,7 +49,7 @@
   
 </ul>
   
-<form action="https://www.google.com/search" method="get">
+<form action="https://www.baidu.com" method="get">
   <fieldset role="search">
     <input type="hidden" name="sitesearch" value="hunter222.github.io">
     <input class="search" type="text" name="q" results="0" placeholder="Search"/>
@@ -58,8 +59,13 @@
 <ul class="main-navigation">
   <li><a href="/">Blog</a></li>
   <li><a href="/blog/archives">Archives</a></li>
-  <li><a href="/category">Category</a></li>
-  <li><a href="/aboutme">AboutMe</a></li>
+  <li><a href="/blog/categories/php">PHP</a></li>
+  <li><a href="/blog/categories/mysql">Mysql</a></li>
+  <li><a href="/blog/categories/html">HTML</a></li>
+  <li><a href="/blog/categories/javascritp">Javascritp</a></li>
+  <li><a href="/blog/categories/linux">Linux</a></li>
+  <li><a href="/blog/categories/frame">Frame</a></li>
+  <li><a href="/blog/categories/other">Other</a></li>
 </ul>
 
 </nav>
@@ -67,6 +73,269 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2016/08/31/php-files/">关于php文件操作示例</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2016-08-31T18:19:32+08:00'><span class='date'><span class='date-month'>Aug</span> <span class='date-day'>31</span><span class='date-suffix'>st</span>, <span class='date-year'>2016</span></span> <span class='time'>6:19 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h6>一 、解析路径：</h6>
+
+<p>1 获得文件名:</p>
+
+<p>basename();</p>
+
+<p>给出一个包含有指向一个文件的全路径的字符串，本函数返回基本的文件名。如果文件名是以 suffix 结束的，那这一部分也会被去掉。
+eg:</p>
+
+<p>$path = &ldquo;/home/httpd/html/index.php&rdquo;;</p>
+
+<p>$file = basename($path,&ldquo;.php&rdquo;); // $file is set to &ldquo;index&rdquo;</p>
+
+<p>2 得到目录部分：</p>
+
+<p>dirname();</p>
+
+<p>给出一个包含有指向一个文件的全路径的字符串，本函数返回去掉文件名后的目录名。
+eg:</p>
+
+<p>$path = &ldquo;/etc/passwd&rdquo;;</p>
+
+<p>你$file = dirname($path); // $file is set to &ldquo;/etc&rdquo;</p>
+
+<p>3 得到路径关联数组
+pathinfo();
+得到一个指定路径中的三个部分：目录名，基本名，扩展名。
+eg:
+$pathinfo = pathinfo(&ldquo;www/test/index.html&rdquo;);
+var_dump($pathinfo);
+// $path[&lsquo;dirname&rsquo;]
+$path[&lsquo;basename&rsquo;]
+$path[&lsquo;extenssion&rsquo;]</p>
+
+<p>二、文件类型
+1. filetype();
+返回文件的类型。可能的值有 fifo，char，dir，block，link，file 和 unknown。
+eg:
+echo filetype(&lsquo;/etc/passwd&rsquo;); // file
+echo filetype(&lsquo;/etc/&rsquo;);        // dir</p>
+
+<p>三、得到给定文件有用信息数组(很有用)</p>
+
+<ol>
+<li>fstat();
+通过已打开的文件指针取得文件信息
+获取由文件指针 handle 所打开文件的统计信息。本函数和 stat() 函数相似，除了它是作用于已打开的文件指针而不是文件名。
+eg:</li>
+</ol>
+
+
+<p>// 打开文件
+$fp = fopen(&ldquo;/etc/passwd&rdquo;, &ldquo;r&rdquo;);
+// 取得统计信息
+$fstat = fstat($fp);
+// 关闭文件
+fclose($fp);
+// 只显示关联数组部分
+print_r(array_slice($fstat, 13));
+2. stat()
+获取由 filename 指定的文件的统计信息(类比fstat())#p#副标题#e#</p>
+
+<p>四、计算大小
+1. filesize()
+返回文件大小的字节数，如果出错返回 FALSE 并生成一条 E_WARNING 级的错误。
+eg:</p>
+
+<p>// 输出类似：somefile.txt: 1024 bytes
+$filename = &lsquo;somefile.txt&rsquo;;
+echo $filename . &lsquo;: &rsquo; . filesize($filename) . &lsquo; bytes&rsquo;;</p>
+
+<ol>
+<li>disk_free_space()
+获得目录所在磁盘分区的可用空间（字节单位）
+eg</li>
+</ol>
+
+
+<p>// $df 包含根目录下可用的字节数
+$df = disk_free_space(&ldquo;/&rdquo;);
+//在 Windows 下:
+disk_free_space(&ldquo;C:&rdquo;);
+disk_free_space(&ldquo;D:&rdquo;);</p>
+
+<ol>
+<li>disk_total_space()
+返回一个目录的磁盘总大小
+eg:(同上，换掉函数)</li>
+</ol>
+
+
+<p>另：如需要计算一个目录大小，可以编写一个递归函数来实现</p>
+
+<p>代码
+function dir_size($dir){
+    $dir_size = 0;
+    if($dh = @opendir($dir)){
+        while(($filename = readdir($dh)) != false){
+            if($filename !=&lsquo;.&rsquo; and $filename !=&lsquo;..&rsquo;){</p>
+
+<pre><code>            if(is_file($dir.'/'.$filename)){
+                $dir_size +=filesize($dir.'/'.$filename);
+
+            }elseif(is_dir($dir.'/'.$filename)){
+
+                $dir_size +=dir_size($dir.'/'.$filename);
+            }
+        }
+
+    }#end while
+
+}# end opendir
+
+@closedir($dh);
+return $dir_size;
+</code></pre>
+
+<p>} #end function</p>
+
+<p>五、 访问与修改时间
+1. fileatime(): 最后访问时间
+2. filectime(): 最后改变时间（任何数据的修改）
+3. filemtime(): 最后修改时间（指仅是内容修改）</p>
+
+<p>六、 文件的I/O操作</p>
+
+<ol>
+<li>fopen &ndash; 打开文件或者 URL</li>
+</ol>
+
+
+<p>mode 说明
+&lsquo;r&rsquo; 只读方式打开，将文件指针指向文件头。
+&lsquo;r+&rsquo; 读写方式打开，将文件指针指向文件头。
+&lsquo;w&rsquo; 写入方式打开，将文件指针指向文件头并将文件大小截为零。如果文件不存在则尝试创建之。
+&lsquo;w+&rsquo; 读写方式打开，将文件指针指向文件头并将文件大小截为零。如果文件不存在则尝试创建之。
+&lsquo;a&rsquo; 写入方式打开，将文件指针指向文件末尾。如果文件不存在则尝试创建之。
+&lsquo;a+&rsquo; 读写方式打开，将文件指针指向文件末尾。如果文件不存在则尝试创建之。
+&lsquo;x&rsquo; 创建并以写入方式打开，将文件指针指向文件头。如果文件已存在，则 fopen() 调用失败并返回 FALSE，
+&lsquo;x+&rsquo; 创建并以读写方式打开，将文件指针指向文件头。如果文件已存在，则 fopen() 调用失败并返回 FALSE
+eg:</p>
+
+<p>$handle = fopen(&ldquo;/home/rasmus/file.txt&rdquo;, &ldquo;r&rdquo;);#p#副标题#e#
+ 2. file &ndash; 把整个文件读入一个数组中(此函数是很有用的)</p>
+
+<p>和 file_get_contents() 一样，只除了 file() 将文件作为一个数组返回。数组中的每个单元都是文件中相应的一行，包括换行符在内。如果失败 file() 返回 FALSE。
+eg:</p>
+
+<p>代码
+$lines = file(&lsquo;<a href="http://www.example.com/">http://www.example.com/</a>&rsquo;);
+// 在数组中循环，显示 HTML 的源文件并加上行号。
+foreach ($lines as $line_num => $line) {
+    echo &ldquo;Line #<b>{$line_num}</b> : &rdquo; . htmlspecialchars($line) . &ldquo;<br />\n&rdquo;;
+}
+// 另一个例子将 web 页面读入字符串。参见 file_get_contents()。
+$html = implode(&lsquo;&rsquo;, file (&lsquo;<a href="http://www.example.com/">http://www.example.com/</a>&rsquo;));
+3. fgets &ndash; 从文件指针中读取一行</p>
+
+<p>从 handle 指向的文件中读取一行并返回长度最多为 length - 1 字节的字符串。碰到换行符（包括在返回值中）、EOF 或者已经读取了 length - 1 字节后停止（看先碰到那一种情况）。如果没有指定 length，则默认为 1K，或者说 1024 字节。
+eg:</p>
+
+<p>$handle = @fopen(&ldquo;/tmp/inputfile.txt&rdquo;, &ldquo;r&rdquo;);
+if ($handle) {
+    while (!feof($handle)) {
+        $buffer = fgets($handle, 4096);
+        echo $buffer;
+    }
+    fclose($handle);
+}
+ 4. fgetss &ndash; 从文件指针中读取一行并过滤掉 HTML 标记</p>
+
+<p>和 fgets() 相同，只除了 fgetss 尝试从读取的文本中去掉任何 HTML 和 PHP 标记。</p>
+
+<p>   可以用可选的第三个参数指定哪些标记不被去掉</p>
+
+<p>   另：对的目录的操作：
+1. opendir &ndash; 打开目录句柄，打开一个目录句柄，可用于之后的 closedir()，readdir() 和 rewinddir() 调用中。
+2. readdir &ndash; 从目录句柄中读取条目，返回目录中下一个文件的文件名。文件名以在文件系统中的排序返回。
+eg:</p>
+
+<p>代码
+// 注意在 4.0.0-RC2 之前不存在 !== 运算符</p>
+
+<p>if ($handle = opendir(&lsquo;/path/to/files&rsquo;)) {
+    echo &ldquo;Directory handle: $handle\n&rdquo;;
+    echo &ldquo;Files:\n&rdquo;;</p>
+
+<pre><code>while (false !== ($file = readdir($handle))) {
+    echo "$file\n";
+}
+
+while ($file = readdir($handle)) {
+    echo "$file\n";
+}
+ closedir($handle);
+</code></pre>
+
+<p>}
+3. scandir &ndash; 列出指定路径中的文件和目录(很有用),返回一个 array，包含有 directory 中的文件和目录。
+默认的排序顺序是按字母升序排列。如果使用了可选参数 sorting_order（设为 1），则排序顺序是按字母降序排列。
+eg:</p>
+
+<p>$dir    = &lsquo;/tmp&rsquo;;
+$files1 = scandir($dir);
+$files2 = scandir($dir, 1);</p>
+
+<p>print_r($files1);
+print_r($files2); <br/>
+另外注：</p>
+
+<p>七、 对文件属性的操作（操作系统环境不同，可能有所不一样，这点要注意）</p>
+
+<pre><code>1文件是否可读：
+
+   boolis_readable ( string filename )
+
+     如果由 filename 指定的文件或目录存在并且可读则返回 TRUE。
+
+    记住 PHP 也许只能以运行 webserver 的用户名（通常为 'nobody'）来访问文件。不计入安全模式的限制。
+
+2 文件是否可写
+
+     bool is_writable ( string filename )
+
+    如果文件存在并且可写则返回 TRUE。filename 参数可以是一个允许进行是否可写检查的目录名。
+
+     记住 PHP 也许只能以运行 webserver 的用户名（通常为 'nobody'）来访问文件。不计入安全模式的限制
+</code></pre>
+
+<p>   3  检查文件是否存在</p>
+
+<pre><code>boolfile_exists ( string filename )
+
+  如果由 filename 指定的文件或目录存在则返回 TRUE，否则返回 FALSE
+</code></pre>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -3129,432 +3398,6 @@ array_walk()函数需要三个参数。第一个是arr，也就是需要处理�
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2016/07/27/ajax-get-post/">Ajax的get和post请求方式示例</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2016-07-27T17:19:26+08:00'><span class='date'><span class='date-month'>Jul</span> <span class='date-day'>27</span><span class='date-suffix'>th</span>, <span class='date-year'>2016</span></span> <span class='time'>5:19 pm</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><h5>1.两者的不同:</h5>
-
-<p>① 给服务器传递数据量，get最多是2k
-                       post原则没有限制，php.ini对其限制为8M</p>
-
-<p>② 安全方面，post传递数据较安全</p>
-
-<p>③ 传递数据的形式不一样
-    get方式在url地址后边以请求字符串形式传递参数
-    <a href="http://%E7%BD%91%E5%9D%80/index.php?name=tom&amp;age=23&amp;addr=beijing">http://%E7%BD%91%E5%9D%80/index.php?name=tom&amp;age=23&amp;addr=beijing</a>
-    蓝色部分就是请求字符串，就是一些“名-值”对，中间使用&amp;符号连接。
-    post方式是把form表单的数据给请求出来以xml形式传递给服务器</p>
-
-<h5>2.处理特殊符号函数：</h5>
-
-<p>在浏览器的地址栏里边传递一些特殊符号信息，会被误解，例如 &amp;  =  空格  中文。</p>
-
-<p>在php里边可以函数函数 urlencode()/urldecode()对特殊符号进行编码、反编码处理
-(url_encode()可以把中文转变为浏览器可以识别的信息。转变之后的信息具体为%号后接两个十六进制数)</p>
-
-<p>在javascript里边可以通过encodeURIComponent ()对特殊符号等信息进行编码。
-经过以上红色函数编码的内容在服务器端可以正常接收，不需要反编码。</p>
-
-<h5>3.ajax总结：</h5>
-
-<p>1.ajax对象创建</p>
-
-<p> var xhr = new XMLHttpRequest();</p>
-
-<p> var xhr = new ActiveXObject(‘Msxml2.XMLHTTP.6.0’);</p>
-
-<p>2.ajax对象属性</p>
-
-<p>readyState</p>
-
-<p>responseText</p>
-
-<p>onreadystatechange</p>
-
-<p>3.ajax对象方法</p>
-
-<p>open()</p>
-
-<p>send()</p>
-
-<p>setRequestHeader()</p>
-
-<h5>4.实例代码:</h5>
-
-<p>代码（get方式）:</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-<span class='line-number'>34</span>
-<span class='line-number'>35</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"&gt;
-</span><span class='line'>&lt;html&gt;
-</span><span class='line'>    &lt;head&gt;
-</span><span class='line'>        &lt;title&gt;新建网页&lt;/title&gt;
-</span><span class='line'>        &lt;meta http-equiv="Content-Type" content="text/html; charset=utf-8" /&gt;
-</span><span class='line'>        &lt;meta name="description" content="" /&gt;
-</span><span class='line'>        &lt;meta name="keywords" content="" /&gt;
-</span><span class='line'>        &lt;script type="text/javascript"&gt;
-</span><span class='line'>        function checkname(){
-</span><span class='line'>            //ajax负责抓取用户名信息，传递给服务器进行校验
-</span><span class='line'>            //获得用户名信息
-</span><span class='line'>            var nm = document.getElementById('username').value;
-</span><span class='line'>            nm = encodeURIComponent(nm);//对浏览器容易混淆的信息进行编码处理
-</span><span class='line'>            var xhr = new XMLHttpRequest();
-</span><span class='line'>            xhr.onreadystatechange = function(){
-</span><span class='line'>                if(xhr.readyState==4){
-</span><span class='line'>                    alert(xhr.responseText);
-</span><span class='line'>                }
-</span><span class='line'>            }
-</span><span class='line'>            xhr.open('get','./04.php?name='+nm);
-</span><span class='line'>            xhr.send(null);
-</span><span class='line'>        }
-</span><span class='line'>        &lt;/script&gt;
-</span><span class='line'>        &lt;style type="text/css"&gt;
-</span><span class='line'>        &lt;/style&gt;
-</span><span class='line'>    &lt;/head&gt;
-</span><span class='line'>    &lt;body&gt;
-</span><span class='line'>        &lt;h2&gt;get方式请求&lt;/h2&gt;
-</span><span class='line'>        &lt;form method="post" action=""&gt;
-</span><span class='line'>            &lt;p&gt;用户名：&lt;input type="text" name="username" id="username" onblur="checkname()"&gt;&lt;/p&gt;
-</span><span class='line'>            &lt;p&gt;密码：&lt;input type="text" name="userpwd"&gt;&lt;/p&gt;
-</span><span class='line'>            &lt;p&gt;&lt;input type="submit" value="注册"&gt;&lt;/p&gt;
-</span><span class='line'>        &lt;/form&gt;
-</span><span class='line'>    &lt;/body&gt;
-</span><span class='line'>&lt;/html&gt;</span></code></pre></td></tr></table></div></figure>
-
-
-<p>js代码(post方式)：</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>function checkname() 
-</span><span class='line'>                  {
-</span><span class='line'>                        //ajax负责抓取用户名信息，传递给服务器进行校验
-</span><span class='line'>                        //获得用户名信息
-</span><span class='line'>                        var nm = document.getElementById('username').value;
-</span><span class='line'>                        nm = encodeURIComponent(nm);
-</span><span class='line'>                        var xhr = new XMLHttpRequest();
-</span><span class='line'>                        xhr.onreadystatechange = function () {
-</span><span class='line'>                            if (xhr.readyState == 4) {
-</span><span class='line'>                                alert(xhr.responseText);
-</span><span class='line'>                            }
-</span><span class='line'>                        }
-</span><span class='line'>                        xhr.open('post', './06.php');
-</span><span class='line'>                        //post模仿form表单把数据传递给服务器端
-</span><span class='line'>                        //form表单把数据组织为“xml格式”传递给服务器端
-</span><span class='line'>                        //把传递的数据组织为请求字符串
-</span><span class='line'>                        //以下方法设置header头信息，作用把传递的数据组织为xml格式
-</span><span class='line'>                        //(要在open()方法执行之后设置)
-</span><span class='line'>                        xhr.setRequestHeader('content-type', 'application/x-www-form-urlencoded');
-</span><span class='line'>                        var info = "name=" + nm;
-</span><span class='line'>                        xhr.send(info);
-</span><span class='line'>                   }</span></code></pre></td></tr></table></div></figure>
-
-
-<p>06.php</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;?php
-</span><span class='line'>header('Content-Type:text/html;charset=utf8');
-</span><span class='line'>$conn = mysqli_connect("localhost","root","1234567","db_liuyanben");
-</span><span class='line'>$sql=mysqli_query($conn,"select Username from tb_user where Username='".$_POST["name"]."'");
-</span><span class='line'>$sq = mysqli_fetch_array($sql, MYSQLI_BOTH);
-</span><span class='line'>if($_POST['name']==$sq['Username']){
-</span><span class='line'>    echo '正确';
-</span><span class='line'>}  else {
-</span><span class='line'>    echo '不正确';
-</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
-
-
-<hr />
-
-<p>layout: post
-title: &ldquo;ajax的无刷新分页显示&rdquo;
-date: 2016-07-27 17:19:26 +0800
-comments: true</p>
-
-<h2>categories: [js,php,ajax]</h2>
-
-<h5>1.两者的不同:</h5>
-
-<p>① 给服务器传递数据量，get最多是2k
-                       post原则没有限制，php.ini对其限制为8M</p>
-
-<p>② 安全方面，post传递数据较安全</p>
-
-<p>③ 传递数据的形式不一样
-    get方式在url地址后边以请求字符串形式传递参数
-    <a href="http://%E7%BD%91%E5%9D%80/index.php?name=tom&amp;age=23&amp;addr=beijing">http://%E7%BD%91%E5%9D%80/index.php?name=tom&amp;age=23&amp;addr=beijing</a>
-    蓝色部分就是请求字符串，就是一些“名-值”对，中间使用&amp;符号连接。
-    post方式是把form表单的数据给请求出来以xml形式传递给服务器</p>
-
-<h5>2.处理特殊符号函数：</h5>
-
-<p>在浏览器的地址栏里边传递一些特殊符号信息，会被误解，例如 &amp;  =  空格  中文。</p>
-
-<p>在php里边可以函数函数 urlencode()/urldecode()对特殊符号进行编码、反编码处理
-(url_encode()可以把中文转变为浏览器可以识别的信息。转变之后的信息具体为%号后接两个十六进制数)</p>
-
-<p>在javascript里边可以通过encodeURIComponent ()对特殊符号等信息进行编码。
-经过以上红色函数编码的内容在服务器端可以正常接收，不需要反编码。</p>
-
-<h5>3.ajax总结：</h5>
-
-<p>1.ajax对象创建</p>
-
-<p> var xhr = new XMLHttpRequest();</p>
-
-<p> var xhr = new ActiveXObject(‘Msxml2.XMLHTTP.6.0’);</p>
-
-<p>2.ajax对象属性</p>
-
-<p>readyState</p>
-
-<p>responseText</p>
-
-<p>onreadystatechange</p>
-
-<p>3.ajax对象方法</p>
-
-<p>open()</p>
-
-<p>send()</p>
-
-<p>setRequestHeader()</p>
-
-<h5>4.实例代码:</h5>
-
-<p>代码（get方式）:</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-<span class='line-number'>34</span>
-<span class='line-number'>35</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"&gt;
-</span><span class='line'>&lt;html&gt;
-</span><span class='line'>    &lt;head&gt;
-</span><span class='line'>        &lt;title&gt;新建网页&lt;/title&gt;
-</span><span class='line'>        &lt;meta http-equiv="Content-Type" content="text/html; charset=utf-8" /&gt;
-</span><span class='line'>        &lt;meta name="description" content="" /&gt;
-</span><span class='line'>        &lt;meta name="keywords" content="" /&gt;
-</span><span class='line'>        &lt;script type="text/javascript"&gt;
-</span><span class='line'>        function checkname(){
-</span><span class='line'>            //ajax负责抓取用户名信息，传递给服务器进行校验
-</span><span class='line'>            //获得用户名信息
-</span><span class='line'>            var nm = document.getElementById('username').value;
-</span><span class='line'>            nm = encodeURIComponent(nm);//对浏览器容易混淆的信息进行编码处理
-</span><span class='line'>            var xhr = new XMLHttpRequest();
-</span><span class='line'>            xhr.onreadystatechange = function(){
-</span><span class='line'>                if(xhr.readyState==4){
-</span><span class='line'>                    alert(xhr.responseText);
-</span><span class='line'>                }
-</span><span class='line'>            }
-</span><span class='line'>            xhr.open('get','./04.php?name='+nm);
-</span><span class='line'>            xhr.send(null);
-</span><span class='line'>        }
-</span><span class='line'>        &lt;/script&gt;
-</span><span class='line'>        &lt;style type="text/css"&gt;
-</span><span class='line'>        &lt;/style&gt;
-</span><span class='line'>    &lt;/head&gt;
-</span><span class='line'>    &lt;body&gt;
-</span><span class='line'>        &lt;h2&gt;get方式请求&lt;/h2&gt;
-</span><span class='line'>        &lt;form method="post" action=""&gt;
-</span><span class='line'>            &lt;p&gt;用户名：&lt;input type="text" name="username" id="username" onblur="checkname()"&gt;&lt;/p&gt;
-</span><span class='line'>            &lt;p&gt;密码：&lt;input type="text" name="userpwd"&gt;&lt;/p&gt;
-</span><span class='line'>            &lt;p&gt;&lt;input type="submit" value="注册"&gt;&lt;/p&gt;
-</span><span class='line'>        &lt;/form&gt;
-</span><span class='line'>    &lt;/body&gt;
-</span><span class='line'>&lt;/html&gt;</span></code></pre></td></tr></table></div></figure>
-
-
-<p>js代码(post方式)：</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>function checkname() 
-</span><span class='line'>                  {
-</span><span class='line'>                        //ajax负责抓取用户名信息，传递给服务器进行校验
-</span><span class='line'>                        //获得用户名信息
-</span><span class='line'>                        var nm = document.getElementById('username').value;
-</span><span class='line'>                        nm = encodeURIComponent(nm);
-</span><span class='line'>                        var xhr = new XMLHttpRequest();
-</span><span class='line'>                        xhr.onreadystatechange = function () {
-</span><span class='line'>                            if (xhr.readyState == 4) {
-</span><span class='line'>                                alert(xhr.responseText);
-</span><span class='line'>                            }
-</span><span class='line'>                        }
-</span><span class='line'>                        xhr.open('post', './06.php');
-</span><span class='line'>                        //post模仿form表单把数据传递给服务器端
-</span><span class='line'>                        //form表单把数据组织为“xml格式”传递给服务器端
-</span><span class='line'>                        //把传递的数据组织为请求字符串
-</span><span class='line'>                        //以下方法设置header头信息，作用把传递的数据组织为xml格式
-</span><span class='line'>                        //(要在open()方法执行之后设置)
-</span><span class='line'>                        xhr.setRequestHeader('content-type', 'application/x-www-form-urlencoded');
-</span><span class='line'>                        var info = "name=" + nm;
-</span><span class='line'>                        xhr.send(info);
-</span><span class='line'>                   }</span></code></pre></td></tr></table></div></figure>
-
-
-<p>06.php</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;?php
-</span><span class='line'>header('Content-Type:text/html;charset=utf8');
-</span><span class='line'>$conn = mysqli_connect("localhost","root","1234567","db_liuyanben");
-</span><span class='line'>$sql=mysqli_query($conn,"select Username from tb_user where Username='".$_POST["name"]."'");
-</span><span class='line'>$sq = mysqli_fetch_array($sql, MYSQLI_BOTH);
-</span><span class='line'>if($_POST['name']==$sq['Username']){
-</span><span class='line'>    echo '正确';
-</span><span class='line'>}  else {
-</span><span class='line'>    echo '不正确';
-</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
-
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/posts/2">&larr; Older</a>
@@ -3568,6 +3411,10 @@ comments: true</p>
     <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2016/08/31/php-files/">关于php文件操作示例</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2016/08/31/linux-base/">Linux的基础语法</a>
@@ -3585,10 +3432,6 @@ comments: true</p>
         <a href="/blog/2016/08/31/zhengzebiaodashio/">关于php的正则表达式</a>
       </li>
     
-      <li class="post">
-        <a href="/blog/2016/08/31/php-arrays2/">【转】php的数组各种用法（下）</a>
-      </li>
-    
   </ul>
 </section>
 
@@ -3602,7 +3445,7 @@ comments: true</p>
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2016 - 小黄鸡 -
+  Copyright &copy; 2016 - chenjingxiu -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 
@@ -3614,16 +3457,6 @@ comments: true</p>
 
 
 
-
-  <script type="text/javascript">
-    (function(){
-      var twitterWidgets = document.createElement('script');
-      twitterWidgets.type = 'text/javascript';
-      twitterWidgets.async = true;
-      twitterWidgets.src = '//platform.twitter.com/widgets.js';
-      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
-    })();
-  </script>
 
 
 
