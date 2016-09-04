@@ -9,7 +9,7 @@
   <meta name="author" content="chenjingxiu">
 
   
-  <meta name="description" content="MySQL的事务支持不是绑定在MySQL服务器本身，而是与存储引擎相关1.MyISAM：不支持事务，用于只读程序提高性能 2.InnoDB：支持ACID事务、行级锁、并发 3.Berkeley DB：支持事务 一个事务是一个连续的一组数据库操作，就好像它是一个单一的工作单元进行。换言之， &hellip;">
+  <meta name="description" content="redis官方提供的命令使用技巧: Redis::__construct构造函数 $redis = new Redis(); connect, open 链接redis服务 参数 host: string，服务地址 port: int,端口号 timeout: float,链接时长 (可选, &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -72,6 +72,1560 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2016/09/02/php-redis/">Redis在php中的使用方法汇总(长篇)</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2016-09-02T18:19:28+08:00'><span class='date'><span class='date-month'>Sep</span> <span class='date-day'>2</span><span class='date-suffix'>nd</span>, <span class='date-year'>2016</span></span> <span class='time'>6:19 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>redis官方提供的命令使用技巧:</p>
+
+<p>Redis::__construct构造函数</p>
+
+<p>$redis = new Redis();</p>
+
+<p>connect, open 链接redis服务</p>
+
+<p>参数</p>
+
+<p>host: string，服务地址</p>
+
+<p>port: int,端口号</p>
+
+<p>timeout: float,链接时长 (可选, 默认为 0 ，不限链接时间)</p>
+
+<p>注: 在redis.conf中也有时间，默认为300</p>
+
+<p>pconnect, popen 不会主动关闭的链接</p>
+
+<p>参考上面</p>
+
+<p>setOption 设置redis模式</p>
+
+<p>getOption 查看redis设置的模式</p>
+
+<p>ping 查看连接状态</p>
+
+<p>get 得到某个key的值（string值）</p>
+
+<p>如果该key不存在，return false</p>
+
+<p>set 写入key 和 value（string值）</p>
+
+<p>如果写入成功，return ture</p>
+
+<p>setex 带生存时间的写入值</p>
+
+<p>$redis->setex(&lsquo;key&rsquo;, 3600, &lsquo;value&rsquo;); // sets key → value, with 1h TTL.</p>
+
+<p>setnx 判断是否重复的，写入值</p>
+
+<p>$redis->setnx(&lsquo;key&rsquo;, &lsquo;value&rsquo;);</p>
+
+<p>$redis->setnx(&lsquo;key&rsquo;, &lsquo;value&rsquo;);</p>
+
+<p>delete 删除指定key的值</p>
+
+<p>返回已经删除key的个数（长整数）</p>
+
+<p>$redis->delete(&lsquo;key1&rsquo;, &lsquo;key2&rsquo;);</p>
+
+<p>$redis->delete(array(&lsquo;key3&rsquo;, &lsquo;key4&rsquo;, &lsquo;key5&rsquo;));</p>
+
+<p>ttl
+得到一个key的生存时间</p>
+
+<p>persist
+移除生存时间到期的key
+如果key到期 true 如果不到期 false</p>
+
+<p>mset （redis版本1.1以上才可以用）
+同时给多个key赋值</p>
+
+<p>$redis->mset(array(&lsquo;key0&rsquo; => &lsquo;value0&rsquo;, &lsquo;key1&rsquo; => &lsquo;value1&rsquo;));</p>
+
+<p>multi, exec, discard</p>
+
+<p>进入或者退出事务模式</p>
+
+<p>参数可选Redis::MULTI或Redis::PIPELINE. 默认是 Redis::MULTI</p>
+
+<p>Redis::MULTI：将多个操作当成一个事务执行</p>
+
+<p>Redis::PIPELINE:让（多条）执行命令简单的，更加快速的发送给服务器，但是没有任何原子性的保证
+discard:删除一个事务</p>
+
+<p>返回值</p>
+
+<p>multi()，返回一个redis对象，并进入multi-mode模式，一旦进入multi-mode模式，以后调用的所有方法都会返回相同的对象，只到exec(）方法被调用。</p>
+
+<p>watch, unwatch （代码测试后，不能达到所说的效果）</p>
+
+<p>监测一个key的值是否被其它的程序更改。如果这个key在watch 和 exec （方法）间被修改，这个 MULTI/EXEC 事务的执行将失败（return false）</p>
+
+<p>unwatch 取消被这个程序监测的所有key</p>
+
+<p>参数，一对key的列表</p>
+
+<p>$redis->watch(&lsquo;x&rsquo;);</p>
+
+<p>$ret = $redis->multi() ->incr(&lsquo;x&rsquo;) ->exec();</p>
+
+<p>subscribe *</p>
+
+<p>方法回调。注意，该方法可能在未来里发生改变</p>
+
+<p>publish *</p>
+
+<p>发表内容到某一个通道。注意，该方法可能在未来里发生改变</p>
+
+<p>exists</p>
+
+<p>判断key是否存在。存在 true 不在 false</p>
+
+<p>incr, incrBy</p>
+
+<p>key中的值进行自增1，如果填写了第二个参数，者自增第二个参数所填的值</p>
+
+<p>$redis->incr(&lsquo;key1&rsquo;);</p>
+
+<p>$redis->incrBy(&lsquo;key1&rsquo;, 10);</p>
+
+<p>decr, decrBy</p>
+
+<p>做减法，使用方法同incr</p>
+
+<p>getMultiple</p>
+
+<p>传参</p>
+
+<p>由key组成的数组</p>
+
+<p>返回参数</p>
+
+<p>如果key存在返回value，不存在返回false</p>
+
+<p>$redis->set(&lsquo;key1&rsquo;, &lsquo;value1&rsquo;); $redis->set(&lsquo;key2&rsquo;, &lsquo;value2&rsquo;); $redis->set(&lsquo;key3&rsquo;, &lsquo;value3&rsquo;); $redis->getMultiple(array(&lsquo;key1&rsquo;, &lsquo;key2&rsquo;, &lsquo;key3&rsquo;));</p>
+
+<p>$redis->lRem(&lsquo;key1&rsquo;, &lsquo;A&rsquo;, 2);</p>
+
+<p>$redis->lRange(&lsquo;key1&rsquo;, 0, -1);</p>
+
+<p>list相关操作</p>
+
+<p>lPush</p>
+
+<p>$redis->lPush(key, value);</p>
+
+<p>在名称为key的list左边（头）添加一个值为value的 元素</p>
+
+<p>rPush</p>
+
+<p>$redis->rPush(key, value);</p>
+
+<p>在名称为key的list右边（尾）添加一个值为value的 元素</p>
+
+<p>lPushx/rPushx</p>
+
+<p>$redis->lPushx(key, value);</p>
+
+<p>在名称为key的list左边(头)/右边（尾）添加一个值为value的元素,如果value已经存在，则不添加</p>
+
+<p>lPop/rPop</p>
+
+<p>$redis->lPop(&lsquo;key&rsquo;);</p>
+
+<p>输出名称为key的list左(头)起/右（尾）起的第一个元素，删除该元素</p>
+
+<p>blPop/brPop</p>
+
+<p>$redis->blPop(&lsquo;key1&rsquo;, &lsquo;key2&rsquo;, 10);</p>
+
+<p>lpop命令的block版本。即当timeout为0时，若遇到名称为key i的list不存在或该list为空，则命令结束。如果timeout>0，则遇到上述情况时，等待timeout秒，如果问题没有解决，则对keyi+1开始的list执行pop操作</p>
+
+<p>lSize</p>
+
+<p>$redis->lSize(&lsquo;key&rsquo;);</p>
+
+<p>返回名称为key的list有多少个元素</p>
+
+<p>lIndex, lGet</p>
+
+<p>$redis->lGet(&lsquo;key&rsquo;, 0);</p>
+
+<p>返回名称为key的list中index位置的元素</p>
+
+<p>lSet</p>
+
+<p>$redis->lSet(&lsquo;key&rsquo;, 0, &lsquo;X&rsquo;);</p>
+
+<p>给名称为key的list中index位置的元素赋值为value</p>
+
+<p>lRange, lGetRange</p>
+
+<p>$redis->lRange(&lsquo;key1&rsquo;, 0, -1);</p>
+
+<p>返回名称为key的list中start至end之间的元素（end为 -1 ，返回所有）</p>
+
+<p>lTrim, listTrim</p>
+
+<p>$redis->lTrim(&lsquo;key&rsquo;, start, end);</p>
+
+<p>截取名称为key的list，保留start至end之间的元素</p>
+
+<p>lRem, lRemove</p>
+
+<p>$redis->lRem(&lsquo;key&rsquo;, &lsquo;A&rsquo;, 2);</p>
+
+<p>删除count个名称为key的list中值为value的元素。count为0，删除所有值为value的元素，count>0从头至尾删除count个值为value的元素，count&lt;0从尾到头删除|count|个值为value的元素</p>
+
+<p>lInsert</p>
+
+<p>在名称为为key的list中，找到值为pivot 的value，并根据参数Redis::BEFORE | Redis::AFTER，来确定，newvalue 是放在 pivot 的前面，或者后面。如果key不存在，不会插入，如果 pivot不存在，return -1</p>
+
+<p>$redis->delete(&lsquo;key1&rsquo;); $redis->lInsert(&lsquo;key1&rsquo;, Redis::AFTER, &lsquo;A&rsquo;, &lsquo;X&rsquo;);</p>
+
+<p>$redis->lPush(&lsquo;key1&rsquo;, &lsquo;A&rsquo;); $redis->lPush(&lsquo;key1&rsquo;, &lsquo;B&rsquo;); $redis->lPush(&lsquo;key1&rsquo;, &lsquo;C&rsquo;);</p>
+
+<p>$redis->lInsert(&lsquo;key1&rsquo;, Redis::BEFORE, &lsquo;C&rsquo;, &lsquo;X&rsquo;);</p>
+
+<p>$redis->lRange(&lsquo;key1&rsquo;, 0, -1);</p>
+
+<p>$redis->lInsert(&lsquo;key1&rsquo;, Redis::AFTER, &lsquo;C&rsquo;, &lsquo;Y&rsquo;);</p>
+
+<p>$redis->lRange(&lsquo;key1&rsquo;, 0, -1);</p>
+
+<p>$redis->lInsert(&lsquo;key1&rsquo;, Redis::AFTER, &lsquo;W&rsquo;, &lsquo;value&rsquo;);</p>
+
+<p>rpoplpush</p>
+
+<p>返回并删除名称为srckey的list的尾元素，并将该元素添加到名称为dstkey的list的头部</p>
+
+<p>$redis->delete(&lsquo;x&rsquo;, &lsquo;y&rsquo;);</p>
+
+<p>$redis->lPush(&lsquo;x&rsquo;, &lsquo;abc&rsquo;); $redis->lPush(&lsquo;x&rsquo;, &lsquo;def&rsquo;); $redis->lPush(&lsquo;y&rsquo;, &lsquo;123&rsquo;);</p>
+
+<p>$redis->lPush(&lsquo;y&rsquo;, &lsquo;456&rsquo;); // move the last of x to the front of y. var_dump($redis->rpoplpush(&lsquo;x&rsquo;, &lsquo;y&rsquo;));</p>
+
+<p>var_dump($redis->lRange(&lsquo;x&rsquo;, 0, -1));</p>
+
+<p>var_dump($redis->lRange(&lsquo;y&rsquo;, 0, -1));</p>
+
+<p>string(3) &ldquo;abc&rdquo;</p>
+
+<p>array(1) { [0]=> string(3) &ldquo;def&rdquo; }</p>
+
+<p>array(3) { [0]=> string(3) &ldquo;abc&rdquo; [1]=> string(3) &ldquo;456&rdquo; [2]=> string(3) &ldquo;123&rdquo; }</p>
+
+<p>SET操作相关</p>
+
+<p>sAdd</p>
+
+<p>向名称为key的set中添加元素value,如果value存在，不写入，return false</p>
+
+<p>$redis->sAdd(key , value);</p>
+
+<p>sRem, sRemove</p>
+
+<p>删除名称为key的set中的元素value</p>
+
+<p>$redis->sAdd(&lsquo;key1&rsquo; , &lsquo;set1&rsquo;);</p>
+
+<p>$redis->sAdd(&lsquo;key1&rsquo; , &lsquo;set2&rsquo;);</p>
+
+<p>$redis->sAdd(&lsquo;key1&rsquo; , &lsquo;set3&rsquo;);</p>
+
+<p>$redis->sRem(&lsquo;key1&rsquo;, &lsquo;set2&rsquo;);</p>
+
+<p>sMove</p>
+
+<p>将value元素从名称为srckey的集合移到名称为dstkey的集合</p>
+
+<p>$redis->sMove(seckey, dstkey, value);</p>
+
+<p>sIsMember, sContains</p>
+
+<p>名称为key的集合中查找是否有value元素，有ture 没有 false</p>
+
+<p>$redis->sIsMember(key, value);</p>
+
+<p>sCard, sSize</p>
+
+<p>返回名称为key的set的元素个数</p>
+
+<p>sPop</p>
+
+<p>随机返回并删除名称为key的set中一个元素</p>
+
+<p>sRandMember</p>
+
+<p>随机返回名称为key的set中一个元素，不删除</p>
+
+<p>sInter</p>
+
+<p>求交集</p>
+
+<p>sInterStore</p>
+
+<p>求交集并将交集保存到output的集合</p>
+
+<p>$redis->sInterStore(&lsquo;output&rsquo;, &lsquo;key1&rsquo;, &lsquo;key2&rsquo;, &lsquo;key3&rsquo;)</p>
+
+<p>sUnion</p>
+
+<p>求并集</p>
+
+<p>$redis->sUnion(&lsquo;s0&rsquo;, &lsquo;s1&rsquo;, &lsquo;s2&rsquo;);</p>
+
+<p>s0,s1,s2 同时求并集</p>
+
+<p>sUnionStore</p>
+
+<p>求并集并将并集保存到output的集合</p>
+
+<p>$redis->sUnionStore(&lsquo;output&rsquo;, &lsquo;key1&rsquo;, &lsquo;key2&rsquo;, &lsquo;key3&rsquo;)；</p>
+
+<p>sDiff</p>
+
+<p>求差集</p>
+
+<p>sDiffStore</p>
+
+<p>求差集并将差集保存到output的集合</p>
+
+<p>sMembers, sGetMembers</p>
+
+<p>返回名称为key的set的所有元素</p>
+
+<p>sort</p>
+
+<p>排序，分页等</p>
+
+<p>参数</p>
+
+<p>&lsquo;by&rsquo; => &lsquo;some_pattern_*&rsquo;,</p>
+
+<p>&lsquo;limit&rsquo; => array(0, 1),</p>
+
+<p>&lsquo;get&rsquo; => &lsquo;some_other_pattern_*&rsquo; or an array of patterns,</p>
+
+<p>&lsquo;sort&rsquo; => &lsquo;asc&rsquo; or &lsquo;desc&rsquo;,</p>
+
+<p>&lsquo;alpha&rsquo; => TRUE,</p>
+
+<p>&lsquo;store&rsquo; => &lsquo;external-key&rsquo;
+例子</p>
+
+<p>$redis->delete(&rsquo;s'); $redis->sadd(&rsquo;s', 5); $redis->sadd(&rsquo;s', 4); $redis->sadd(&rsquo;s', 2); $redis->sadd(&rsquo;s', 1); $redis->sadd(&rsquo;s', 3);</p>
+
+<p>var_dump($redis->sort(&rsquo;s')); // 1,2,3,4,5</p>
+
+<p>var_dump($redis->sort(&rsquo;s', array(&lsquo;sort&rsquo; => &lsquo;desc&rsquo;))); // 5,4,3,2,1</p>
+
+<p>var_dump($redis->sort(&rsquo;s', array(&lsquo;sort&rsquo; => &lsquo;desc&rsquo;, &lsquo;store&rsquo; => &lsquo;out&rsquo;))); // (int)5</p>
+
+<p>string命令</p>
+
+<p>getSet</p>
+
+<p>返回原来key中的值，并将value写入key</p>
+
+<p>$redis->set(&lsquo;x&rsquo;, &lsquo;42&rsquo;);</p>
+
+<p>$exValue = $redis->getSet(&lsquo;x&rsquo;, &lsquo;lol&rsquo;); // return &lsquo;42&rsquo;, replaces x by &lsquo;lol&rsquo;</p>
+
+<p>$newValue = $redis->get(&lsquo;x&rsquo;)&lsquo; // return 'lol&rsquo;</p>
+
+<p>append</p>
+
+<p>string，名称为key的string的值在后面加上value</p>
+
+<p>$redis->set(&lsquo;key&rsquo;, &lsquo;value1&rsquo;);</p>
+
+<p>$redis->append(&lsquo;key&rsquo;, &lsquo;value2&rsquo;);</p>
+
+<p>$redis->get(&lsquo;key&rsquo;);</p>
+
+<p>getRange （方法不存在）</p>
+
+<p>返回名称为key的string中start至end之间的字符</p>
+
+<p>$redis->set(&lsquo;key&rsquo;, &lsquo;string value&rsquo;);</p>
+
+<p>$redis->getRange(&lsquo;key&rsquo;, 0, 5);</p>
+
+<p>$redis->getRange(&lsquo;key&rsquo;, -5, -1);</p>
+
+<p>setRange （方法不存在）</p>
+
+<p>改变key的string中start至end之间的字符为value</p>
+
+<p>$redis->set(&lsquo;key&rsquo;, &lsquo;Hello world&rsquo;);</p>
+
+<p>$redis->setRange(&lsquo;key&rsquo;, 6, &ldquo;redis&rdquo;);</p>
+
+<p>$redis->get(&lsquo;key&rsquo;);</p>
+
+<p>strlen</p>
+
+<p>得到key的string的长度</p>
+
+<p>$redis->strlen(&lsquo;key&rsquo;);</p>
+
+<p>getBit/setBit</p>
+
+<p>返回2进制信息</p>
+
+<p>zset（sorted set）操作相关</p>
+
+<p>zAdd(key, score, member)：向名称为key的zset中添加元素member，score用于排序。如果该元素已经
+存在，则根据score更新该元素的顺序。</p>
+
+<p>$redis->zAdd(&lsquo;key&rsquo;, 1, &lsquo;val1&rsquo;);</p>
+
+<p>$redis->zAdd(&lsquo;key&rsquo;, 0, &lsquo;val0&rsquo;);</p>
+
+<p>$redis->zAdd(&lsquo;key&rsquo;, 5, &lsquo;val5&rsquo;);</p>
+
+<p>$redis->zRange(&lsquo;key&rsquo;, 0, -1); // array(val0, val1, val5)</p>
+
+<p>zRange(key, start, end,withscores)：返回名称为key的zset（元素已按score从小到大排序）中的
+index从start到end的所有元素</p>
+
+<p>$redis->zAdd(&lsquo;key1&rsquo;, 0, &lsquo;val0&rsquo;);</p>
+
+<p>$redis->zAdd(&lsquo;key1&rsquo;, 2, &lsquo;val2&rsquo;);</p>
+
+<p>$redis->zAdd(&lsquo;key1&rsquo;, 10, &lsquo;val10&rsquo;);</p>
+
+<p>$redis->zRange(&lsquo;key1&rsquo;, 0, -1); // with scores $redis->zRange(&lsquo;key1&rsquo;, 0, -1, true);</p>
+
+<p>zDelete, zRem</p>
+
+<p>zRem(key, member) ：删除名称为key的zset中的元素member</p>
+
+<p>$redis->zAdd(&lsquo;key&rsquo;, 0, &lsquo;val0&rsquo;);</p>
+
+<p>$redis->zAdd(&lsquo;key&rsquo;, 2, &lsquo;val2&rsquo;);</p>
+
+<p>$redis->zAdd(&lsquo;key&rsquo;, 10, &lsquo;val10&rsquo;);</p>
+
+<p>$redis->zDelete(&lsquo;key&rsquo;, &lsquo;val2&rsquo;);</p>
+
+<p>$redis->zRange(&lsquo;key&rsquo;, 0, -1);</p>
+
+<p>zRevRange(key, start, end,withscores)：返回名称为key的zset（元素已按score从大到小排序）中
+的index从start到end的所有元素.withscores: 是否输出socre的值，默认false，不输出</p>
+
+<p>$redis->zAdd(&lsquo;key&rsquo;, 0, &lsquo;val0&rsquo;);</p>
+
+<p>$redis->zAdd(&lsquo;key&rsquo;, 2, &lsquo;val2&rsquo;);</p>
+
+<p>$redis->zAdd(&lsquo;key&rsquo;, 10, &lsquo;val10&rsquo;);</p>
+
+<p>$redis->zRevRange(&lsquo;key&rsquo;, 0, -1); // with scores $redis->zRevRange(&lsquo;key&rsquo;, 0, -1,
+true);</p>
+
+<p>zRangeByScore, zRevRangeByScore</p>
+
+<p>$redis->zRangeByScore(key, star, end, array(withscores， limit ));
+返回名称为key的zset中score >= star且score &lt;= end的所有元素</p>
+
+<p>zCount</p>
+
+<p>$redis->zCount(key, star, end);
+返回名称为key的zset中score >= star且score &lt;= end的所有元素的个数</p>
+
+<p>zRemRangeByScore, zDeleteRangeByScore</p>
+
+<p>$redis->zRemRangeByScore(&lsquo;key&rsquo;, star, end);
+删除名称为key的zset中score >= star且score &lt;= end的所有元素，返回删除个数</p>
+
+<p>zSize, zCard</p>
+
+<p>返回名称为key的zset的所有元素的个数</p>
+
+<p>zScore</p>
+
+<p>$redis->zScore(key, val2);
+返回名称为key的zset中元素val2的score</p>
+
+<p>zRank, zRevRank</p>
+
+<p>$redis->zRevRank(key, val);
+返回名称为key的zset（元素已按score从小到大排序）中val元素的rank（即index，从0开始），若没有val元素，返回“null”。zRevRank 是从大到小排序</p>
+
+<p>zIncrBy</p>
+
+<p>$redis->zIncrBy(&lsquo;key&rsquo;, increment, &lsquo;member&rsquo;);
+如果在名称为key的zset中已经存在元素member，则该元素的score增加increment；否则向集合中添加该元素，其score的值为increment</p>
+
+<p>zUnion/zInter</p>
+
+<p>参数</p>
+
+<p>keyOutput</p>
+
+<p>arrayZSetKeys</p>
+
+<p>arrayWeights</p>
+
+<p>aggregateFunction Either &ldquo;SUM&rdquo;, &ldquo;MIN&rdquo;, or &ldquo;MAX&rdquo;: defines the behaviour to use on duplicate entries during the zUnion.</p>
+
+<p>对N个zset求并集和交集，并将最后的集合保存在dstkeyN中。对于集合中每一个元素的score，在进行
+AGGREGATE运算前，都要乘以对于的WEIGHT参数。如果没有提供WEIGHT，默认为1。默认的AGGREGATE是SUM，即结果集合中元素的score是所有集合对应元素进行SUM运算的值，而MIN和MAX是指，结果集合中元素的score是所有集合对应元素中最小值和最大值。</p>
+
+<p>Hash操作</p>
+
+<p>hSet</p>
+
+<p>$redis->hSet(&lsquo;h&rsquo;, &lsquo;key1&rsquo;, &lsquo;hello&rsquo;);</p>
+
+<p>向名称为h的hash中添加元素key1—>hello</p>
+
+<p>hGet</p>
+
+<p>$redis->hGet(&lsquo;h&rsquo;, &lsquo;key1&rsquo;);
+返回名称为h的hash中key1对应的value（hello）</p>
+
+<p>hLen</p>
+
+<p>$redis->hLen(&lsquo;h&rsquo;);
+返回名称为h的hash中元素个数</p>
+
+<p>hDel</p>
+
+<p>$redis->hDel(&lsquo;h&rsquo;, &lsquo;key1&rsquo;);
+删除名称为h的hash中键为key1的域</p>
+
+<p>hKeys</p>
+
+<p>$redis->hKeys(&lsquo;h&rsquo;);
+返回名称为key的hash中所有键</p>
+
+<p>hVals</p>
+
+<p>$redis->hVals(&lsquo;h&rsquo;)
+返回名称为h的hash中所有键对应的value</p>
+
+<p>hGetAll</p>
+
+<p>$redis->hGetAll(&lsquo;h&rsquo;);
+返回名称为h的hash中所有的键（field）及其对应的value</p>
+
+<p>hExists</p>
+
+<p>$redis->hExists(&lsquo;h&rsquo;, &lsquo;a&rsquo;);
+名称为h的hash中是否存在键名字为a的域</p>
+
+<p>hIncrBy</p>
+
+<p>$redis->hIncrBy(&lsquo;h&rsquo;, &lsquo;x&rsquo;, 2);
+将名称为h的hash中x的value增加2</p>
+
+<p>hMset</p>
+
+<p>$redis->hMset(&lsquo;user:1&rsquo;, array(&lsquo;name&rsquo; => &lsquo;Joe&rsquo;, &lsquo;salary&rsquo; => 2000));
+向名称为key的hash中批量添加元素</p>
+
+<p>hMGet</p>
+
+<p>$redis->hmGet(&lsquo;h&rsquo;, array(&lsquo;field1&rsquo;, &lsquo;field2&rsquo;));
+返回名称为h的hash中field1,field2对应的value</p>
+
+<p>redis 操作相关</p>
+
+<p>flushDB
+清空当前数据库</p>
+
+<p>flushAll
+清空所有数据库</p>
+
+<p>randomKey
+随机返回key空间的一个key</p>
+
+<p>$key = $redis->randomKey();</p>
+
+<p>select</p>
+
+<p>选择一个数据库</p>
+
+<p>move</p>
+
+<p>转移一个key到另外一个数据库</p>
+
+<p>$redis->select(0); // switch to DB 0</p>
+
+<p>$redis->set(&lsquo;x&rsquo;, &lsquo;42&rsquo;); // write 42 to x</p>
+
+<p>$redis->move(&lsquo;x&rsquo;, 1); // move to DB 1</p>
+
+<p>$redis->select(1); // switch to DB 1</p>
+
+<p>$redis->get(&lsquo;x&rsquo;); // will return 42</p>
+
+<p>rename, renameKey
+给key重命名</p>
+
+<p>$redis->set(&lsquo;x&rsquo;, &lsquo;42&rsquo;);</p>
+
+<p>$redis->rename(&lsquo;x&rsquo;, &lsquo;y&rsquo;);</p>
+
+<p>$redis->get(&lsquo;y&rsquo;); // → 42</p>
+
+<p>$redis->get(&lsquo;x&rsquo;); // → <code>FALSE</code></p>
+
+<p>renameNx</p>
+
+<p>与remane类似，但是，如果重新命名的名字已经存在，不会替换成功</p>
+
+<p>setTimeout, expire</p>
+
+<p>设定一个key的活动时间（s）</p>
+
+<p>$redis->setTimeout(&lsquo;x&rsquo;, 3);</p>
+
+<p>expireAt</p>
+
+<p>key存活到一个unix时间戳时间</p>
+
+<p>$redis->expireAt(&lsquo;x&rsquo;, time() + 3);</p>
+
+<p>keys, getKeys
+返回满足给定pattern的所有key</p>
+
+<p>$keyWithUserPrefix = $redis->keys(&lsquo;user*&rsquo;);</p>
+
+<p>dbSize
+查看现在数据库有多少key</p>
+
+<p>$count = $redis->dbSize();</p>
+
+<p>auth
+密码认证</p>
+
+<p>$redis->auth(&lsquo;foobared&rsquo;);</p>
+
+<p>bgrewriteaof
+使用aof来进行数据库持久化</p>
+
+<p>$redis->bgrewriteaof();</p>
+
+<p>slaveof
+选择从服务器</p>
+
+<p>$redis->slaveof(&lsquo;10.0.1.7&rsquo;, 6379);</p>
+
+<p>save
+将数据同步保存到磁盘</p>
+
+<p>bgsave
+将数据异步保存到磁盘</p>
+
+<p>lastSave
+返回上次成功将数据保存到磁盘的Unix时戳</p>
+
+<p>info
+返回redis的版本信息等详情</p>
+
+<p>type
+返回key的类型值</p>
+
+<p>string: Redis::REDIS_STRING</p>
+
+<p>set: Redis::REDIS_SET</p>
+
+<p>list: Redis::REDIS_LIST</p>
+
+<p>zset: Redis::REDIS_ZSET</p>
+
+<p>hash: Redis::REDIS_HASH</p>
+
+<p>other: Redis::REDIS_NOT_FOUND</p>
+
+<p>示例代码：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+<span class='line-number'>53</span>
+<span class='line-number'>54</span>
+<span class='line-number'>55</span>
+<span class='line-number'>56</span>
+<span class='line-number'>57</span>
+<span class='line-number'>58</span>
+<span class='line-number'>59</span>
+<span class='line-number'>60</span>
+<span class='line-number'>61</span>
+<span class='line-number'>62</span>
+<span class='line-number'>63</span>
+<span class='line-number'>64</span>
+<span class='line-number'>65</span>
+<span class='line-number'>66</span>
+<span class='line-number'>67</span>
+<span class='line-number'>68</span>
+<span class='line-number'>69</span>
+<span class='line-number'>70</span>
+<span class='line-number'>71</span>
+<span class='line-number'>72</span>
+<span class='line-number'>73</span>
+<span class='line-number'>74</span>
+<span class='line-number'>75</span>
+<span class='line-number'>76</span>
+<span class='line-number'>77</span>
+<span class='line-number'>78</span>
+<span class='line-number'>79</span>
+<span class='line-number'>80</span>
+<span class='line-number'>81</span>
+<span class='line-number'>82</span>
+<span class='line-number'>83</span>
+<span class='line-number'>84</span>
+<span class='line-number'>85</span>
+<span class='line-number'>86</span>
+<span class='line-number'>87</span>
+<span class='line-number'>88</span>
+<span class='line-number'>89</span>
+<span class='line-number'>90</span>
+<span class='line-number'>91</span>
+<span class='line-number'>92</span>
+<span class='line-number'>93</span>
+<span class='line-number'>94</span>
+<span class='line-number'>95</span>
+<span class='line-number'>96</span>
+<span class='line-number'>97</span>
+<span class='line-number'>98</span>
+<span class='line-number'>99</span>
+<span class='line-number'>100</span>
+<span class='line-number'>101</span>
+<span class='line-number'>102</span>
+<span class='line-number'>103</span>
+<span class='line-number'>104</span>
+<span class='line-number'>105</span>
+<span class='line-number'>106</span>
+<span class='line-number'>107</span>
+<span class='line-number'>108</span>
+<span class='line-number'>109</span>
+<span class='line-number'>110</span>
+<span class='line-number'>111</span>
+<span class='line-number'>112</span>
+<span class='line-number'>113</span>
+<span class='line-number'>114</span>
+<span class='line-number'>115</span>
+<span class='line-number'>116</span>
+<span class='line-number'>117</span>
+<span class='line-number'>118</span>
+<span class='line-number'>119</span>
+<span class='line-number'>120</span>
+<span class='line-number'>121</span>
+<span class='line-number'>122</span>
+<span class='line-number'>123</span>
+<span class='line-number'>124</span>
+<span class='line-number'>125</span>
+<span class='line-number'>126</span>
+<span class='line-number'>127</span>
+<span class='line-number'>128</span>
+<span class='line-number'>129</span>
+<span class='line-number'>130</span>
+<span class='line-number'>131</span>
+<span class='line-number'>132</span>
+<span class='line-number'>133</span>
+<span class='line-number'>134</span>
+<span class='line-number'>135</span>
+<span class='line-number'>136</span>
+<span class='line-number'>137</span>
+<span class='line-number'>138</span>
+<span class='line-number'>139</span>
+<span class='line-number'>140</span>
+<span class='line-number'>141</span>
+<span class='line-number'>142</span>
+<span class='line-number'>143</span>
+<span class='line-number'>144</span>
+<span class='line-number'>145</span>
+<span class='line-number'>146</span>
+<span class='line-number'>147</span>
+<span class='line-number'>148</span>
+<span class='line-number'>149</span>
+<span class='line-number'>150</span>
+<span class='line-number'>151</span>
+<span class='line-number'>152</span>
+<span class='line-number'>153</span>
+<span class='line-number'>154</span>
+<span class='line-number'>155</span>
+<span class='line-number'>156</span>
+<span class='line-number'>157</span>
+<span class='line-number'>158</span>
+<span class='line-number'>159</span>
+<span class='line-number'>160</span>
+<span class='line-number'>161</span>
+<span class='line-number'>162</span>
+<span class='line-number'>163</span>
+<span class='line-number'>164</span>
+<span class='line-number'>165</span>
+<span class='line-number'>166</span>
+<span class='line-number'>167</span>
+<span class='line-number'>168</span>
+<span class='line-number'>169</span>
+<span class='line-number'>170</span>
+<span class='line-number'>171</span>
+<span class='line-number'>172</span>
+<span class='line-number'>173</span>
+<span class='line-number'>174</span>
+<span class='line-number'>175</span>
+<span class='line-number'>176</span>
+<span class='line-number'>177</span>
+<span class='line-number'>178</span>
+<span class='line-number'>179</span>
+<span class='line-number'>180</span>
+<span class='line-number'>181</span>
+<span class='line-number'>182</span>
+<span class='line-number'>183</span>
+<span class='line-number'>184</span>
+<span class='line-number'>185</span>
+<span class='line-number'>186</span>
+<span class='line-number'>187</span>
+<span class='line-number'>188</span>
+<span class='line-number'>189</span>
+<span class='line-number'>190</span>
+<span class='line-number'>191</span>
+<span class='line-number'>192</span>
+<span class='line-number'>193</span>
+<span class='line-number'>194</span>
+<span class='line-number'>195</span>
+<span class='line-number'>196</span>
+<span class='line-number'>197</span>
+<span class='line-number'>198</span>
+<span class='line-number'>199</span>
+<span class='line-number'>200</span>
+<span class='line-number'>201</span>
+<span class='line-number'>202</span>
+<span class='line-number'>203</span>
+<span class='line-number'>204</span>
+<span class='line-number'>205</span>
+<span class='line-number'>206</span>
+<span class='line-number'>207</span>
+<span class='line-number'>208</span>
+<span class='line-number'>209</span>
+<span class='line-number'>210</span>
+<span class='line-number'>211</span>
+<span class='line-number'>212</span>
+<span class='line-number'>213</span>
+<span class='line-number'>214</span>
+<span class='line-number'>215</span>
+<span class='line-number'>216</span>
+<span class='line-number'>217</span>
+<span class='line-number'>218</span>
+<span class='line-number'>219</span>
+<span class='line-number'>220</span>
+<span class='line-number'>221</span>
+<span class='line-number'>222</span>
+<span class='line-number'>223</span>
+<span class='line-number'>224</span>
+<span class='line-number'>225</span>
+<span class='line-number'>226</span>
+<span class='line-number'>227</span>
+<span class='line-number'>228</span>
+<span class='line-number'>229</span>
+<span class='line-number'>230</span>
+<span class='line-number'>231</span>
+<span class='line-number'>232</span>
+<span class='line-number'>233</span>
+<span class='line-number'>234</span>
+<span class='line-number'>235</span>
+<span class='line-number'>236</span>
+<span class='line-number'>237</span>
+<span class='line-number'>238</span>
+<span class='line-number'>239</span>
+<span class='line-number'>240</span>
+<span class='line-number'>241</span>
+<span class='line-number'>242</span>
+<span class='line-number'>243</span>
+<span class='line-number'>244</span>
+<span class='line-number'>245</span>
+<span class='line-number'>246</span>
+<span class='line-number'>247</span>
+<span class='line-number'>248</span>
+<span class='line-number'>249</span>
+<span class='line-number'>250</span>
+<span class='line-number'>251</span>
+<span class='line-number'>252</span>
+<span class='line-number'>253</span>
+<span class='line-number'>254</span>
+<span class='line-number'>255</span>
+<span class='line-number'>256</span>
+<span class='line-number'>257</span>
+<span class='line-number'>258</span>
+<span class='line-number'>259</span>
+<span class='line-number'>260</span>
+<span class='line-number'>261</span>
+<span class='line-number'>262</span>
+<span class='line-number'>263</span>
+<span class='line-number'>264</span>
+<span class='line-number'>265</span>
+<span class='line-number'>266</span>
+<span class='line-number'>267</span>
+<span class='line-number'>268</span>
+<span class='line-number'>269</span>
+<span class='line-number'>270</span>
+<span class='line-number'>271</span>
+<span class='line-number'>272</span>
+<span class='line-number'>273</span>
+<span class='line-number'>274</span>
+<span class='line-number'>275</span>
+<span class='line-number'>276</span>
+<span class='line-number'>277</span>
+<span class='line-number'>278</span>
+<span class='line-number'>279</span>
+<span class='line-number'>280</span>
+<span class='line-number'>281</span>
+<span class='line-number'>282</span>
+<span class='line-number'>283</span>
+<span class='line-number'>284</span>
+<span class='line-number'>285</span>
+<span class='line-number'>286</span>
+<span class='line-number'>287</span>
+<span class='line-number'>288</span>
+<span class='line-number'>289</span>
+<span class='line-number'>290</span>
+<span class='line-number'>291</span>
+<span class='line-number'>292</span>
+<span class='line-number'>293</span>
+<span class='line-number'>294</span>
+<span class='line-number'>295</span>
+<span class='line-number'>296</span>
+<span class='line-number'>297</span>
+<span class='line-number'>298</span>
+<span class='line-number'>299</span>
+<span class='line-number'>300</span>
+<span class='line-number'>301</span>
+<span class='line-number'>302</span>
+<span class='line-number'>303</span>
+<span class='line-number'>304</span>
+<span class='line-number'>305</span>
+<span class='line-number'>306</span>
+<span class='line-number'>307</span>
+<span class='line-number'>308</span>
+<span class='line-number'>309</span>
+<span class='line-number'>310</span>
+<span class='line-number'>311</span>
+<span class='line-number'>312</span>
+<span class='line-number'>313</span>
+<span class='line-number'>314</span>
+<span class='line-number'>315</span>
+<span class='line-number'>316</span>
+<span class='line-number'>317</span>
+<span class='line-number'>318</span>
+<span class='line-number'>319</span>
+<span class='line-number'>320</span>
+<span class='line-number'>321</span>
+<span class='line-number'>322</span>
+<span class='line-number'>323</span>
+<span class='line-number'>324</span>
+<span class='line-number'>325</span>
+<span class='line-number'>326</span>
+<span class='line-number'>327</span>
+<span class='line-number'>328</span>
+<span class='line-number'>329</span>
+<span class='line-number'>330</span>
+<span class='line-number'>331</span>
+<span class='line-number'>332</span>
+<span class='line-number'>333</span>
+<span class='line-number'>334</span>
+<span class='line-number'>335</span>
+<span class='line-number'>336</span>
+<span class='line-number'>337</span>
+<span class='line-number'>338</span>
+<span class='line-number'>339</span>
+<span class='line-number'>340</span>
+<span class='line-number'>341</span>
+<span class='line-number'>342</span>
+<span class='line-number'>343</span>
+<span class='line-number'>344</span>
+<span class='line-number'>345</span>
+<span class='line-number'>346</span>
+<span class='line-number'>347</span>
+<span class='line-number'>348</span>
+<span class='line-number'>349</span>
+<span class='line-number'>350</span>
+<span class='line-number'>351</span>
+<span class='line-number'>352</span>
+<span class='line-number'>353</span>
+<span class='line-number'>354</span>
+<span class='line-number'>355</span>
+<span class='line-number'>356</span>
+<span class='line-number'>357</span>
+<span class='line-number'>358</span>
+<span class='line-number'>359</span>
+<span class='line-number'>360</span>
+<span class='line-number'>361</span>
+<span class='line-number'>362</span>
+<span class='line-number'>363</span>
+<span class='line-number'>364</span>
+<span class='line-number'>365</span>
+<span class='line-number'>366</span>
+<span class='line-number'>367</span>
+<span class='line-number'>368</span>
+<span class='line-number'>369</span>
+<span class='line-number'>370</span>
+<span class='line-number'>371</span>
+<span class='line-number'>372</span>
+<span class='line-number'>373</span>
+<span class='line-number'>374</span>
+<span class='line-number'>375</span>
+<span class='line-number'>376</span>
+<span class='line-number'>377</span>
+<span class='line-number'>378</span>
+<span class='line-number'>379</span>
+<span class='line-number'>380</span>
+<span class='line-number'>381</span>
+<span class='line-number'>382</span>
+<span class='line-number'>383</span>
+<span class='line-number'>384</span>
+<span class='line-number'>385</span>
+<span class='line-number'>386</span>
+<span class='line-number'>387</span>
+<span class='line-number'>388</span>
+<span class='line-number'>389</span>
+<span class='line-number'>390</span>
+<span class='line-number'>391</span>
+<span class='line-number'>392</span>
+<span class='line-number'>393</span>
+<span class='line-number'>394</span>
+<span class='line-number'>395</span>
+<span class='line-number'>396</span>
+<span class='line-number'>397</span>
+<span class='line-number'>398</span>
+<span class='line-number'>399</span>
+<span class='line-number'>400</span>
+<span class='line-number'>401</span>
+<span class='line-number'>402</span>
+<span class='line-number'>403</span>
+<span class='line-number'>404</span>
+<span class='line-number'>405</span>
+<span class='line-number'>406</span>
+<span class='line-number'>407</span>
+<span class='line-number'>408</span>
+<span class='line-number'>409</span>
+<span class='line-number'>410</span>
+<span class='line-number'>411</span>
+<span class='line-number'>412</span>
+<span class='line-number'>413</span>
+<span class='line-number'>414</span>
+<span class='line-number'>415</span>
+<span class='line-number'>416</span>
+<span class='line-number'>417</span>
+<span class='line-number'>418</span>
+<span class='line-number'>419</span>
+<span class='line-number'>420</span>
+<span class='line-number'>421</span>
+<span class='line-number'>422</span>
+<span class='line-number'>423</span>
+<span class='line-number'>424</span>
+<span class='line-number'>425</span>
+<span class='line-number'>426</span>
+<span class='line-number'>427</span>
+<span class='line-number'>428</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>1//使用autoload加载相关库,这边重点就是为了require $file;
+</span><span class='line'>  2spl_autoload_register(function($class) {
+</span><span class='line'>  3$file = __DIR__.’/lib/Predis/’.$class.’.php’;
+</span><span class='line'>  4 if (file_exists($file)) {
+</span><span class='line'>  5 require $file;
+</span><span class='line'>  6 return true;
+</span><span class='line'>  7 }
+</span><span class='line'>  8 });
+</span><span class='line'>  9 
+</span><span class='line'> 10 //配置连接的IP、端口、以及相应的数据库
+</span><span class='line'> 11 $server = array(
+</span><span class='line'> 12 ‘host’     =&gt; ’127.0.0.1′,
+</span><span class='line'> 13 ‘port’     =&gt; 6379,
+</span><span class='line'> 14 ‘database’ =&gt; 15
+</span><span class='line'> 15 );
+</span><span class='line'> 16 $redis = new Client($server);
+</span><span class='line'> 17 
+</span><span class='line'> 18 //普通set/get操作
+</span><span class='line'> 19 $redis-&gt;set(‘library’, ‘predis’);
+</span><span class='line'> 20 $retval = $redis-&gt;get(‘library’);
+</span><span class='line'> 21 echo $retval; //显示 ‘predis’
+</span><span class='line'> 22 
+</span><span class='line'> 23 //setex set一个存储时效
+</span><span class='line'> 24 $redis-&gt;setex(‘str’, 10, ‘bar’); //表示存储有效期为10秒
+</span><span class='line'> 25 
+</span><span class='line'> 26 //setnx/msetnx相当于add操作,不会覆盖已有值
+</span><span class='line'> 27 $redis-&gt;setnx(‘foo’,12); //true
+</span><span class='line'> 28 $redis-&gt;setnx(‘foo’,34); //false
+</span><span class='line'> 29 
+</span><span class='line'> 30 //getset操作,set的变种,结果返回替换前的值
+</span><span class='line'> 31 $redis-&gt;getset(‘foo’,56);//返回34
+</span><span class='line'> 32 
+</span><span class='line'> 33 // incrby/incr/decrby/decr 对值的递增和递减
+</span><span class='line'> 34 $redis-&gt;incr(‘foo’); //foo为57
+</span><span class='line'> 35 $redis-&gt;incrby(‘foo’,2); //foo为59
+</span><span class='line'> 36 
+</span><span class='line'> 37 //exists检测是否存在某值
+</span><span class='line'> 38 $redis-&gt;exists(‘foo’);//true
+</span><span class='line'> 39 
+</span><span class='line'> 40 //del 删除
+</span><span class='line'> 41 $redis-&gt;del(‘foo’);//true
+</span><span class='line'> 42 
+</span><span class='line'> 43 //type 类型检测,字符串返回string,列表返回 list,set表返回set/zset,hash表返回hash
+</span><span class='line'> 44 $redis-&gt;type(‘foo’);//不存在,返回none
+</span><span class='line'> 45 $redis-&gt;set(‘str’,'test’);
+</span><span class='line'> 46 $redis-&gt;type(‘str’); //字符串，返回string
+</span><span class='line'> 47 
+</span><span class='line'> 48 //append 连接到已存在字符串
+</span><span class='line'> 49 $redis-&gt;append(‘str’,'_123′); //返回累加后的字符串长度8,此进str为 ‘test_123′
+</span><span class='line'> 50 
+</span><span class='line'> 51 //setrange 部分替换操作
+</span><span class='line'> 52 $redis-&gt;setrange(‘str’,0,’abc’); //返回3,参数2为0时等同于set操作
+</span><span class='line'> 53 $redis-&gt;setrange(‘str’,2,’cd’);//返回4,表示从第2个字符后替换,这时’str’为’abcd’
+</span><span class='line'> 54 
+</span><span class='line'> 55 //substr 部分获取操作
+</span><span class='line'> 56 $redis-&gt;substr(‘str’,0,2);//表示从第0个起，取到第2个字符，共3个，返回’abc’
+</span><span class='line'> 57 
+</span><span class='line'> 58 //strlen 获取字符串长度
+</span><span class='line'> 59 $redis-&gt;strlen(‘str’); //返回4
+</span><span class='line'> 60 
+</span><span class='line'> 61 //setbit/getbit 位存储和获取
+</span><span class='line'> 62 $redis-&gt;setbit(‘binary’,31,1);  //表示在第31位存入1,这边可能会有大小端问题?不过没关系,getbit 应该不会有问题
+</span><span class='line'> 63 $redis-&gt;getbit(‘binary’,31);    //返回1
+</span><span class='line'> 64 
+</span><span class='line'> 65 //keys 模糊查找功能,支持*号以及?号(匹配一个字符)
+</span><span class='line'> 66 $redis-&gt;set(‘foo1′,123);
+</span><span class='line'> 67 $redis-&gt;set(‘foo2′,456);
+</span><span class='line'> 68 $redis-&gt;keys(‘foo*’); //返回foo1和foo2的array
+</span><span class='line'> 69 $redis-&gt;keys(‘f?o?’);  //同上
+</span><span class='line'> 70 
+</span><span class='line'> 71 //randomkey 随机返回一个key
+</span><span class='line'> 72 $redis-&gt;randomkey(); //可能是返回 ‘foo1′或者是’foo2′及其它任何一存在redis的key
+</span><span class='line'> 73 
+</span><span class='line'> 74 //rename/renamenx 对key进行改名,所不同的是renamenx不允许改成已存在的key
+</span><span class='line'> 75 $redis-&gt;rename(‘str’,'str2′); //把原先命名为’str’的key改成了’str2′
+</span><span class='line'> 76 
+</span><span class='line'> 77 //expire 设置key-value的时效性,ttl 获取剩余有效期,persist 重新设置为永久存储
+</span><span class='line'> 78 $redis-&gt;expire(‘foo’, 1); //设置有效期为1秒
+</span><span class='line'> 79 $redis-&gt;ttl(‘foo’); //返回有效期值1s
+</span><span class='line'> 80 $redis-&gt;expire(‘foo’); //取消expire行为
+</span><span class='line'> 81 
+</span><span class='line'> 82 //dbsize 返回redis当前数据库的记录总数
+</span><span class='line'> 83 $redis-&gt;dbsize();
+</span><span class='line'> 84 
+</span><span class='line'> 85 /*
+</span><span class='line'> 86 队列操作
+</span><span class='line'> 87 */
+</span><span class='line'> 88 
+</span><span class='line'> 89 //rpush/rpushx 有序列表操作,从队列后插入元素
+</span><span class='line'> 90 //lpush/lpushx 和rpush/rpushx的区别是插入到队列的头部,同上,’x'含义是只对已存在的key进行操作
+</span><span class='line'> 91 $redis-&gt;rpush(‘fooList’, ‘bar1′); //返回一个列表的长度1
+</span><span class='line'> 92 $redis-&gt;lpush(‘fooList’, ‘bar0′); //返回一个列表的长度2
+</span><span class='line'> 93 $redis-&gt;rpushx(‘fooList’, ‘bar2′); //返回3,rpushx只对已存在的队列做添加,否则返回0
+</span><span class='line'> 94 //llen返回当前列表长度
+</span><span class='line'> 95 $redis-&gt;llen(‘fooList’);//3
+</span><span class='line'> 96 
+</span><span class='line'> 97 //lrange 返回队列中一个区间的元素
+</span><span class='line'> 98 $redis-&gt;lrange(‘fooList’,0,1); //返回数组包含第0个至第1个共2个元素
+</span><span class='line'> 99 $redis-&gt;lrange(‘fooList’,0,-1);//返回第0个至倒数第一个,相当于返回所有元素,注意redis中很多时候会用到负数,下同
+</span><span class='line'>100 
+</span><span class='line'>101 //lindex 返回指定顺序位置的list元素
+</span><span class='line'>102 $redis-&gt;lindex(‘fooList’,1); //返回’bar1′
+</span><span class='line'>103 
+</span><span class='line'>104 //lset 修改队列中指定位置的value
+</span><span class='line'>105 $redis-&gt;lset(‘fooList’,1,’123′);//修改位置1的元素,返回true
+</span><span class='line'>106 
+</span><span class='line'>107 //lrem 删除队列中左起指定数量的字符
+</span><span class='line'>108 $redis-&gt;lrem(‘fooList’,1,’_'); //删除队列中左起(右起使用-1)1个字符’_'(若有)
+</span><span class='line'>109 
+</span><span class='line'>110 //lpop/rpop 类似栈结构地弹出(并删除)最左或最右的一个元素
+</span><span class='line'>111 $redis-&gt;lpop(‘fooList’); //’bar0′
+</span><span class='line'>112 $redis-&gt;rpop(‘fooList’); //’bar2′
+</span><span class='line'>113 
+</span><span class='line'>114 //ltrim 队列修改，保留左边起若干元素，其余删除
+</span><span class='line'>115 $redis-&gt;ltrim(‘fooList’, 0,1); //保留左边起第0个至第1个元素
+</span><span class='line'>116 
+</span><span class='line'>117 //rpoplpush 从一个队列中pop出元素并push到另一个队列
+</span><span class='line'>118 $redis-&gt;rpush(‘list1′,’ab0′);
+</span><span class='line'>119 $redis-&gt;rpush(‘list1′,’ab1′);
+</span><span class='line'>120 $redis-&gt;rpush(‘list2′,’ab2′);
+</span><span class='line'>121 $redis-&gt;rpush(‘list2′,’ab3′);
+</span><span class='line'>122 $redis-&gt;rpoplpush(‘list1′,’list2′);//结果list1 =&gt;array(‘ab0′),list2 =&gt;array(‘ab1′,’ab2′,’ab3′)
+</span><span class='line'>123 $redis-&gt;rpoplpush(‘list2′,’list2′);//也适用于同一个队列,把最后一个元素移到头部list2 =&gt;array(‘ab3′,’ab1′,’ab2′)
+</span><span class='line'>124 
+</span><span class='line'>125 //linsert 在队列的中间指定元素前或后插入元素
+</span><span class='line'>126 $redis-&gt;linsert(‘list2′, ‘before’,'ab1′,’123′); //表示在元素’ab1′之前插入’123′
+</span><span class='line'>127 $redis-&gt;linsert(‘list2′, ‘after’,'ab1′,’456′);   //表示在元素’ab1′之后插入’456′
+</span><span class='line'>128 
+</span><span class='line'>129 //blpop/brpop 阻塞并等待一个列队不为空时，再pop出最左或最右的一个元素（这个功能在php以外可以说非常好用）
+</span><span class='line'>130 //brpoplpush 同样是阻塞并等待操作，结果同rpoplpush一样
+</span><span class='line'>131 $redis-&gt;blpop(‘list3′,10); //如果list3为空则一直等待,直到不为空时将第一元素弹出,10秒后超时
+</span><span class='line'>132 
+</span><span class='line'>133 /**
+</span><span class='line'>134 set表操作
+</span><span class='line'>135 */
+</span><span class='line'>136 
+</span><span class='line'>137 //sadd 增加元素,返回true,重复返回false
+</span><span class='line'>138 $redis-&gt;sadd(‘set1′,’ab’);
+</span><span class='line'>139 $redis-&gt;sadd(‘set1′,’cd’);
+</span><span class='line'>140 $redis-&gt;sadd(‘set1′,’ef’);
+</span><span class='line'>141 
+</span><span class='line'>142 //srem 移除指定元素
+</span><span class='line'>143 $redis-&gt;srem(‘set1′,’cd’); //删除’cd’元素
+</span><span class='line'>144 
+</span><span class='line'>145 //spop 弹出首元素
+</span><span class='line'>146 $redis-&gt;spop(‘set1′);
+</span><span class='line'>147 
+</span><span class='line'>148 //smove 移动当前set表的指定元素到另一个set表
+</span><span class='line'>149 $redis-&gt;sadd(‘set2′,’123′);
+</span><span class='line'>150 $redis-&gt;smove(‘set1′,’set2′,’ab’);//移动’set1′中的’ab’到’set2′,返回true or false
+</span><span class='line'>151 
+</span><span class='line'>152 //scard 返回当前set表元素个数
+</span><span class='line'>153 $redis-&gt;scard(‘set2′);//2
+</span><span class='line'>154 
+</span><span class='line'>155 //sismember 判断元素是否属于当前表
+</span><span class='line'>156 $redis-&gt;sismember(‘set2′,’123′); //true or false
+</span><span class='line'>157 
+</span><span class='line'>158 //smembers 返回当前表的所有元素
+</span><span class='line'>159 $redis-&gt;smembers(‘set2′); //array(’123′,’ab’);
+</span><span class='line'>160 
+</span><span class='line'>161 //sinter/sunion/sdiff  返回两个表中元素的交集/并集/补集
+</span><span class='line'>162 $redis-&gt;sadd(‘set1′,’ab’);
+</span><span class='line'>163 $redis-&gt;sinter(‘set2′,’set1′); //返回array(‘ab’)
+</span><span class='line'>164 
+</span><span class='line'>165 //sinterstore/sunionstore/sdiffstore 将两个表交集/并集/补集元素copy到第三个表中
+</span><span class='line'>166 $redis-&gt;set(‘foo’,0);
+</span><span class='line'>167 $redis-&gt;sinterstore(‘foo’,'set1′); //这边等同于将’set1′的内容copy到’foo’中，并将’foo’转为set表
+</span><span class='line'>168 $redis-&gt;sinterstore(‘foo’,array(‘set1′,’set2′)); //将’set1′和’set2′中相同的元素copy到’foo’表中,覆盖’foo’原有内容
+</span><span class='line'>169 
+</span><span class='line'>170 //srandmember 返回表中一个随机元素
+</span><span class='line'>171 $redis-&gt;srandmember(‘set1′);
+</span><span class='line'>172 
+</span><span class='line'>173 /**
+</span><span class='line'>174 有序set表操作
+</span><span class='line'>175 */
+</span><span class='line'>176 
+</span><span class='line'>177 //sadd 增加元素,并设置序号,返回true,重复返回false
+</span><span class='line'>178 $redis-&gt;zadd(‘zset1′,1,’ab’);
+</span><span class='line'>179 $redis-&gt;zadd(‘zset1′,2,’cd’);
+</span><span class='line'>180 $redis-&gt;zadd(‘zset1′,3,’ef’);
+</span><span class='line'>181 
+</span><span class='line'>182 //zincrby 对指定元素索引值的增减,改变元素排列次序
+</span><span class='line'>183 $redis-&gt;zincrby(‘zset1′,10,’ab’);//返回11
+</span><span class='line'>184 
+</span><span class='line'>185 //zrem 移除指定元素
+</span><span class='line'>186 $redis-&gt;zrem(‘zset1′,’ef’); //true or false
+</span><span class='line'>187 
+</span><span class='line'>188 //zrange 按位置次序返回表中指定区间的元素
+</span><span class='line'>189 $redis-&gt;zrange(‘zset1′,0,1); //返回位置0和1之间(两个)的元素
+</span><span class='line'>190 $redis-&gt;zrange(‘zset1′,0,-1);//返回位置0和倒数第一个元素之间的元素(相当于所有元素)
+</span><span class='line'>191 
+</span><span class='line'>192 //zrevrange 同上,返回表中指定区间的元素,按次序倒排
+</span><span class='line'>193 $redis-&gt;zrevrange(‘zset1′,0,-1); //元素顺序和zrange相反
+</span><span class='line'>194 
+</span><span class='line'>195 //zrangebyscore/zrevrangebyscore 按顺序/降序返回表中指定索引区间的元素
+</span><span class='line'>196 $redis-&gt;zadd(‘zset1′,3,’ef’);
+</span><span class='line'>197 $redis-&gt;zadd(‘zset1′,5,’gh’);
+</span><span class='line'>198 $redis-&gt;zrangebyscore(‘zset1′,2,9); //返回索引值2-9之间的元素 array(‘ef’,'gh’)
+</span><span class='line'>199 //参数形式
+</span><span class='line'>200 $redis-&gt;zrangebyscore(‘zset1′,2,9,’withscores’); //返回索引值2-9之间的元素并包含索引值 array(array(‘ef’,3),array(‘gh’,5))
+</span><span class='line'>201 $redis-&gt;zrangebyscore(‘zset1′,2,9,array(‘withscores’ =&gt;true,’limit’=&gt;array(1, 2))); //返回索引值2-9之间的元素,’withscores’ =&gt;true表示包含索引值; ‘limit’=&gt;array(1, 2),表示最多返回2条,结果为array(array(‘ef’,3),array(‘gh’,5))
+</span><span class='line'>202 
+</span><span class='line'>203 //zunionstore/zinterstore 将多个表的并集/交集存入另一个表中
+</span><span class='line'>204 $redis-&gt;zunionstore(‘zset3′,array(‘zset1′,’zset2′,’zset0′)); //将’zset1′,’zset2′,’zset0′的并集存入’zset3′
+</span><span class='line'>205 //其它参数
+</span><span class='line'>206 $redis-&gt;zunionstore(‘zset3′,array(‘zset1′,’zset2′),array(‘weights’ =&gt; array(5,0)));//weights参数表示权重，其中表示并集后值大于5的元素排在前，大于0的排在后
+</span><span class='line'>207 $redis-&gt;zunionstore(‘zset3′,array(‘zset1′,’zset2′),array(‘aggregate’ =&gt; ‘max’));//’aggregate’ =&gt; ‘max’或’min’表示并集后相同的元素是取大值或是取小值
+</span><span class='line'>208 
+</span><span class='line'>209 //zcount 统计一个索引区间的元素个数
+</span><span class='line'>210 $redis-&gt;zcount(‘zset1′,3,5);//2
+</span><span class='line'>211 $redis-&gt;zcount(‘zset1′,’(3′,5)); //’(3′表示索引值在3-5之间但不含3,同理也可以使用’(5′表示上限为5但不含5
+</span><span class='line'>212 
+</span><span class='line'>213 //zcard 统计元素个数
+</span><span class='line'>214 $redis-&gt;zcard(‘zset1′);//4
+</span><span class='line'>215 
+</span><span class='line'>216 //zscore 查询元素的索引
+</span><span class='line'>217 $redis-&gt;zscore(‘zset1′,’ef’);//3
+</span><span class='line'>218 
+</span><span class='line'>219 //zremrangebyscore 删除一个索引区间的元素
+</span><span class='line'>220 $redis-&gt;zremrangebyscore(‘zset1′,0,2); //删除索引在0-2之间的元素(‘ab’,'cd’),返回删除元素个数2
+</span><span class='line'>221 
+</span><span class='line'>222 //zrank/zrevrank 返回元素所在表顺序/降序的位置(不是索引)
+</span><span class='line'>223 $redis-&gt;zrank(‘zset1′,’ef’);//返回0,因为它是第一个元素;zrevrank则返回1(最后一个)
+</span><span class='line'>224 
+</span><span class='line'>225 //zremrangebyrank 删除表中指定位置区间的元素
+</span><span class='line'>226 $redis-&gt;zremrangebyrank(‘zset1′,0,10); //删除位置为0-10的元素,返回删除的元素个数2
+</span><span class='line'>227 
+</span><span class='line'>228 /**
+</span><span class='line'>229 hash表操作
+</span><span class='line'>230 */
+</span><span class='line'>231 
+</span><span class='line'>232 //hset/hget 存取hash表的数据
+</span><span class='line'>233 $redis-&gt;hset(‘hash1′,’key1′,’v1′); //将key为’key1′ value为’v1′的元素存入hash1表
+</span><span class='line'>234 $redis-&gt;hset(‘hash1′,’key2′,’v2′);
+</span><span class='line'>235 $redis-&gt;hget(‘hash1′,’key1′);  //取出表’hash1′中的key ‘key1′的值,返回’v1′
+</span><span class='line'>236 
+</span><span class='line'>237 //hexists 返回hash表中的指定key是否存在
+</span><span class='line'>238 $redis-&gt;hexists (‘hash1′,’key1′); //true or false
+</span><span class='line'>239 
+</span><span class='line'>240 //hdel 删除hash表中指定key的元素
+</span><span class='line'>241 $redis-&gt;hdel(‘hash1′,’key2′); //true or false
+</span><span class='line'>242 
+</span><span class='line'>243 //hlen 返回hash表元素个数
+</span><span class='line'>244 $redis-&gt;hlen(‘hash1′); //1
+</span><span class='line'>245 
+</span><span class='line'>246 //hsetnx 增加一个元素,但不能重复
+</span><span class='line'>247 $redis-&gt;hsetnx(‘hash1′,’key1′,’v2′); //false
+</span><span class='line'>248 $redis-&gt;hsetnx(‘hash1′,’key2′,’v2′); //true
+</span><span class='line'>249 
+</span><span class='line'>250 //hmset/hmget 存取多个元素到hash表
+</span><span class='line'>251 $redis-&gt;hmset(‘hash1′,array(‘key3′=&gt;’v3′,’key4′=&gt;’v4′));
+</span><span class='line'>252 $redis-&gt;hmget(‘hash1′,array(‘key3′,’key4′)); //返回相应的值 array(‘v3′,’v4′)
+</span><span class='line'>253 
+</span><span class='line'>254 //hincrby 对指定key进行累加
+</span><span class='line'>255 $redis-&gt;hincrby(‘hash1′,’key5′,3); //返回3
+</span><span class='line'>256 $redis-&gt;hincrby(‘hash1′,’key5′,10); //返回13
+</span><span class='line'>257 
+</span><span class='line'>258 //hkeys 返回hash表中的所有key
+</span><span class='line'>259 $redis-&gt;hkeys(‘hash1′); //返回array(‘key1′,’key2′,’key3′,’key4′,’key5′)
+</span><span class='line'>260 
+</span><span class='line'>261 //hvals 返回hash表中的所有value
+</span><span class='line'>262 $redis-&gt;hvals(‘hash1′); //返回array(‘v1′,’v2′,’v3′,’v4′,13)
+</span><span class='line'>263 
+</span><span class='line'>264 //hgetall 返回整个hash表元素
+</span><span class='line'>265 $redis-&gt;hgetall(‘hash1′); //返回array(‘key1′=&gt;’v1′,’key2′=&gt;’v2′,’key3′=&gt;’v3′,’key4′=&gt;’v4′,’key5′=&gt;13)
+</span><span class='line'>266 
+</span><span class='line'>267 /**
+</span><span class='line'>268 排序操作
+</span><span class='line'>269 */
+</span><span class='line'>270 
+</span><span class='line'>271 //sort 排序
+</span><span class='line'>272 $redis-&gt;rpush(‘tab’,3);
+</span><span class='line'>273 $redis-&gt;rpush(‘tab’,2);
+</span><span class='line'>274 $redis-&gt;rpush(‘tab’,17);
+</span><span class='line'>275 $redis-&gt;sort(‘tab’);  //返回array(2,3,17)
+</span><span class='line'>276 //使用参数,可组合使用 array(‘sort’ =&gt; ‘desc’,'limit’ =&gt; array(1, 2))
+</span><span class='line'>277 $redis-&gt;sort(‘tab’,array(‘sort’ =&gt; ‘desc’));  //降序排列,返回array(17,3,2)
+</span><span class='line'>278 $redis-&gt;sort(‘tab’,array(‘limit’ =&gt; array(1, 2)));  //返回顺序位置中1的元素2个(这里的2是指个数,而不是位置),返回array(3,17)
+</span><span class='line'>279 $redis-&gt;sort(‘tab’,array(‘limit’ =&gt; array(‘alpha’ =&gt; true))); //按首字符排序返回array(17,2,3),因为17的首字符是’1′所以排首位置
+</span><span class='line'>280 $redis-&gt;sort(‘tab’,array(‘limit’ =&gt; array(‘store’ =&gt; ‘ordered’))); //表示永久性排序,返回元素个数
+</span><span class='line'>281 $redis-&gt;sort(‘tab’,array(‘limit’ =&gt; array(‘get’ =&gt; ‘pre_*’))); //使用了通配符’*'过滤元素,表示只返回以’pre_’开头的元素
+</span><span class='line'>282 
+</span><span class='line'>283 /**
+</span><span class='line'>284 redis管理操作
+</span><span class='line'>285 */
+</span><span class='line'>286 
+</span><span class='line'>287 //select 指定要操作的数据库
+</span><span class='line'>288 $redis-&gt;select(‘mydb’); //指定为mydb,不存在则创建
+</span><span class='line'>289 
+</span><span class='line'>290 //flushdb 清空当前库
+</span><span class='line'>291 $redis-&gt;flushdb();
+</span><span class='line'>292 
+</span><span class='line'>293 //move 移动当库的元素到其它库
+</span><span class='line'>294 $redis-&gt;set(‘foo’, ‘bar’);
+</span><span class='line'>295 $redis-&gt;move(‘foo’, ‘mydb2′); //若’mydb2′库存在
+</span><span class='line'>296 
+</span><span class='line'>297 //info 显示服务当状态信息
+</span><span class='line'>298 $redis-&gt;info();
+</span><span class='line'>299 
+</span><span class='line'>300 //slaveof 配置从服务器
+</span><span class='line'>301 $redis-&gt;slaveof(’127.0.0.1′,80); //配置127.0.0.1端口80的服务器为从服务器
+</span><span class='line'>302 $redis-&gt;slaveof(); //清除从服务器
+</span><span class='line'>303 
+</span><span class='line'>304 //同步保存服务器数据到磁盘
+</span><span class='line'>305 $redis-&gt;save();
+</span><span class='line'>306 //异步保存服务器数据到磁盘
+</span><span class='line'>307 $redis-&gt;bgsave();
+</span><span class='line'>308 //??
+</span><span class='line'>309 $redis-&gt;bgrewriteaof();
+</span><span class='line'>310 //返回最后更新磁盘的时间
+</span><span class='line'>311 $redis-&gt;lastsave();
+</span><span class='line'>312 
+</span><span class='line'>313 //set/get多个key-value
+</span><span class='line'>314 $mkv = array(
+</span><span class='line'>315 ‘usr:0001′ =&gt; ‘First user’,
+</span><span class='line'>316 ‘usr:0002′ =&gt; ‘Second user’,
+</span><span class='line'>317 ‘usr:0003′ =&gt; ‘Third user’
+</span><span class='line'>318 );
+</span><span class='line'>319 $redis-&gt;mset($mkv); //存储多个key对应的value
+</span><span class='line'>320 $retval = $redis-&gt;mget(array_keys($mkv)); //获取多个key对应的value
+</span><span class='line'>321 print_r($retval);
+</span><span class='line'>322 
+</span><span class='line'>323 //批量操作
+</span><span class='line'>324 $replies = $redis-&gt;pipeline(function($pipe) {
+</span><span class='line'>325 $pipe-&gt;ping();
+</span><span class='line'>326 $pipe-&gt;flushdb();
+</span><span class='line'>327 $pipe-&gt;incrby(‘counter’, 10); //增量操作
+</span><span class='line'>328 $pipe-&gt;incrby(‘counter’, 30);
+</span><span class='line'>329 $pipe-&gt;exists(‘counter’);
+</span><span class='line'>330 $pipe-&gt;get(‘counter’);
+</span><span class='line'>331 $pipe-&gt;mget(‘does_not_exist’, ‘counter’);
+</span><span class='line'>332 });
+</span><span class='line'>333 print_r($replies);
+</span><span class='line'>334 
+</span><span class='line'>335 //CAS,事务性操作
+</span><span class='line'>336 
+</span><span class='line'>337 function zpop($client, $zsetKey) {
+</span><span class='line'>338 $element = null;
+</span><span class='line'>339 $options = array(
+</span><span class='line'>340 ‘cas’   =&gt; true,     // Initialize with support for CAS operations
+</span><span class='line'>341 ‘watch’ =&gt; $zsetKey, // Key that needs to be WATCHed to detect changes
+</span><span class='line'>342 ‘retry’ =&gt; 3,        // Number of retries on aborted transactions, after
+</span><span class='line'>343 // which the client bails out with an exception.
+</span><span class='line'>344 );
+</span><span class='line'>345 
+</span><span class='line'>346 $txReply = $client-&gt;multiExec($options, function($tx)
+</span><span class='line'>347 use ($zsetKey, &$element) {
+</span><span class='line'>348 @list($element) = $tx-&gt;zrange($zsetKey, 0, 0);
+</span><span class='line'>349 if (isset($element)) {
+</span><span class='line'>350 $tx-&gt;multi();     // With CAS, MULTI *must* be explicitly invoked.
+</span><span class='line'>351 $tx-&gt;zrem($zsetKey, $element);
+</span><span class='line'>352 }
+</span><span class='line'>353 });
+</span><span class='line'>354 return $element;
+</span><span class='line'>355 }
+</span><span class='line'>356 $zpopped = zpop($redis, ‘zset’);
+</span><span class='line'>357 echo isset($zpopped) ? “ZPOPed $zpopped” : “Nothing to ZPOP!”, “\n”;
+</span><span class='line'>358 
+</span><span class='line'>359 //对存取的key加前缀,如: ‘nrk:’
+</span><span class='line'>360 $redis-&gt;getProfile()-&gt;setPreprocessor(new KeyPrefixPreprocessor(‘nrk:’));
+</span><span class='line'>361 
+</span><span class='line'>362 //分布式存储的一些方法
+</span><span class='line'>363 $multiple_servers = array(
+</span><span class='line'>364 array(
+</span><span class='line'>365 ‘host’     =&gt; ’127.0.0.1′,
+</span><span class='line'>366 ‘port’     =&gt; 6379,
+</span><span class='line'>367 ‘database’ =&gt; 15,
+</span><span class='line'>368 ‘alias’    =&gt; ‘first’,
+</span><span class='line'>369 ),
+</span><span class='line'>370 array(
+</span><span class='line'>371 ‘host’     =&gt; ’127.0.0.1′,
+</span><span class='line'>372 ‘port’     =&gt; 6380,
+</span><span class='line'>373 ‘database’ =&gt; 15,
+</span><span class='line'>374 ‘alias’    =&gt; ‘second’,
+</span><span class='line'>375 ),
+</span><span class='line'>376 );
+</span><span class='line'>377 
+</span><span class='line'>378 use Predis\Distribution\IDistributionStrategy;
+</span><span class='line'>379 
+</span><span class='line'>380 class NaiveDistributionStrategy implements IDistributionStrategy {
+</span><span class='line'>381 private $_nodes, $_nodesCount;
+</span><span class='line'>382 
+</span><span class='line'>383 public function __constructor() {
+</span><span class='line'>384 $this-&gt;_nodes = array();
+</span><span class='line'>385 $this-&gt;_nodesCount = 0;
+</span><span class='line'>386 }
+</span><span class='line'>387 
+</span><span class='line'>388 public function add($node, $weight = null) {
+</span><span class='line'>389 $this-&gt;_nodes[] = $node;
+</span><span class='line'>390 $this-&gt;_nodesCount++;
+</span><span class='line'>391 }
+</span><span class='line'>392 
+</span><span class='line'>393 public function remove($node) {
+</span><span class='line'>394 $this-&gt;_nodes = array_filter($this-&gt;_nodes, function($n) use($node) {
+</span><span class='line'>395 return $n !== $node;
+</span><span class='line'>396 });
+</span><span class='line'>397 $this-&gt;_nodesCount = count($this-&gt;_nodes);
+</span><span class='line'>398 }
+</span><span class='line'>399 
+</span><span class='line'>400 public function get($key) {
+</span><span class='line'>401 $count = $this-&gt;_nodesCount;
+</span><span class='line'>402 if ($count === 0) {
+</span><span class='line'>403 throw new RuntimeException(‘No connections’);
+</span><span class='line'>404 }
+</span><span class='line'>405 return $this-&gt;_nodes[$count &gt; 1 ? abs(crc32($key) % $count) : 0];
+</span><span class='line'>406 }
+</span><span class='line'>407 
+</span><span class='line'>408 public function generateKey($value) {
+</span><span class='line'>409 return crc32($value);
+</span><span class='line'>410 }
+</span><span class='line'>411 }
+</span><span class='line'>412 
+</span><span class='line'>413 //配置键分布策略
+</span><span class='line'>414 $options = array(
+</span><span class='line'>415 ‘key_distribution’ =&gt; new NaiveDistributionStrategy(),
+</span><span class='line'>416 );
+</span><span class='line'>417 
+</span><span class='line'>418 $redis = new Predis\Client($multiple_servers, $options);
+</span><span class='line'>419 
+</span><span class='line'>420 for ($i = 0; $i set(“key:$i”, str_pad($i, 4, ’0′, 0));
+</span><span class='line'>421 $redis-&gt;get(“key:$i”);
+</span><span class='line'>422 }
+</span><span class='line'>423 
+</span><span class='line'>424 $server1 = $redis-&gt;getClientFor(‘first’)-&gt;info();
+</span><span class='line'>425 $server2 = $redis-&gt;getClientFor(‘second’)-&gt;info();
+</span><span class='line'>426 
+</span><span class='line'>427 printf(“Server ‘%s’ has %d keys while server ‘%s’ has %d keys.\n”,
+</span><span class='line'>428 ‘first’, $server1['db15']['keys'], ‘second’, $server2['db15']['keys']</span></code></pre></td></tr></table></div></figure>
+
+
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -3264,147 +4818,6 @@ array_walk()函数需要三个参数。第一个是arr，也就是需要处理�
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2016/08/31/Nginx-thinkphp/">linux下thinkphp的Nginx配置文件</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2016-08-31T18:19:26+08:00'><span class='date'><span class='date-month'>Aug</span> <span class='date-day'>31</span><span class='date-suffix'>st</span>, <span class='date-year'>2016</span></span> <span class='time'>6:19 pm</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><h5>linux下thinkphp的Nginx配置文件(亲测有效)</h5>
-
-<p>一个配置文件，完美支持普通,兼容,pathinfo,rewrite4种url模式，常见的静态文件404时也不会再去跑一遍fastcgi浪费资源。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-<span class='line-number'>34</span>
-<span class='line-number'>35</span>
-<span class='line-number'>36</span>
-<span class='line-number'>37</span>
-<span class='line-number'>38</span>
-<span class='line-number'>39</span>
-<span class='line-number'>40</span>
-<span class='line-number'>41</span>
-<span class='line-number'>42</span>
-<span class='line-number'>43</span>
-<span class='line-number'>44</span>
-<span class='line-number'>45</span>
-<span class='line-number'>46</span>
-<span class='line-number'>47</span>
-<span class='line-number'>48</span>
-<span class='line-number'>49</span>
-<span class='line-number'>50</span>
-<span class='line-number'>51</span>
-<span class='line-number'>52</span>
-<span class='line-number'>53</span>
-<span class='line-number'>54</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>server {
-</span><span class='line'>    listen       80;
-</span><span class='line'>    server_name  thinkphp.lo;
-</span><span class='line'>    root /var/www;
-</span><span class='line'>    index  index.html index.htm index.php;
-</span><span class='line'>
-</span><span class='line'>    error_page  404              /404.html;
-</span><span class='line'>    location = /404.html {
-</span><span class='line'>        return 404 'Sorry, File not Found!';
-</span><span class='line'>    }
-</span><span class='line'>    error_page  500 502 503 504  /50x.html;
-</span><span class='line'>    location = /50x.html {
-</span><span class='line'>        root   /usr/share/nginx/html; # windows用户替换这个目录
-</span><span class='line'>    }
-</span><span class='line'>
-</span><span class='line'>    location / {
-</span><span class='line'>        try_files $uri @rewrite;
-</span><span class='line'>    }
-</span><span class='line'>
-</span><span class='line'>    location @rewrite {
-</span><span class='line'>        set $static 0;
-</span><span class='line'>        if  ($uri ~ \.(css|js|jpg|jpeg|png|gif|ico|woff|eot|svg|css\.map|min\.map)$) {
-</span><span class='line'>            set $static 1;
-</span><span class='line'>        }
-</span><span class='line'>
-</span><span class='line'>        if ($static = 0) {
-</span><span class='line'>            rewrite ^/(.*)$ /index.php?s=/$1;
-</span><span class='line'>        }
-</span><span class='line'>
-</span><span class='line'>    }
-</span><span class='line'>
-</span><span class='line'>    location ~ /Uploads/.*\.php$ {
-</span><span class='line'>        deny all;
-</span><span class='line'>    }
-</span><span class='line'>
-</span><span class='line'>    location ~ \.php/ {
-</span><span class='line'>       if ($request_uri ~ ^(.+\.php)(/.+?)($|\?)) { }
-</span><span class='line'>       fastcgi_pass 127.0.0.1:9000;
-</span><span class='line'>       include fastcgi_params;
-</span><span class='line'>       fastcgi_param SCRIPT_NAME     $1;
-</span><span class='line'>       fastcgi_param PATH_INFO       $2;
-</span><span class='line'>       fastcgi_param SCRIPT_FILENAME $document_root$1;
-</span><span class='line'>    }
-</span><span class='line'>
-</span><span class='line'>    location ~ \.php$ {
-</span><span class='line'>        fastcgi_pass 127.0.0.1:9000;
-</span><span class='line'>        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
-</span><span class='line'>        include fastcgi_params;
-</span><span class='line'>    }
-</span><span class='line'>
-</span><span class='line'>    location ~ /\.ht {
-</span><span class='line'>        deny  all;
-</span><span class='line'>    }
-</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
-
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/posts/2">&larr; Older</a>
@@ -3420,6 +4833,10 @@ array_walk()函数需要三个参数。第一个是arr，也就是需要处理�
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2016/09/02/php-redis/">Redis在php中的使用方法汇总(长篇)</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2016/09/02/MyISam-innoDb/">数据库表类型中MyISam和innoDB的区别</a>
       </li>
     
@@ -3433,10 +4850,6 @@ array_walk()函数需要三个参数。第一个是arr，也就是需要处理�
     
       <li class="post">
         <a href="/blog/2016/08/31/php-files/">关于php文件操作示例</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2016/08/31/linux-base/">Linux的基础语法</a>
       </li>
     
   </ul>
