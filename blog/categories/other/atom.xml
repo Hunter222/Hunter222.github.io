@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Other | 小黄鸡]]></title>
   <link href="http://hunter222.github.io/blog/categories/other/atom.xml" rel="self"/>
   <link href="http://hunter222.github.io/"/>
-  <updated>2016-09-04T20:43:19+08:00</updated>
+  <updated>2016-09-04T20:43:50+08:00</updated>
   <id>http://hunter222.github.io/</id>
   <author>
     <name><![CDATA[chenjingxiu]]></name>
@@ -18,10 +18,9 @@
     <link href="http://hunter222.github.io/blog/2016/09/02/mysql-optimize/"/>
     <updated>2016-09-02T18:19:30+08:00</updated>
     <id>http://hunter222.github.io/blog/2016/09/02/mysql-optimize</id>
-    <content type="html"><![CDATA[<p>注：由于本人总结的mysql笔记篇幅过长，截图过多，占用博客内存过大。因此在网上找到不错的文章转载过来方便以后参考(链接如下):</p>
+    <content type="html"><![CDATA[<p>注：由于本人总结的mysql笔记篇幅过长，截图过多，占用博客内存过大。因此在网上找到不错的文章转载过来方便以后参考:</p>
 
-<pre><code>http://www.thinkphp.cn/topic/3855.html
-</code></pre>
+<p><a href="http://www.thinkphp.cn/topic/3855.html">http://www.thinkphp.cn/topic/3855.html</a></p>
 
 <p>欢迎留言探讨！</p>
 ]]></content>
