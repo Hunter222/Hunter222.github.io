@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Other | 小黄鸡]]></title>
   <link href="http://hunter222.github.io/blog/categories/other/atom.xml" rel="self"/>
   <link href="http://hunter222.github.io/"/>
-  <updated>2016-09-04T20:43:50+08:00</updated>
+  <updated>2016-09-04T22:24:16+08:00</updated>
   <id>http://hunter222.github.io/</id>
   <author>
     <name><![CDATA[chenjingxiu]]></name>
@@ -12,6 +12,305 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[php操作mongoDB示例]]></title>
+    <link href="http://hunter222.github.io/blog/2016/09/02/phpl-mongoDB/"/>
+    <updated>2016-09-02T18:19:33+08:00</updated>
+    <id>http://hunter222.github.io/blog/2016/09/02/phpl-mongoDB</id>
+    <content type="html"><![CDATA[<pre><code>&lt;?php
+/**
+* PHP操作MongoDB学习笔记
+*/
+//*************************
+//**   连接MongoDB数据库  **//
+//*************************
+//格式=&gt;(“mongodb://用户名:密码 @地址:端口/默认指定数据库”,参数)
+$conn = new Mongo();
+//可以简写为
+//$conn=new Mongo(); #连接本地主机,默认端口.
+//$conn=new Mongo(“172.21.15.69″); #连接远程主机
+//$conn=new Mongo(“xiaocai.loc:10086″); #连接指定端口远程主机
+//$conn=new Mongo(“xiaocai.loc”,array(“replicaSet”=&gt;true)); #负载均衡
+//$conn=new Mongo(“xiaocai.loc”,array(“persist”=&gt;”t”)); #持久连接
+//$conn=new Mongo(“mongodb://sa:123@localhost”); #带用户名密码
+//$conn=new Mongo(“mongodb://localhost:27017,localhost:27018″); #连接多个服务器
+//$conn=new Mongo(“mongodb:///tmp/mongo-27017.sock”); #域套接字
+//$conn=new Mongo(“mongodb://admin_miss:miss@localhost:27017/test”,array(‘persist’=&gt;’p',”replicaSet”=&gt;true)); #完整
+//详细资料:http://www.php.net/manual/en/mongo.connecting.php
+//*************************
+//**   选择数据库与表    **//
+//*************************
+$db=$conn-&gt;mydb; #选择mydb数据库
+//$db=$conn-&gt;selectDB(“mydb”); #第二种写法
+$collection=$db-&gt;column; #选择集合(选择’表’)
+//$collection=$db-&gt;selectCollection(‘column’); #第二种写法
+//$collection=$conn-&gt;mydb-&gt;column; #更简洁的写法
+//注意:1.数据库和集合不需要事先创建,若它们不存在则会自动创建它们.
+//   2.注意错别字,你可能会无意间的创建一个新的数据库(与原先的数据库混乱).
+//*************************
+//**   插入文档     **//
+//*************************
+//**向集合中插入数据,返回bool判断是否插入成功. **/
+$array=array(‘column_name’=&gt;’col’.rand(100,999),’column_exp’=&gt;’xiaocai’);
+$result=$collection-&gt;insert($array); #简单插入
+echo “新记录ID:”.$array['_id']; #MongoDB会返回一个记录标识
+var_dump($result); #返回:bool(true)
+//**向集合中安全插入数据,返回插入状态(数组). **/
+$array=array(‘column_name’=&gt;’col’.rand(100,999),’column_exp’=&gt;’xiaocai2′);
+$result=$collection-&gt;insert($array,true); #用于等待MongoDB完成操作,以便确定是否成功.(当有大量记录插入时使用该参数会比较有用)
+echo “新记录ID:”.$array['_id']; #MongoDB会返回一个记录标识
+var_dump($result); #返回:array(3) { ["err"]=&gt; NULL ["n"]=&gt; int(0) ["ok"]=&gt; float(1) }
+//**完整的写法 **/
+#insert($array,array(‘safe’=&gt;false,’fsync’=&gt;false,’timeout’=&gt;10000))
+/*
+* *
+* 完整格式:insert ( array $a [, array $options = array() ] )
+*    insert(array(),array(‘safe’=&gt;false,’fsync’=&gt;false,’timeout’=&gt;10000))
+*       参数:safe:默认false,是否安全写入
+*   fsync:默认false,是否强制插入到同步到磁盘
+*     timeout:超时时间(毫秒)
+*
+* 插入结果:{ “_id” : ObjectId(“4d63552ad549a02c01000009″), “column_name” : “col770″, “column_exp” : “xiaocai” }
+*    ’_id’为主键字段,在插入是MongoDB自动添加.
+*
+*    注意:1.以下两次插入的为同一条记录(相同的_id),因为它们的值相同。
+*         $collection-&gt;insert(array(‘column_name’=&gt;’xiaocai’));
+*         $collection-&gt;insert(array(‘column_name’=&gt;’xiaocai’));
+*     避免
+* $collection-&gt;insert(array(‘column_name’=&gt;’xiaocai’),true);
+* try {
+*      $collection-&gt;insert(array(‘column_name’=&gt;’xiaocai’),true);
+* }catch(MongoCursorException $e){
+*      echo “Can’t save the same person twice!\n”;
+* }
+*
+*    详细资料:http://www.php.net/manual/zh/mongocollection.insert.php
+* *
+*/
+//*************************
+//**   更新文档     **//
+//*************************
+//** 修改更新 **/
+$where=array(‘column_name’=&gt;’col123′);
+$newdata=array(‘column_exp’=&gt;’GGGGGGG’,'column_fid’=&gt;444);
+$result=$collection-&gt;update($where,array(‘$set’=&gt;$newdata)); #$set:让某节点等于给定值,类似的还有$pull $pullAll $pop $inc,在后面慢慢说明用法
+/*
+* 结果:
+* 原数据
+* {“_id”:ObjectId(“4d635ba2d549a02801000003″),”column_name”:”col123″,”column_exp”:”xiaocai”}
+* 被替换成了
+* {“_id”:ObjectId(“4d635ba2d549a02801000003″),”column_name”:”col123″,”column_exp”:”GGGGGGG”,”column_fid”:444}
+*/
+//** 替换更新 **/
+$where=array(‘column_name’=&gt;’col709′);
+$newdata=array(‘column_exp’=&gt;’HHHHHHHHH’,'column_fid’=&gt;123);
+$result=$collection-&gt;update($where,$newdata);
+/*
+* 结果:
+* 原数据
+* {“_id”:ObjectId(“4d635ba2d549a02801000003″),”column_name”:”col709″,”column_exp”:”xiaocai”}
+* 被替换成了
+* {“_id”:ObjectId(“4d635ba2d549a02801000003″),”column_exp”:”HHHHHHHHH”,”column_fid”:123}
+*/
+//** 批量更新 **/
+$where=array(‘column_name’=&gt;’col’);
+$newdata=array(‘column_exp’=&gt;’multiple’,’91u’=&gt;684435);
+$result=$collection-&gt;update($where,array(‘$set’=&gt;$newdata),array(‘multiple’=&gt;true));
+/**
+* 所有’column_name’='col’都被修改
+*/
+//** 自动累加 **/
+$where=array(’91u’=&gt;684435);
+$newdata=array(‘column_exp’=&gt;’edit’);
+$result=$collection-&gt;update($where,array(‘$set’=&gt;$newdata,’$inc’=&gt;array(’91u’=&gt;-5)));
+/**
+* 更新91u=684435的数据,并且91u自减5
+*/
+/** 删除节点 **/
+$where=array(‘column_name’=&gt;’col685′);
+$result=$collection-&gt;update($where,array(‘$unset’=&gt;’column_exp’));
+/**
+* 删除节点column_exp
+*/
+/*
+* *
+* 完整格式:update(array $criteria, array $newobj [, array $options = array()  ] )
+*       注意:1.注意区分替换更新与修改更新
+*    2.注意区分数据类型如 array(’91u’=&gt;’684435′)与array(’91u’=&gt;684435)
+* 详细资料:http://www.mongodb.org/display/DOCS/Updating#Updating-%24bit
+* *
+*/
+//*************************
+//**   删除文档     **//
+//*************************
+/** 清空数据库 **/
+$collection-&gt;remove(array(‘column_name’=&gt;’col399′));
+//$collection-&gt;remove(); #清空集合
+/** 删除指定MongoId **/
+$id = new MongoId(“4d638ea1d549a02801000011″);
+$collection-&gt;remove(array(‘_id’=&gt;(object)$id));
+/*
+* *
+*  使用下面的方法来匹配{“_id”:ObjectId(“4d638ea1d549a02801000011″)},查询、更新也一样
+*  $id = new MongoId(“4d638ea1d549a02801000011″);
+*  array(‘_id’=&gt;(object)$id)
+* *
+*/
+//*************************
+//**   查询文档     **//
+//*************************
+/** 查询文档中的记录数 **/
+echo ‘count:’.$collection-&gt;count().”&lt;br&gt;”; #全部
+echo ‘count:’.$collection-&gt;count(array(‘type’=&gt;’user’)).”&lt;br&gt;”; #可以加上条件
+echo ‘count:’.$collection-&gt;count(array(‘age’=&gt;array(‘$gt’=&gt;50,’$lte’=&gt;74))).”&lt;br&gt;”; #大于50小于等于74
+echo ‘count:’.$collection-&gt;find()-&gt;limit(5)-&gt;skip(0)-&gt;count(true).”&lt;br&gt;”; #获得实际返回的结果数
+/**
+* 注:$gt为大于、$gte为大于等于、$lt为小于、$lte为小于等于、$ne为不等于、$exists不存在
+*/
+/** 集合中所有文档 **/
+$cursor = $collection-&gt;find()-&gt;snapshot();
+foreach ($cursor as $id =&gt; $value) {
+echo “$id: “; var_dump($value); echo “&lt;br&gt;”;
+}
+/**
+* 注意:
+* 在我们做了find()操作，获得$cursor游标之后，这个游标还是动态的.
+* 换句话说,在我find()之后,到我的游标循环完成这段时间,如果再有符合条件的记录被插入到collection,那么这些记录也会被$cursor 获得.
+* 如果你想在获得$cursor之后的结果集不变化,需要这样做：
+* $cursor = $collection-&gt;find();
+* $cursor-&gt;snapshot();
+* 详见http://www.bumao.com/index.php/2010/08/mongo_php_cursor.html
+*/
+/** 查询一条数据 **/
+$cursor = $collection-&gt;findOne();
+/**
+*  注意:findOne()获得结果集后不能使用snapshot(),fields()等函数;
+*/
+/** age,type 列不显示 **/
+$cursor = $collection-&gt;find()-&gt;fields(array(“age”=&gt;false,”type”=&gt;false));
+/** 只显示user 列 **/
+$cursor = $collection-&gt;find()-&gt;fields(array(“user”=&gt;true));
+/**
+* 我这样写会出错:$cursor-&gt;fields(array(“age”=&gt;true,”type”=&gt;false));
+*/
+/** (存在type,age节点) and age!=0 and age&lt;50 **/
+$where=array(‘type’=&gt;array(‘$exists’=&gt;true),’age’=&gt;array(‘$ne’=&gt;0,’$lt’=&gt;50,’$exists’=&gt;true));
+$cursor = $collection-&gt;find($where);
+/** 分页获取结果集  **/
+$cursor = $collection-&gt;find()-&gt;limit(5)-&gt;skip(0);
+/** 排序  **/
+$cursor = $collection-&gt;find()-&gt;sort(array(‘age’=&gt;-1,’type’=&gt;1)); ##1表示降序 -1表示升序,参数的先后影响排序顺序
+/** 索引  **/
+$collection-&gt;ensureIndex(array(‘age’ =&gt; 1,’type’=&gt;-1)); #1表示降序 -1表示升序
+$collection-&gt;ensureIndex(array(‘age’ =&gt; 1,’type’=&gt;-1),array(‘background’=&gt;true)); #索引的创建放在后台运行(默认是同步运行)
+$collection-&gt;ensureIndex(array(‘age’ =&gt; 1,’type’=&gt;-1),array(‘unique’=&gt;true)); #该索引是唯一的
+/**
+* ensureIndex (array(),array(‘name’=&gt;’索引名称’,'background’=true,’unique’=true))
+* 详见:http://www.php.net/manual/en/mongocollection.ensureindex.php
+*/
+/** 取得查询结果 **/
+$cursor = $collection-&gt;find();
+$array=array();
+foreach ($cursor as $id =&gt; $value) {
+$array[]=$value;
+}
+//*************************
+//**   文档聚类     **//
+//*************************
+//这东西没弄明白…
+$conn-&gt;close(); #关闭连接
+/*
+关系型数据库与MongoDB数据存储的区别
+MySql数据结构:
+CREATE TABLE IF NOT EXISTS `column`(
+`column_id` int(16)  NOT NULL  auto_increment  COMMENT ‘主键’,
+`column_name` varchar(32) NOT NULL COMMENT ‘栏目名称’,
+PRIMARY KEY  (`column_id`)
+);
+CREATE TABLE IF NOT EXISTS `article`(
+`article_id`  int(16)  NOT NULL  auto_increment  COMMENT ‘主键’,
+`article_caption` varchar(15) NOT NULL COMMENT ‘标题’,
+PRIMARY KEY(`article_id`)
+);
+CREATE TABLE IF NOT EXISTS `article_body`(
+`article_id` int(16) NOT NULL COMMENT ‘article.article_id’,
+`body` text COMMENT ‘正文’
+);
+MongoDB数据结构:
+$data=array(
+‘column_name’ =&gt;’default’,
+‘article’ =&gt;array(
+‘article_caption’ =&gt; ‘xiaocai’,
+‘body’   =&gt; ‘xxxxxxxxxx…’
+)
+);
+$inc
+如果记录的该节点存在，让该节点的数值加N；如果该节点不存在，让该节点值等于N
+设结构记录结构为 array(’a’=&gt;1,’b’=&gt;’t’),想让a加5，那么：
+$coll-&gt;update(
+array(’b’=&gt;’t’),
+array(’$inc’=&gt;array(’a’=&gt;5)),
+)
+$set
+让某节点等于给定值
+设结构记录结构为 array(’a’=&gt;1,’b’=&gt;’t’),b为加f，那么：
+$coll-&gt;update(
+array(’a’=&gt;1),
+array(’$set’=&gt;array(’b’=&gt;’f’)),
+)
+$unset
+删除某节点
+设记录结构为 array(’a’=&gt;1,’b’=&gt;’t’)，想删除b节点，那么：
+$coll-&gt;update(
+array(’a’=&gt;1),
+array(’$unset’=&gt;’b’),
+)
+$push
+如果对应节点是个数组，就附加一个新的值上去；不存在，就创建这个数组，并附加一个值在这个数组上；如果该节点不是数组，返回错误。
+设记录结构为array(’a’=&gt;array(0=&gt;’haha’),’b’=&amp; gt;1)，想附加新数据到节点a，那么：
+$coll-&gt;update(
+array(’b’=&gt;1),
+array(’$push’=&gt;array(’a’=&gt;’wow’)),
+)
+这样，该记录就会成为：array(’a’=&gt;array(0=&gt;’haha’,1=&gt;’wow’),’b’=&gt;1)
+$pushAll
+与$push类似，只是会一次附加多个数值到某节点
+$addToSet
+如果该阶段的数组中没有某值，就添加之
+设记录结构为array(’a’=&gt;array(0=&amp; gt;’haha’),’b’=&gt;1)，如果想附加新的数据到该节点a，那么：
+$coll-&gt;update(
+array(’b’=&gt;1),
+array(’$addToSet’=&gt;array(’a’=&gt;’wow’)),
+)
+如果在a节点中已经有了wow,那么就不会再添加新的，如果没有，就会为该节点添加新的item——wow。
+$pop
+设该记录为array(’a’=&gt;array(0=&gt;’haha’,1=&amp; gt;’wow’),’b’=&gt;1)
+删除某数组节点的最后一个元素:
+$coll-&gt;update(
+array(’b’=&gt;1),
+array(’$pop=&gt;array(’a’=&gt;1)),
+)
+删除某数组阶段的第一个元素
+$coll-&gt;update(
+array(’b’=&gt;1),
+array(’$pop=&gt;array(’a’=&gt;-1)),
+)
+$pull
+如果该节点是个数组，那么删除其值为value的子项，如果不是数组，会返回一个错误。
+设该记录为 array(’a’=&gt;array(0=&gt;’haha’,1=&gt;’wow’),’b’=&gt;1)，想要删除a中value为 haha的子项：
+$coll-&gt;update(
+array(’b’=&gt;1),
+array(’$pull=&gt;array(’a’=&gt;’haha’)),
+)
+结果为： array(’a’=&gt;array(0=&gt;’wow’),’b’=&gt;1)
+$pullAll
+与$pull类似，只是可以删除一组符合条件的记录。
+*/
+?&gt;
+</code></pre>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[【转】mysql优化原理与方式]]></title>
@@ -1311,129 +1610,6 @@ function  deepslashes($data){
        return is_array($data) ? array_map('deepspecialchars', $data) : htmlspecialchars($data);
    }
 </code></pre>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[linux下thinkphp的Nginx配置文件]]></title>
-    <link href="http://hunter222.github.io/blog/2016/08/31/Nginx-thinkphp/"/>
-    <updated>2016-08-31T18:19:26+08:00</updated>
-    <id>http://hunter222.github.io/blog/2016/08/31/Nginx-thinkphp</id>
-    <content type="html"><![CDATA[<h5>linux下thinkphp的Nginx配置文件(亲测有效)</h5>
-
-<p>一个配置文件，完美支持普通,兼容,pathinfo,rewrite4种url模式，常见的静态文件404时也不会再去跑一遍fastcgi浪费资源。
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-<span class='line-number'>34</span>
-<span class='line-number'>35</span>
-<span class='line-number'>36</span>
-<span class='line-number'>37</span>
-<span class='line-number'>38</span>
-<span class='line-number'>39</span>
-<span class='line-number'>40</span>
-<span class='line-number'>41</span>
-<span class='line-number'>42</span>
-<span class='line-number'>43</span>
-<span class='line-number'>44</span>
-<span class='line-number'>45</span>
-<span class='line-number'>46</span>
-<span class='line-number'>47</span>
-<span class='line-number'>48</span>
-<span class='line-number'>49</span>
-<span class='line-number'>50</span>
-<span class='line-number'>51</span>
-<span class='line-number'>52</span>
-<span class='line-number'>53</span>
-<span class='line-number'>54</span>
-<span class='line-number'>55</span>
-<span class='line-number'>56</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>server {
-</span><span class='line'>    listen       80;
-</span><span class='line'>    server_name  thinkphp.lo;
-</span><span class='line'>    root /var/www;
-</span><span class='line'>    index  index.html index.htm index.php;&lt;/p&gt;
-</span><span class='line'>
-</span><span class='line'>&lt;pre&gt;&lt;code&gt;error_page  404              /404.html;
-</span><span class='line'>location = /404.html {
-</span><span class='line'>    return 404 'Sorry, File not Found!';
-</span><span class='line'>}
-</span><span class='line'>error_page  500 502 503 504  /50x.html;
-</span><span class='line'>location = /50x.html {
-</span><span class='line'>    root   /usr/share/nginx/html; # windows用户替换这个目录
-</span><span class='line'>}
-</span><span class='line'>
-</span><span class='line'>location / {
-</span><span class='line'>    try_files $uri @rewrite;
-</span><span class='line'>}
-</span><span class='line'>
-</span><span class='line'>location @rewrite {
-</span><span class='line'>    set $static 0;
-</span><span class='line'>    if  ($uri ~ \.(css|js|jpg|jpeg|png|gif|ico|woff|eot|svg|css\.map|min\.map)$) {
-</span><span class='line'>        set $static 1;
-</span><span class='line'>    }
-</span><span class='line'>
-</span><span class='line'>    if ($static = 0) {
-</span><span class='line'>        rewrite ^/(.*)$ /index.php?s=/$1;
-</span><span class='line'>    }
-</span><span class='line'>
-</span><span class='line'>}
-</span><span class='line'>
-</span><span class='line'>location ~ /Uploads/.*\.php$ {
-</span><span class='line'>    deny all;
-</span><span class='line'>}
-</span><span class='line'>
-</span><span class='line'>location ~ \.php/ {
-</span><span class='line'>   if ($request_uri ~ ^(.+\.php)(/.+?)($|\?)) { }
-</span><span class='line'>   fastcgi_pass 127.0.0.1:9000;
-</span><span class='line'>   include fastcgi_params;
-</span><span class='line'>   fastcgi_param SCRIPT_NAME     $1;
-</span><span class='line'>   fastcgi_param PATH_INFO       $2;
-</span><span class='line'>   fastcgi_param SCRIPT_FILENAME $document_root$1;
-</span><span class='line'>}
-</span><span class='line'>
-</span><span class='line'>location ~ \.php$ {
-</span><span class='line'>    fastcgi_pass 127.0.0.1:9000;
-</span><span class='line'>    fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
-</span><span class='line'>    include fastcgi_params;
-</span><span class='line'>}
-</span><span class='line'>
-</span><span class='line'>location ~ /\.ht {
-</span><span class='line'>    deny  all;
-</span><span class='line'>}
-</span><span class='line'>&lt;/code&gt;&lt;/pre&gt;
-</span><span class='line'>
-</span><span class='line'>&lt;p&gt;}</span></code></pre></td></tr></table></div></figure></p>
 ]]></content>
   </entry>
   

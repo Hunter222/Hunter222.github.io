@@ -9,8 +9,59 @@
   <meta name="author" content="chenjingxiu">
 
   
-  <meta name="description" content="注：由于本人总结的mysql笔记篇幅过长，截图过多，占用博客内存过大。因此在网上找到不错的文章转载过来方便以后参考: http://www.thinkphp.cn/topic/3855.html 欢迎留言探讨！
-">
+  <meta name="description" content="1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -73,6 +124,615 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2016/09/02/phpl-mongoDB/">php操作mongoDB示例</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2016-09-02T18:19:33+08:00'><span class='date'><span class='date-month'>Sep</span> <span class='date-day'>2</span><span class='date-suffix'>nd</span>, <span class='date-year'>2016</span></span> <span class='time'>6:19 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+<span class='line-number'>53</span>
+<span class='line-number'>54</span>
+<span class='line-number'>55</span>
+<span class='line-number'>56</span>
+<span class='line-number'>57</span>
+<span class='line-number'>58</span>
+<span class='line-number'>59</span>
+<span class='line-number'>60</span>
+<span class='line-number'>61</span>
+<span class='line-number'>62</span>
+<span class='line-number'>63</span>
+<span class='line-number'>64</span>
+<span class='line-number'>65</span>
+<span class='line-number'>66</span>
+<span class='line-number'>67</span>
+<span class='line-number'>68</span>
+<span class='line-number'>69</span>
+<span class='line-number'>70</span>
+<span class='line-number'>71</span>
+<span class='line-number'>72</span>
+<span class='line-number'>73</span>
+<span class='line-number'>74</span>
+<span class='line-number'>75</span>
+<span class='line-number'>76</span>
+<span class='line-number'>77</span>
+<span class='line-number'>78</span>
+<span class='line-number'>79</span>
+<span class='line-number'>80</span>
+<span class='line-number'>81</span>
+<span class='line-number'>82</span>
+<span class='line-number'>83</span>
+<span class='line-number'>84</span>
+<span class='line-number'>85</span>
+<span class='line-number'>86</span>
+<span class='line-number'>87</span>
+<span class='line-number'>88</span>
+<span class='line-number'>89</span>
+<span class='line-number'>90</span>
+<span class='line-number'>91</span>
+<span class='line-number'>92</span>
+<span class='line-number'>93</span>
+<span class='line-number'>94</span>
+<span class='line-number'>95</span>
+<span class='line-number'>96</span>
+<span class='line-number'>97</span>
+<span class='line-number'>98</span>
+<span class='line-number'>99</span>
+<span class='line-number'>100</span>
+<span class='line-number'>101</span>
+<span class='line-number'>102</span>
+<span class='line-number'>103</span>
+<span class='line-number'>104</span>
+<span class='line-number'>105</span>
+<span class='line-number'>106</span>
+<span class='line-number'>107</span>
+<span class='line-number'>108</span>
+<span class='line-number'>109</span>
+<span class='line-number'>110</span>
+<span class='line-number'>111</span>
+<span class='line-number'>112</span>
+<span class='line-number'>113</span>
+<span class='line-number'>114</span>
+<span class='line-number'>115</span>
+<span class='line-number'>116</span>
+<span class='line-number'>117</span>
+<span class='line-number'>118</span>
+<span class='line-number'>119</span>
+<span class='line-number'>120</span>
+<span class='line-number'>121</span>
+<span class='line-number'>122</span>
+<span class='line-number'>123</span>
+<span class='line-number'>124</span>
+<span class='line-number'>125</span>
+<span class='line-number'>126</span>
+<span class='line-number'>127</span>
+<span class='line-number'>128</span>
+<span class='line-number'>129</span>
+<span class='line-number'>130</span>
+<span class='line-number'>131</span>
+<span class='line-number'>132</span>
+<span class='line-number'>133</span>
+<span class='line-number'>134</span>
+<span class='line-number'>135</span>
+<span class='line-number'>136</span>
+<span class='line-number'>137</span>
+<span class='line-number'>138</span>
+<span class='line-number'>139</span>
+<span class='line-number'>140</span>
+<span class='line-number'>141</span>
+<span class='line-number'>142</span>
+<span class='line-number'>143</span>
+<span class='line-number'>144</span>
+<span class='line-number'>145</span>
+<span class='line-number'>146</span>
+<span class='line-number'>147</span>
+<span class='line-number'>148</span>
+<span class='line-number'>149</span>
+<span class='line-number'>150</span>
+<span class='line-number'>151</span>
+<span class='line-number'>152</span>
+<span class='line-number'>153</span>
+<span class='line-number'>154</span>
+<span class='line-number'>155</span>
+<span class='line-number'>156</span>
+<span class='line-number'>157</span>
+<span class='line-number'>158</span>
+<span class='line-number'>159</span>
+<span class='line-number'>160</span>
+<span class='line-number'>161</span>
+<span class='line-number'>162</span>
+<span class='line-number'>163</span>
+<span class='line-number'>164</span>
+<span class='line-number'>165</span>
+<span class='line-number'>166</span>
+<span class='line-number'>167</span>
+<span class='line-number'>168</span>
+<span class='line-number'>169</span>
+<span class='line-number'>170</span>
+<span class='line-number'>171</span>
+<span class='line-number'>172</span>
+<span class='line-number'>173</span>
+<span class='line-number'>174</span>
+<span class='line-number'>175</span>
+<span class='line-number'>176</span>
+<span class='line-number'>177</span>
+<span class='line-number'>178</span>
+<span class='line-number'>179</span>
+<span class='line-number'>180</span>
+<span class='line-number'>181</span>
+<span class='line-number'>182</span>
+<span class='line-number'>183</span>
+<span class='line-number'>184</span>
+<span class='line-number'>185</span>
+<span class='line-number'>186</span>
+<span class='line-number'>187</span>
+<span class='line-number'>188</span>
+<span class='line-number'>189</span>
+<span class='line-number'>190</span>
+<span class='line-number'>191</span>
+<span class='line-number'>192</span>
+<span class='line-number'>193</span>
+<span class='line-number'>194</span>
+<span class='line-number'>195</span>
+<span class='line-number'>196</span>
+<span class='line-number'>197</span>
+<span class='line-number'>198</span>
+<span class='line-number'>199</span>
+<span class='line-number'>200</span>
+<span class='line-number'>201</span>
+<span class='line-number'>202</span>
+<span class='line-number'>203</span>
+<span class='line-number'>204</span>
+<span class='line-number'>205</span>
+<span class='line-number'>206</span>
+<span class='line-number'>207</span>
+<span class='line-number'>208</span>
+<span class='line-number'>209</span>
+<span class='line-number'>210</span>
+<span class='line-number'>211</span>
+<span class='line-number'>212</span>
+<span class='line-number'>213</span>
+<span class='line-number'>214</span>
+<span class='line-number'>215</span>
+<span class='line-number'>216</span>
+<span class='line-number'>217</span>
+<span class='line-number'>218</span>
+<span class='line-number'>219</span>
+<span class='line-number'>220</span>
+<span class='line-number'>221</span>
+<span class='line-number'>222</span>
+<span class='line-number'>223</span>
+<span class='line-number'>224</span>
+<span class='line-number'>225</span>
+<span class='line-number'>226</span>
+<span class='line-number'>227</span>
+<span class='line-number'>228</span>
+<span class='line-number'>229</span>
+<span class='line-number'>230</span>
+<span class='line-number'>231</span>
+<span class='line-number'>232</span>
+<span class='line-number'>233</span>
+<span class='line-number'>234</span>
+<span class='line-number'>235</span>
+<span class='line-number'>236</span>
+<span class='line-number'>237</span>
+<span class='line-number'>238</span>
+<span class='line-number'>239</span>
+<span class='line-number'>240</span>
+<span class='line-number'>241</span>
+<span class='line-number'>242</span>
+<span class='line-number'>243</span>
+<span class='line-number'>244</span>
+<span class='line-number'>245</span>
+<span class='line-number'>246</span>
+<span class='line-number'>247</span>
+<span class='line-number'>248</span>
+<span class='line-number'>249</span>
+<span class='line-number'>250</span>
+<span class='line-number'>251</span>
+<span class='line-number'>252</span>
+<span class='line-number'>253</span>
+<span class='line-number'>254</span>
+<span class='line-number'>255</span>
+<span class='line-number'>256</span>
+<span class='line-number'>257</span>
+<span class='line-number'>258</span>
+<span class='line-number'>259</span>
+<span class='line-number'>260</span>
+<span class='line-number'>261</span>
+<span class='line-number'>262</span>
+<span class='line-number'>263</span>
+<span class='line-number'>264</span>
+<span class='line-number'>265</span>
+<span class='line-number'>266</span>
+<span class='line-number'>267</span>
+<span class='line-number'>268</span>
+<span class='line-number'>269</span>
+<span class='line-number'>270</span>
+<span class='line-number'>271</span>
+<span class='line-number'>272</span>
+<span class='line-number'>273</span>
+<span class='line-number'>274</span>
+<span class='line-number'>275</span>
+<span class='line-number'>276</span>
+<span class='line-number'>277</span>
+<span class='line-number'>278</span>
+<span class='line-number'>279</span>
+<span class='line-number'>280</span>
+<span class='line-number'>281</span>
+<span class='line-number'>282</span>
+<span class='line-number'>283</span>
+<span class='line-number'>284</span>
+<span class='line-number'>285</span>
+<span class='line-number'>286</span>
+<span class='line-number'>287</span>
+<span class='line-number'>288</span>
+<span class='line-number'>289</span>
+<span class='line-number'>290</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;?php
+</span><span class='line'>/**
+</span><span class='line'>* PHP操作MongoDB学习笔记
+</span><span class='line'>*/
+</span><span class='line'>//*************************
+</span><span class='line'>//**   连接MongoDB数据库  **//
+</span><span class='line'>//*************************
+</span><span class='line'>//格式=&gt;(“mongodb://用户名:密码 @地址:端口/默认指定数据库”,参数)
+</span><span class='line'>$conn = new Mongo();
+</span><span class='line'>//可以简写为
+</span><span class='line'>//$conn=new Mongo(); #连接本地主机,默认端口.
+</span><span class='line'>//$conn=new Mongo(“172.21.15.69″); #连接远程主机
+</span><span class='line'>//$conn=new Mongo(“xiaocai.loc:10086″); #连接指定端口远程主机
+</span><span class='line'>//$conn=new Mongo(“xiaocai.loc”,array(“replicaSet”=&gt;true)); #负载均衡
+</span><span class='line'>//$conn=new Mongo(“xiaocai.loc”,array(“persist”=&gt;”t”)); #持久连接
+</span><span class='line'>//$conn=new Mongo(“mongodb://sa:123@localhost”); #带用户名密码
+</span><span class='line'>//$conn=new Mongo(“mongodb://localhost:27017,localhost:27018″); #连接多个服务器
+</span><span class='line'>//$conn=new Mongo(“mongodb:///tmp/mongo-27017.sock”); #域套接字
+</span><span class='line'>//$conn=new Mongo(“mongodb://admin_miss:miss@localhost:27017/test”,array(‘persist’=&gt;’p',”replicaSet”=&gt;true)); #完整
+</span><span class='line'>//详细资料:http://www.php.net/manual/en/mongo.connecting.php
+</span><span class='line'>//*************************
+</span><span class='line'>//**   选择数据库与表    **//
+</span><span class='line'>//*************************
+</span><span class='line'>$db=$conn-&gt;mydb; #选择mydb数据库
+</span><span class='line'>//$db=$conn-&gt;selectDB(“mydb”); #第二种写法
+</span><span class='line'>$collection=$db-&gt;column; #选择集合(选择’表’)
+</span><span class='line'>//$collection=$db-&gt;selectCollection(‘column’); #第二种写法
+</span><span class='line'>//$collection=$conn-&gt;mydb-&gt;column; #更简洁的写法
+</span><span class='line'>//注意:1.数据库和集合不需要事先创建,若它们不存在则会自动创建它们.
+</span><span class='line'>//   2.注意错别字,你可能会无意间的创建一个新的数据库(与原先的数据库混乱).
+</span><span class='line'>//*************************
+</span><span class='line'>//**   插入文档     **//
+</span><span class='line'>//*************************
+</span><span class='line'>//**向集合中插入数据,返回bool判断是否插入成功. **/
+</span><span class='line'>$array=array(‘column_name’=&gt;’col’.rand(100,999),’column_exp’=&gt;’xiaocai’);
+</span><span class='line'>$result=$collection-&gt;insert($array); #简单插入
+</span><span class='line'>echo “新记录ID:”.$array['_id']; #MongoDB会返回一个记录标识
+</span><span class='line'>var_dump($result); #返回:bool(true)
+</span><span class='line'>//**向集合中安全插入数据,返回插入状态(数组). **/
+</span><span class='line'>$array=array(‘column_name’=&gt;’col’.rand(100,999),’column_exp’=&gt;’xiaocai2′);
+</span><span class='line'>$result=$collection-&gt;insert($array,true); #用于等待MongoDB完成操作,以便确定是否成功.(当有大量记录插入时使用该参数会比较有用)
+</span><span class='line'>echo “新记录ID:”.$array['_id']; #MongoDB会返回一个记录标识
+</span><span class='line'>var_dump($result); #返回:array(3) { ["err"]=&gt; NULL ["n"]=&gt; int(0) ["ok"]=&gt; float(1) }
+</span><span class='line'>//**完整的写法 **/
+</span><span class='line'>#insert($array,array(‘safe’=&gt;false,’fsync’=&gt;false,’timeout’=&gt;10000))
+</span><span class='line'>/*
+</span><span class='line'>* *
+</span><span class='line'>* 完整格式:insert ( array $a [, array $options = array() ] )
+</span><span class='line'>*    insert(array(),array(‘safe’=&gt;false,’fsync’=&gt;false,’timeout’=&gt;10000))
+</span><span class='line'>*       参数:safe:默认false,是否安全写入
+</span><span class='line'>*   fsync:默认false,是否强制插入到同步到磁盘
+</span><span class='line'>*     timeout:超时时间(毫秒)
+</span><span class='line'>*
+</span><span class='line'>* 插入结果:{ “_id” : ObjectId(“4d63552ad549a02c01000009″), “column_name” : “col770″, “column_exp” : “xiaocai” }
+</span><span class='line'>*    ’_id’为主键字段,在插入是MongoDB自动添加.
+</span><span class='line'>*
+</span><span class='line'>*    注意:1.以下两次插入的为同一条记录(相同的_id),因为它们的值相同。
+</span><span class='line'>*         $collection-&gt;insert(array(‘column_name’=&gt;’xiaocai’));
+</span><span class='line'>*         $collection-&gt;insert(array(‘column_name’=&gt;’xiaocai’));
+</span><span class='line'>*     避免
+</span><span class='line'>* $collection-&gt;insert(array(‘column_name’=&gt;’xiaocai’),true);
+</span><span class='line'>* try {
+</span><span class='line'>*      $collection-&gt;insert(array(‘column_name’=&gt;’xiaocai’),true);
+</span><span class='line'>* }catch(MongoCursorException $e){
+</span><span class='line'>*      echo “Can’t save the same person twice!\n”;
+</span><span class='line'>* }
+</span><span class='line'>*
+</span><span class='line'>*    详细资料:http://www.php.net/manual/zh/mongocollection.insert.php
+</span><span class='line'>* *
+</span><span class='line'>*/
+</span><span class='line'>//*************************
+</span><span class='line'>//**   更新文档     **//
+</span><span class='line'>//*************************
+</span><span class='line'>//** 修改更新 **/
+</span><span class='line'>$where=array(‘column_name’=&gt;’col123′);
+</span><span class='line'>$newdata=array(‘column_exp’=&gt;’GGGGGGG’,'column_fid’=&gt;444);
+</span><span class='line'>$result=$collection-&gt;update($where,array(‘$set’=&gt;$newdata)); #$set:让某节点等于给定值,类似的还有$pull $pullAll $pop $inc,在后面慢慢说明用法
+</span><span class='line'>/*
+</span><span class='line'>* 结果:
+</span><span class='line'>* 原数据
+</span><span class='line'>* {“_id”:ObjectId(“4d635ba2d549a02801000003″),”column_name”:”col123″,”column_exp”:”xiaocai”}
+</span><span class='line'>* 被替换成了
+</span><span class='line'>* {“_id”:ObjectId(“4d635ba2d549a02801000003″),”column_name”:”col123″,”column_exp”:”GGGGGGG”,”column_fid”:444}
+</span><span class='line'>*/
+</span><span class='line'>//** 替换更新 **/
+</span><span class='line'>$where=array(‘column_name’=&gt;’col709′);
+</span><span class='line'>$newdata=array(‘column_exp’=&gt;’HHHHHHHHH’,'column_fid’=&gt;123);
+</span><span class='line'>$result=$collection-&gt;update($where,$newdata);
+</span><span class='line'>/*
+</span><span class='line'>* 结果:
+</span><span class='line'>* 原数据
+</span><span class='line'>* {“_id”:ObjectId(“4d635ba2d549a02801000003″),”column_name”:”col709″,”column_exp”:”xiaocai”}
+</span><span class='line'>* 被替换成了
+</span><span class='line'>* {“_id”:ObjectId(“4d635ba2d549a02801000003″),”column_exp”:”HHHHHHHHH”,”column_fid”:123}
+</span><span class='line'>*/
+</span><span class='line'>//** 批量更新 **/
+</span><span class='line'>$where=array(‘column_name’=&gt;’col’);
+</span><span class='line'>$newdata=array(‘column_exp’=&gt;’multiple’,’91u’=&gt;684435);
+</span><span class='line'>$result=$collection-&gt;update($where,array(‘$set’=&gt;$newdata),array(‘multiple’=&gt;true));
+</span><span class='line'>/**
+</span><span class='line'>* 所有’column_name’='col’都被修改
+</span><span class='line'>*/
+</span><span class='line'>//** 自动累加 **/
+</span><span class='line'>$where=array(’91u’=&gt;684435);
+</span><span class='line'>$newdata=array(‘column_exp’=&gt;’edit’);
+</span><span class='line'>$result=$collection-&gt;update($where,array(‘$set’=&gt;$newdata,’$inc’=&gt;array(’91u’=&gt;-5)));
+</span><span class='line'>/**
+</span><span class='line'>* 更新91u=684435的数据,并且91u自减5
+</span><span class='line'>*/
+</span><span class='line'>/** 删除节点 **/
+</span><span class='line'>$where=array(‘column_name’=&gt;’col685′);
+</span><span class='line'>$result=$collection-&gt;update($where,array(‘$unset’=&gt;’column_exp’));
+</span><span class='line'>/**
+</span><span class='line'>* 删除节点column_exp
+</span><span class='line'>*/
+</span><span class='line'>/*
+</span><span class='line'>* *
+</span><span class='line'>* 完整格式:update(array $criteria, array $newobj [, array $options = array()  ] )
+</span><span class='line'>*       注意:1.注意区分替换更新与修改更新
+</span><span class='line'>*    2.注意区分数据类型如 array(’91u’=&gt;’684435′)与array(’91u’=&gt;684435)
+</span><span class='line'>* 详细资料:http://www.mongodb.org/display/DOCS/Updating#Updating-%24bit
+</span><span class='line'>* *
+</span><span class='line'>*/
+</span><span class='line'>//*************************
+</span><span class='line'>//**   删除文档     **//
+</span><span class='line'>//*************************
+</span><span class='line'>/** 清空数据库 **/
+</span><span class='line'>$collection-&gt;remove(array(‘column_name’=&gt;’col399′));
+</span><span class='line'>//$collection-&gt;remove(); #清空集合
+</span><span class='line'>/** 删除指定MongoId **/
+</span><span class='line'>$id = new MongoId(“4d638ea1d549a02801000011″);
+</span><span class='line'>$collection-&gt;remove(array(‘_id’=&gt;(object)$id));
+</span><span class='line'>/*
+</span><span class='line'>* *
+</span><span class='line'>*  使用下面的方法来匹配{“_id”:ObjectId(“4d638ea1d549a02801000011″)},查询、更新也一样
+</span><span class='line'>*  $id = new MongoId(“4d638ea1d549a02801000011″);
+</span><span class='line'>*  array(‘_id’=&gt;(object)$id)
+</span><span class='line'>* *
+</span><span class='line'>*/
+</span><span class='line'>//*************************
+</span><span class='line'>//**   查询文档     **//
+</span><span class='line'>//*************************
+</span><span class='line'>/** 查询文档中的记录数 **/
+</span><span class='line'>echo ‘count:’.$collection-&gt;count().”&lt;br&gt;”; #全部
+</span><span class='line'>echo ‘count:’.$collection-&gt;count(array(‘type’=&gt;’user’)).”&lt;br&gt;”; #可以加上条件
+</span><span class='line'>echo ‘count:’.$collection-&gt;count(array(‘age’=&gt;array(‘$gt’=&gt;50,’$lte’=&gt;74))).”&lt;br&gt;”; #大于50小于等于74
+</span><span class='line'>echo ‘count:’.$collection-&gt;find()-&gt;limit(5)-&gt;skip(0)-&gt;count(true).”&lt;br&gt;”; #获得实际返回的结果数
+</span><span class='line'>/**
+</span><span class='line'>* 注:$gt为大于、$gte为大于等于、$lt为小于、$lte为小于等于、$ne为不等于、$exists不存在
+</span><span class='line'>*/
+</span><span class='line'>/** 集合中所有文档 **/
+</span><span class='line'>$cursor = $collection-&gt;find()-&gt;snapshot();
+</span><span class='line'>foreach ($cursor as $id =&gt; $value) {
+</span><span class='line'>echo “$id: “; var_dump($value); echo “&lt;br&gt;”;
+</span><span class='line'>}
+</span><span class='line'>/**
+</span><span class='line'>* 注意:
+</span><span class='line'>* 在我们做了find()操作，获得$cursor游标之后，这个游标还是动态的.
+</span><span class='line'>* 换句话说,在我find()之后,到我的游标循环完成这段时间,如果再有符合条件的记录被插入到collection,那么这些记录也会被$cursor 获得.
+</span><span class='line'>* 如果你想在获得$cursor之后的结果集不变化,需要这样做：
+</span><span class='line'>* $cursor = $collection-&gt;find();
+</span><span class='line'>* $cursor-&gt;snapshot();
+</span><span class='line'>* 详见http://www.bumao.com/index.php/2010/08/mongo_php_cursor.html
+</span><span class='line'>*/
+</span><span class='line'>/** 查询一条数据 **/
+</span><span class='line'>$cursor = $collection-&gt;findOne();
+</span><span class='line'>/**
+</span><span class='line'>*  注意:findOne()获得结果集后不能使用snapshot(),fields()等函数;
+</span><span class='line'>*/
+</span><span class='line'>/** age,type 列不显示 **/
+</span><span class='line'>$cursor = $collection-&gt;find()-&gt;fields(array(“age”=&gt;false,”type”=&gt;false));
+</span><span class='line'>/** 只显示user 列 **/
+</span><span class='line'>$cursor = $collection-&gt;find()-&gt;fields(array(“user”=&gt;true));
+</span><span class='line'>/**
+</span><span class='line'>* 我这样写会出错:$cursor-&gt;fields(array(“age”=&gt;true,”type”=&gt;false));
+</span><span class='line'>*/
+</span><span class='line'>/** (存在type,age节点) and age!=0 and age&lt;50 **/
+</span><span class='line'>$where=array(‘type’=&gt;array(‘$exists’=&gt;true),’age’=&gt;array(‘$ne’=&gt;0,’$lt’=&gt;50,’$exists’=&gt;true));
+</span><span class='line'>$cursor = $collection-&gt;find($where);
+</span><span class='line'>/** 分页获取结果集  **/
+</span><span class='line'>$cursor = $collection-&gt;find()-&gt;limit(5)-&gt;skip(0);
+</span><span class='line'>/** 排序  **/
+</span><span class='line'>$cursor = $collection-&gt;find()-&gt;sort(array(‘age’=&gt;-1,’type’=&gt;1)); ##1表示降序 -1表示升序,参数的先后影响排序顺序
+</span><span class='line'>/** 索引  **/
+</span><span class='line'>$collection-&gt;ensureIndex(array(‘age’ =&gt; 1,’type’=&gt;-1)); #1表示降序 -1表示升序
+</span><span class='line'>$collection-&gt;ensureIndex(array(‘age’ =&gt; 1,’type’=&gt;-1),array(‘background’=&gt;true)); #索引的创建放在后台运行(默认是同步运行)
+</span><span class='line'>$collection-&gt;ensureIndex(array(‘age’ =&gt; 1,’type’=&gt;-1),array(‘unique’=&gt;true)); #该索引是唯一的
+</span><span class='line'>/**
+</span><span class='line'>* ensureIndex (array(),array(‘name’=&gt;’索引名称’,'background’=true,’unique’=true))
+</span><span class='line'>* 详见:http://www.php.net/manual/en/mongocollection.ensureindex.php
+</span><span class='line'>*/
+</span><span class='line'>/** 取得查询结果 **/
+</span><span class='line'>$cursor = $collection-&gt;find();
+</span><span class='line'>$array=array();
+</span><span class='line'>foreach ($cursor as $id =&gt; $value) {
+</span><span class='line'>$array[]=$value;
+</span><span class='line'>}
+</span><span class='line'>//*************************
+</span><span class='line'>//**   文档聚类     **//
+</span><span class='line'>//*************************
+</span><span class='line'>//这东西没弄明白…
+</span><span class='line'>$conn-&gt;close(); #关闭连接
+</span><span class='line'>/*
+</span><span class='line'>关系型数据库与MongoDB数据存储的区别
+</span><span class='line'>MySql数据结构:
+</span><span class='line'>CREATE TABLE IF NOT EXISTS `column`(
+</span><span class='line'>`column_id` int(16)  NOT NULL  auto_increment  COMMENT ‘主键’,
+</span><span class='line'>`column_name` varchar(32) NOT NULL COMMENT ‘栏目名称’,
+</span><span class='line'>PRIMARY KEY  (`column_id`)
+</span><span class='line'>);
+</span><span class='line'>CREATE TABLE IF NOT EXISTS `article`(
+</span><span class='line'>`article_id`  int(16)  NOT NULL  auto_increment  COMMENT ‘主键’,
+</span><span class='line'>`article_caption` varchar(15) NOT NULL COMMENT ‘标题’,
+</span><span class='line'>PRIMARY KEY(`article_id`)
+</span><span class='line'>);
+</span><span class='line'>CREATE TABLE IF NOT EXISTS `article_body`(
+</span><span class='line'>`article_id` int(16) NOT NULL COMMENT ‘article.article_id’,
+</span><span class='line'>`body` text COMMENT ‘正文’
+</span><span class='line'>);
+</span><span class='line'>MongoDB数据结构:
+</span><span class='line'>$data=array(
+</span><span class='line'>‘column_name’ =&gt;’default’,
+</span><span class='line'>‘article’ =&gt;array(
+</span><span class='line'>‘article_caption’ =&gt; ‘xiaocai’,
+</span><span class='line'>‘body’   =&gt; ‘xxxxxxxxxx…’
+</span><span class='line'>)
+</span><span class='line'>);
+</span><span class='line'>$inc
+</span><span class='line'>如果记录的该节点存在，让该节点的数值加N；如果该节点不存在，让该节点值等于N
+</span><span class='line'>设结构记录结构为 array(’a’=&gt;1,’b’=&gt;’t’),想让a加5，那么：
+</span><span class='line'>$coll-&gt;update(
+</span><span class='line'>array(’b’=&gt;’t’),
+</span><span class='line'>array(’$inc’=&gt;array(’a’=&gt;5)),
+</span><span class='line'>)
+</span><span class='line'>$set
+</span><span class='line'>让某节点等于给定值
+</span><span class='line'>设结构记录结构为 array(’a’=&gt;1,’b’=&gt;’t’),b为加f，那么：
+</span><span class='line'>$coll-&gt;update(
+</span><span class='line'>array(’a’=&gt;1),
+</span><span class='line'>array(’$set’=&gt;array(’b’=&gt;’f’)),
+</span><span class='line'>)
+</span><span class='line'>$unset
+</span><span class='line'>删除某节点
+</span><span class='line'>设记录结构为 array(’a’=&gt;1,’b’=&gt;’t’)，想删除b节点，那么：
+</span><span class='line'>$coll-&gt;update(
+</span><span class='line'>array(’a’=&gt;1),
+</span><span class='line'>array(’$unset’=&gt;’b’),
+</span><span class='line'>)
+</span><span class='line'>$push
+</span><span class='line'>如果对应节点是个数组，就附加一个新的值上去；不存在，就创建这个数组，并附加一个值在这个数组上；如果该节点不是数组，返回错误。
+</span><span class='line'>设记录结构为array(’a’=&gt;array(0=&gt;’haha’),’b’=& gt;1)，想附加新数据到节点a，那么：
+</span><span class='line'>$coll-&gt;update(
+</span><span class='line'>array(’b’=&gt;1),
+</span><span class='line'>array(’$push’=&gt;array(’a’=&gt;’wow’)),
+</span><span class='line'>)
+</span><span class='line'>这样，该记录就会成为：array(’a’=&gt;array(0=&gt;’haha’,1=&gt;’wow’),’b’=&gt;1)
+</span><span class='line'>$pushAll
+</span><span class='line'>与$push类似，只是会一次附加多个数值到某节点
+</span><span class='line'>$addToSet
+</span><span class='line'>如果该阶段的数组中没有某值，就添加之
+</span><span class='line'>设记录结构为array(’a’=&gt;array(0=& gt;’haha’),’b’=&gt;1)，如果想附加新的数据到该节点a，那么：
+</span><span class='line'>$coll-&gt;update(
+</span><span class='line'>array(’b’=&gt;1),
+</span><span class='line'>array(’$addToSet’=&gt;array(’a’=&gt;’wow’)),
+</span><span class='line'>)
+</span><span class='line'>如果在a节点中已经有了wow,那么就不会再添加新的，如果没有，就会为该节点添加新的item——wow。
+</span><span class='line'>$pop
+</span><span class='line'>设该记录为array(’a’=&gt;array(0=&gt;’haha’,1=& gt;’wow’),’b’=&gt;1)
+</span><span class='line'>删除某数组节点的最后一个元素:
+</span><span class='line'>$coll-&gt;update(
+</span><span class='line'>array(’b’=&gt;1),
+</span><span class='line'>array(’$pop=&gt;array(’a’=&gt;1)),
+</span><span class='line'>)
+</span><span class='line'>删除某数组阶段的第一个元素
+</span><span class='line'>$coll-&gt;update(
+</span><span class='line'>array(’b’=&gt;1),
+</span><span class='line'>array(’$pop=&gt;array(’a’=&gt;-1)),
+</span><span class='line'>)
+</span><span class='line'>$pull
+</span><span class='line'>如果该节点是个数组，那么删除其值为value的子项，如果不是数组，会返回一个错误。
+</span><span class='line'>设该记录为 array(’a’=&gt;array(0=&gt;’haha’,1=&gt;’wow’),’b’=&gt;1)，想要删除a中value为 haha的子项：
+</span><span class='line'>$coll-&gt;update(
+</span><span class='line'>array(’b’=&gt;1),
+</span><span class='line'>array(’$pull=&gt;array(’a’=&gt;’haha’)),
+</span><span class='line'>)
+</span><span class='line'>结果为： array(’a’=&gt;array(0=&gt;’wow’),’b’=&gt;1)
+</span><span class='line'>$pullAll
+</span><span class='line'>与$pull类似，只是可以删除一组符合条件的记录。
+</span><span class='line'>*/
+</span><span class='line'>?&gt;</span></code></pre></td></tr></table></div></figure>
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -4319,200 +4979,6 @@ xsxk具有完全访问权限，并可以
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2016/08/31/zhengzebiaodashio/">关于php的正则表达式</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2016-08-31T18:19:28+08:00'><span class='date'><span class='date-month'>Aug</span> <span class='date-day'>31</span><span class='date-suffix'>st</span>, <span class='date-year'>2016</span></span> <span class='time'>6:19 pm</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>&ldquo;^[0-9]<em>[1-9][0-9]</em>$"　　 //正整数</p>
-
-<p>&ldquo;^((-\d+)|(0+))$"　　 //非正整数（负整数 + 0）</p>
-
-<p>&ldquo;^-[0-9]<em>[1-9][0-9]</em>$"　　 //负整数</p>
-
-<p>&ldquo;^-?\d+$"　　　　 //整数</p>
-
-<p>&ldquo;^\d+(.\d+)?$"　　 //非负浮点数（正浮点数 + 0）</p>
-
-<p>&ldquo;^(([0-9]+.[0-9]<em>[1-9][0-9]</em>)|([0-9]<em>[1-9][0-9]</em>.[0-9]+)|([0-9]<em>[1-9][0-9]</em>))$"　　 //正浮点数</p>
-
-<p>&ldquo;^((-\d+(.\d+)?)|(0+(.0+)?))$&rdquo;//非正浮点数（负浮点数 + 0）
-&ldquo;^(-(([0-9]+.[0-9]<em>[1-9][0-9]</em>)|([0-9]<em>[1-9][0-9]</em>.[0-9]+)|([0-9]<em>[1-9][0-9]</em>)))$"　　 //负浮点数</p>
-
-<p>&ldquo;^(-?\d+)(.\d+)?$"　　 //浮点数</p>
-
-<p>&ldquo;^[A-Za-z]+$"　　 //由26个英文字母组成的字符串</p>
-
-<p>&ldquo;^[A-Z]+$"　　 //由26个英文字母的大写组成的字符串</p>
-
-<p>&ldquo;^[a-z]+$"　　 //由26个英文字母的小写组成的字符串</p>
-
-<p>&ldquo;^[A-Za-z0-9]+$"　　 //由数字和26个英文字母组成的字符串</p>
-
-<p>&ldquo;^\w+$"　　 //由数字、26个英文字母或者下划线组成的字符串</p>
-
-<p>&ldquo;^[\w-]+(.[\w-]+)*@[\w-]+(.[\w-]+)+$"　　　　//email地址</p>
-
-<p>&ldquo;^[a-zA-z]+://(\w+(-\w+)<em>)(.(\w+(-\w+)</em>))<em>(\?\S</em>)?$&rdquo;//url
-/^(d{2}|d{4})-((0([1-9]{1}))|(1[1|2]))-((<a href="[1-9]{1}">0-2</a>)|(3[0|1]))$/ // 年-月-日
-/^((0([1-9]{1}))|(1[1|2]))/((<a href="[1-9]{1}">0-2</a>)|(3[0|1]))/(d{2}|d{4})$/ // 月/日/年</p>
-
-<p>&ldquo;^([w-.]+)@(([[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.)|(([w-]+.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(]?)$&rdquo; //Emil
-/^((+?[0-9]{2,4}-[0-9]{3,4}-)|([0-9]{3,4}-))?([0-9]{7,8})(-[0-9]+)?$/ //电话号码</p>
-
-<p>&ldquo;^(d{1,2}|1dd|2[0-4]d|25[0-5]).(d{1,2}|1dd|2[0-4]d|25[0-5]).(d{1,2}|1dd|2[0-4]d|25[0-5]).(d{1,2}|1dd|2[0-4]d|25[0-5])$&rdquo; //IP地址</p>
-
-<p>匹配中文字符的正则表达式： [\u4e00-\u9fa5]</p>
-
-<p>匹配双字节字符(包括汉字在内)：[^\x00-\xff]</p>
-
-<p>匹配空行的正则表达式：\n[\s| ]*\r</p>
-
-<p>匹配HTML标记的正则表达式：/&lt;(.<em>)>.</em>&lt;\/\1>|&lt;(.*) \/>/</p>
-
-<p>匹配首尾空格的正则表达式：(^\s<em>)|(\s</em>$)</p>
-
-<p>匹配Email地址的正则表达式：\w+([-+.]\w+)<em>@\w+([-.]\w+)</em>.\w+([-.]\w+)*</p>
-
-<p>匹配网址URL的正则表达式：^[a-zA-z]+://(\w+(-\w+)<em>)(\.(\w+(-\w+)</em>))<em>(\?\S</em>)?$</p>
-
-<p>匹配帐号是否合法(字母开头，允许5-16字节，允许字母数字下划线)：^[a-zA-Z][a-zA-Z0-9_]{4,15}$</p>
-
-<p>匹配国内电话号码：(\d{3}-|\d{4}-)?(\d{8}|\d{7})?</p>
-
-<p>匹配腾讯QQ号：^[1-9]<em>[1-9][0-9]</em>$</p>
-
-<p>利用正则表达式限制网页表单里的文本框输入内容：</p>
-
-<p>用正则表达式限制只能输入中文：onkeyup=&ldquo;value=value.replace(/[^u4E00-u9FA5]/g,&lsquo;&rsquo;)&rdquo; onbeforepaste=&ldquo;clipboardData.setData(&lsquo;text&rsquo;,clipboardData.getData(&lsquo;text&rsquo;).replace(/[^u4E00-u9FA5]/g,&lsquo;&rsquo;))&rdquo;</p>
-
-<p>用正则表达式限制只能输入全角字符：
-onkeyup=&ldquo;value=value.replace(/[^uFF00-uFFFF]/g,&lsquo;&rsquo;)&rdquo;</p>
-
-<p>onbeforepaste=&ldquo;clipboardData.setData(&lsquo;text&rsquo;,clipboardData.getData(&lsquo;text&rsquo;).replace(/[^uFF00-uFFFF]/g,&lsquo;&rsquo;))&rdquo;</p>
-
-<p>用正则表达式限制只能输入数字：onkeyup=&ldquo;value=value.replace(/[^d]/g,&lsquo;&rsquo;) "onbeforepaste="clipboardData.setData(&lsquo;text&rsquo;,clipboardData.getData(&lsquo;text&rsquo;).replace(/[^d]/g,&lsquo;&rsquo;))&rdquo;</p>
-
-<p>用正则表达式限制只能输入数字和英文：
-onkeyup=&ldquo;value=value.replace(/[W]/g,&lsquo;&rsquo;) "onbeforepaste="clipboardData.setData(&lsquo;text&rsquo;,clipboardData.getData(&lsquo;text&rsquo;).replace(/[^d]/g,&lsquo;&rsquo;))&rdquo;</p>
-
-<p>=========常用正则式</p>
-
-<p>匹配中文字符的正则表达式： [\u4e00-\u9fa5]</p>
-
-<p>匹配双字节字符(包括汉字在内)：[^\x00-\xff]</p>
-
-<p>匹配空行的正则表达式：\n[\s| ]*\r</p>
-
-<p>匹配HTML标记的正则表达式：/&lt;(.<em>)>.</em>&lt;\/\1>|&lt;(.*) \/>/</p>
-
-<p>匹配首尾空格的正则表达式：(^\s<em>)|(\s</em>$)</p>
-
-<p>匹配IP地址的正则表达式：/(\d+).(\d+).(\d+).(\d+)/g //</p>
-
-<p>匹配Email地址的正则表达式：\w+([-+.]\w+)<em>@\w+([-.]\w+)</em>.\w+([-.]\w+)*</p>
-
-<p>匹配网址URL的正则表达式：<a href="http://">http://</a>(/[\w-]+.)+[\w-]+(/[\w- ./?%&amp;=]*)?</p>
-
-<p>sql语句：<sup>select|drop|delete|create|update|insert</sup>.*$</p>
-
-<p>非负整数：^\d+$</p>
-
-<p>正整数：^[0-9]<em>[1-9][0-9]</em>$</p>
-
-<p>非正整数：<sup>(-\d+)|(0+)</sup>$</p>
-
-<p>负整数：^-[0-9]<em>[1-9][0-9]</em>$</p>
-
-<p>整数：^-?\d+$</p>
-
-<p>非负浮点数：^\d+(.\d+)?$</p>
-
-<p>正浮点数：<sup>(0-9)+.[0-9]<em>[1-9][0-9]</em></sup>|([0-9]<em>[1-9][0-9]</em>.[0-9]+)|([0-9]<em>[1-9][0-9]</em>))$</p>
-
-<p>非正浮点数：<sup>(-\d+.\d+)?</sup>|(0+(.0+)?))$</p>
-
-<p>负浮点数：<sup>-((正浮点数正则式))</sup>$</p>
-
-<p>英文字符串：^[A-Za-z]+$</p>
-
-<p>英文大写串：^[A-Z]+$</p>
-
-<p>英文小写串：^[a-z]+$</p>
-
-<p>英文字符数字串：^[A-Za-z0-9]+$</p>
-
-<p>英数字加下划线串：^\w+$</p>
-
-<p>E-mail地址：^[\w-]+(.[\w-]+)<em>@[\w-]+(.[\w-]+)+$
-URL：^[a-zA-Z]+://(\w+(-\w+)</em>)(.(\w+(-\w+)<em>))</em>(\?\s<em>)?$ 或：<sup>http</sup>:\/\/[A-Za-z0-9]+.[A-Za-z0-9]+[\/=\?%-&amp;_~`@[]\&lsquo;:+!]</em>([^&lt;>\&ldquo;\&rdquo;])*$</p>
-
-<p>邮政编码：^[1-9]\d{5}$ 中文：^[\u0391-\uFFE5]+$</p>
-
-<p>电话号码：<sup>((\d{2,3}))|(\d{3}-)</sup>?((0\d{2,3})|0\d{2,3}-)?[1-9]\d{6,7}(-\d{1,4})?$</p>
-
-<p>手机号码：<sup>((\d{2,3}))|(\d{3}-)</sup>?13\d{9}$</p>
-
-<p>双字节字符(包括汉字在内)：^\x00-\xff</p>
-
-<p>匹配首尾空格：(^\s<em>)|(\s</em>$)（像vbscript那样的trim函数）</p>
-
-<p>匹配HTML标记：&lt;(.<em>)>.</em>&lt;\/\1>|&lt;(.*) \/></p>
-
-<p>匹配空行：\n[\s| ]*\r</p>
-
-<p>提取信息中的网络链接：(h|H)(r|R)(e|E)(f|F) <em>= </em>(&lsquo;|&ldquo;)?(\w|\|\/|.)+(&rsquo;|&rdquo;| *|>)?</p>
-
-<p>提取信息中的邮件地址：\w+([-+.]\w+)<em>@\w+([-.]\w+)</em>.\w+([-.]\w+)*</p>
-
-<p>提取信息中的图片链接：(s|S)(r|R)(c|C) <em>= </em>(&lsquo;|&ldquo;)?(\w|\|\/|.)
-+(&rsquo;|&rdquo;| *|>)?</p>
-
-<p>提取信息中的IP地址：(\d+).(\d+).(\d+).(\d+)</p>
-
-<p>提取信息中的中国手机号码：(86)<em>0</em>13\d{9}</p>
-
-<p>提取信息中的中国固定电话号码：((\d{3,4})|\d{3,4}-|\s)?\d{8}</p>
-
-<p>提取信息中的中国电话号码（包括移动和固定电话):((\d{3,4})|\d{3,4}-|\s)?\d{7,14}</p>
-
-<p>提取信息中的中国邮政编码：[1-9]{1}(\d+){5}</p>
-
-<p>提取信息中的浮点数（即小数):(-?\d*).?\d+</p>
-
-<p>提取信息中的任何数字:(-?\d*)(.\d+)? IP：(\d+).(\d+).(\d+).(\d+)</p>
-
-<p>电话区号：/^0\d{2,3}$/</p>
-
-<p>腾讯QQ号：^[1-9]<em>[1-9][0-9]</em>$</p>
-
-<p>帐号(字母开头，允许5-16字节，允许字母数字下划线)：
-^[a-zA-Z][a-zA-Z0-9_]{4,15}$</p>
-
-<p>中文、英文、数字及下划线：^[\u4e00-\u9fa5_a-zA-Z0-9]+$</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/posts/2">&larr; Older</a>
@@ -4528,6 +4994,10 @@ URL：^[a-zA-Z]+://(\w+(-\w+)</em>)(.(\w+(-\w+)<em>))</em>(\?\s<em>)?$ 或：<su
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2016/09/02/phpl-mongoDB/">php操作mongoDB示例</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2016/09/02/mysql-optimize/">【转】mysql优化原理与方式</a>
       </li>
     
@@ -4541,10 +5011,6 @@ URL：^[a-zA-Z]+://(\w+(-\w+)</em>)(.(\w+(-\w+)<em>))</em>(\?\s<em>)?$ 或：<su
     
       <li class="post">
         <a href="/blog/2016/09/01/php-yanzhengma/">验证码工具类的使用</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2016/09/01/php-sql-xss/">Php常用的防黑客攻击的几种情况</a>
       </li>
     
   </ul>
