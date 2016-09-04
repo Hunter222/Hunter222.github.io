@@ -4,7 +4,7 @@
   <title><![CDATA[小黄鸡]]></title>
   <link href="http://hunter222.github.io/atom.xml" rel="self"/>
   <link href="http://hunter222.github.io/"/>
-  <updated>2016-09-01T22:20:14+08:00</updated>
+  <updated>2016-09-04T19:10:11+08:00</updated>
   <id>http://hunter222.github.io/</id>
   <author>
     <name><![CDATA[chenjingxiu]]></name>
@@ -12,6 +12,482 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[数据库表类型中MyISam和innoDB的区别]]></title>
+    <link href="http://hunter222.github.io/blog/2016/09/02/MyISam-innoDb/"/>
+    <updated>2016-09-02T18:19:26+08:00</updated>
+    <id>http://hunter222.github.io/blog/2016/09/02/MyISam-innoDb</id>
+    <content type="html"><![CDATA[<p>MySQL的事务支持不是绑定在MySQL服务器本身，而是与存储引擎相关1.MyISAM：不支持事务，用于只读程序提高性能 2.InnoDB：支持ACID事务、行级锁、并发 3.Berkeley DB：支持事务</p>
+
+<p> 一个事务是一个连续的一组数据库操作，就好像它是一个单一的工作单元进行。换言之，永远不会是完整的事务，除非该组内的每个单独的操作是成功的。如果在事务的任何操作失败，则整个事务将失败。</p>
+
+<p>实际上，会俱乐部许多SQL查询到一个组中，将执行所有的人都一起作为事务的一部分。</p>
+
+<p>事务的特性：
+事务有以下四个标准属性的缩写ACID，通常被称为：</p>
+
+<p>原子性: 确保工作单元内的所有操作都成功完成，否则事务将被中止在故障点，和以前的操作将回滚到以前的状态。</p>
+
+<p>一致性: 确保数据库正确地改变状态后，成功提交的事务。</p>
+
+<p>隔离性: 使事务操作彼此独立的和透明的。</p>
+
+<p>持久性: 确保提交的事务的结果或效果的系统出现故障的情况下仍然存在。</p>
+
+<p>在MySQL中，事务开始使用COMMIT或ROLLBACK语句开始工作和结束。开始和结束语句的SQL命令之间形成了大量的事务。</p>
+
+<p>COMMIT &amp; ROLLBACK:
+这两个关键字提交和回滚主要用于MySQL的事务。</p>
+
+<p>当一个成功的事务完成后，发出COMMIT命令应使所有参与表的更改才会生效。</p>
+
+<p>如果发生故障时，应发出一个ROLLBACK命令返回的事务中引用的每一个表到以前的状态。</p>
+
+<p>可以控制的事务行为称为AUTOCOMMIT设置会话变量。如果AUTOCOMMIT设置为1（默认值），然后每一个SQL语句（在事务与否）被认为是一个完整的事务，并承诺在默认情况下，当它完成。 AUTOCOMMIT设置为0时，发出SET AUTOCOMMIT =0命令，在随后的一系列语句的作用就像一个事务，直到一个明确的COMMIT语句时，没有活动的提交。</p>
+
+<p>可以通过使用mysql_query()函数在PHP中执行这些SQL命令。</p>
+
+<p>通用事务例子</p>
+
+<p>这一系列事件是独立于所使用的编程语言，可以建立在任何使用的语言来创建应用程序的逻辑路径。</p>
+
+<p>可以通过使用mysql_query()函数在PHP中执行这些SQL命令。</p>
+
+<p>BEGIN WORK开始事务发出SQL命令</p>
+
+<p>发出一个或多个SQL命令，如SELECT，INSERT，UPDATE或DELETE</p>
+
+<p>检查是否有任何错误，一切都依据的需要。</p>
+
+<p>如果有任何错误，那么问题ROLLBACK命令，否则发出COMMIT命令。</p>
+
+<p>在MySQL中的事务安全表类型：</p>
+
+<p>如果打算使用MySQL事务编程，那么就需要一种特殊的方式创建表。有很多支持事务但最流行的是InnoDB表类型。</p>
+
+<p>从源代码编译MySQL时，InnoDB表支持需要特定的编译参数。如果MySQL版本没有InnoDB支持，请互联网服务提供商建立一个版本的MySQL支持InnoDB表类型，或者下载并安装Windows或Linux/UNIX的MySQL-Max二进制分发和使用的表类型在开发环境中。</p>
+
+<p>如果MySQL安装支持InnoDB表，只需添加一个的TYPE=InnoDB 定义表创建语句。例如，下面的代码创建InnoDB表tcount_tbl：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>root@host# mysql -u root -p password;
+</span><span class='line'>Enter password:*******
+</span><span class='line'>mysql&gt; use TUTORIALS;
+</span><span class='line'>Database changed
+</span><span class='line'>mysql&gt; create table tcount_tbl
+</span><span class='line'>    -&gt; (
+</span><span class='line'>    -&gt; tutorial_author varchar(40) NOT NULL,
+</span><span class='line'>    -&gt; tutorial_count  INT
+</span><span class='line'>    -&gt; ) TYPE=InnoDB;
+</span><span class='line'>Query OK, 0 rows affected (0.05 sec)</span></code></pre></td></tr></table></div></figure>
+
+
+<p>可以使用其他GEMINI或BDB表类型，但它取决于您的安装，如果它支持这两种类型。</p>
+
+<p>由于项目设计里面，牵扯到了金钱的转移，于是就要用到MYSQL的事务处理，来保证一组处理结果的正确性。用了事务，就不可避免的要牺牲一部分速度，来保证数据的正确性。</p>
+
+<p>只有InnoDB支持事务</p>
+
+<p>事务 ACID Atomicity（原子性）、Consistency（稳定性）、Isolation（隔离性）、Durability（可靠性）</p>
+
+<p>1、事务的原子性</p>
+
+<p>一组事务，要么成功；要么撤回。</p>
+
+<p>2、稳定性</p>
+
+<p>有非法数据（外键约束之类），事务撤回。</p>
+
+<p>3、隔离性</p>
+
+<p>事务独立运行。</p>
+
+<p>一个事务处理后的结果，影响了其他事务，那么其他事务会撤回。</p>
+
+<p>事务的100%隔离，需要牺牲速度。</p>
+
+<p>4、可靠性</p>
+
+<p>软、硬件崩溃后，InnoDB数据表驱动会利用日志文件重构修改。</p>
+
+<p>可靠性和高速度不可兼得， innodb_flush_log_at_trx_commit选项 决定什么时候吧事务保存到日志里。
+开启事务</p>
+
+<p>START TRANSACTION 或 BEGIN</p>
+
+<p>提交事务（关闭事务）</p>
+
+<p>COMMIT</p>
+
+<p>放弃事务（关闭事务）</p>
+
+<p>ROLLBACK</p>
+
+<p>折返点</p>
+
+<p>SAVEPOINT adqoo_1</p>
+
+<p>ROLLBACK TO SAVEPOINT adqoo_1</p>
+
+<p>发生在折返点 adqoo_1 之前的事务被提交，之后的被忽略</p>
+
+<p>事务的终止</p>
+
+<p>设置“自动提交”模式</p>
+
+<p>SET AUTOCOMMIT = 0</p>
+
+<p>每条SQL都是同一个事务的不同命令，之间由 COMMIT 或 ROLLBACK隔开</p>
+
+<p>掉线后，没有 COMMIT 的事务都被放弃</p>
+
+<p>事务锁定模式</p>
+
+<p>系统默认： 不需要等待某事务结束，可直接查询到结果，但不能再进行修改、删除。</p>
+
+<p>缺点：查询到的结果，可能是已经过期的。</p>
+
+<p>优点：不需要等待某事务结束，可直接查询到结果。</p>
+
+<p>需要用以下模式来设定锁定模式</p>
+
+<p>1、SELECT …… LOCK IN SHARE MODE（共享锁）</p>
+
+<p>查询到的数据，就是数据库在这一时刻的数据（其他已commit事务的结果，已经反应到这里了）</p>
+
+<p>SELECT 必须等待，某个事务结束后才能执行</p>
+
+<p>2、SELECT …… FOR UPDATE（排它锁）</p>
+
+<p>例如 SELECT * FROM tablename WHERE id&lt;200</p>
+
+<p>那么id&lt;200的数据，被查询到的数据，都将不能再进行修改、删除、SELECT …… LOCK IN SHARE MODE操作
+一直到此事务结束</p>
+
+<p>共享锁 和 排它锁 的区别：在于是否阻断其他客户发出的 SELECT …… LOCK IN SHARE MODE命令</p>
+
+<p>3、INSERT / UPDATE / DELETE</p>
+
+<p>所有关联数据都会被锁定，加上排它锁</p>
+
+<p>4、防插入锁</p>
+
+<p>例如 SELECT * FROM tablename WHERE id>200</p>
+
+<p>那么id>200的记录无法被插入</p>
+
+<p>5、死锁</p>
+
+<p>自动识别死锁</p>
+
+<p>先进来的进程被执行，后来的进程收到出错消息，并按ROLLBACK方式回滚</p>
+
+<p>innodb_lock_wait_timeout = n 来设置最长等待时间，默认是50秒</p>
+
+<p>事务隔离模式</p>
+
+<p>SET [SESSION|GLOBAL] TRANSACTION ISOLATION LEVEL</p>
+
+<p>READ UNCOMMITTED | READ COMMITTED | REPEATABLE READ | SERIALIZABLE</p>
+
+<p>1、不带SESSION、GLOBAL的SET命令</p>
+
+<p>只对下一个事务有效</p>
+
+<p>2、SET SESSION</p>
+
+<p>为当前会话设置隔离模式</p>
+
+<p>3、SET GLOBAL</p>
+
+<p>为以后新建的所有MYSQL连接设置隔离模式（当前连接不包括在内）</p>
+
+<p>隔离模式</p>
+
+<p>   READ UNCOMMITTED</p>
+
+<p>不隔离SELECT</p>
+
+<p>其他事务未完成的修改（未COMMIT），其结果也考虑在内</p>
+
+<p>   READ COMMITTED</p>
+
+<p>把其他事务的 COMMIT 修改考虑在内</p>
+
+<p>同一个事务中，同一 SELECT 可能返回不同结果</p>
+
+<p>   REPEATABLE READ（默认）</p>
+
+<p>不把其他事务的修改考虑在内，无论其他事务是否用COMMIT命令提交过
+同一个事务中，同一 SELECT 返回同一结果（前提是本事务，不修改）</p>
+
+<p>   SERIALIZABLE</p>
+
+<p>和REPEATABLE READ类似，给所有的SELECT都加上了 共享锁</p>
+
+<p>出错处理</p>
+
+<p>根据出错信息，执行相应的处理</p>
+
+<p>mysql事物处理实例</p>
+
+<p>MYSQL的事务处理主要有两种方法</p>
+
+<p>1.用begin,rollback,commit来实现</p>
+
+<pre><code>begin开始一个事务
+
+rollback事务回滚
+
+commit 事务确认
+</code></pre>
+
+<p>2.直接用set来改变mysql的自动提交模式</p>
+
+<pre><code>mysql默认是自动提交的，也就是你提交一个query，就直接执行！可以通过
+
+set autocommit = 0 禁止自动提交
+
+set autocommit = 1 开启自动提交
+
+来实现事务的处理。
+</code></pre>
+
+<p>但要注意当用set autocommit = 0 的时候，你以后所有的sql都将作为事务处理，直到你用commit确认或 rollback结束，注意当你结束这个事务的同时也开启了新的事务！按第一种方法只将当前的做为一个事务!</p>
+
+<p>MYSQL只有 INNODB和BDB类型的数据表才支持事务处理，其他的类型是不支持的!</p>
+
+<p>MYSQL5.0 WINXP下测试通过</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>mysql&gt; use test;
+</span><span class='line'>    Database changed
+</span><span class='line'>    mysql&gt; CREATE TABLE `dbtest`(
+</span><span class='line'>    -&gt; id int(4)
+</span><span class='line'>    -&gt; ) TYPE=INNODB;
+</span><span class='line'>Query OK, 0 rows affected, 1 warning (0.05 sec)
+</span><span class='line'>mysql&gt; select * from dbtest
+</span><span class='line'>    -&gt; ;
+</span><span class='line'>Empty set (0.01 sec)
+</span><span class='line'>mysql&gt; begin;
+</span><span class='line'>Query OK, 0 rows affected (0.00 sec)
+</span><span class='line'>mysql&gt; insert into dbtest values(5);
+</span><span class='line'>Query OK, 1 row affected (0.00 sec)
+</span><span class='line'>mysql&gt; insert into dbtest value(6);
+</span><span class='line'>Query OK, 1 row affected (0.00 sec)
+</span><span class='line'>mysql&gt; commit;
+</span><span class='line'>Query OK, 0 rows affected (0.00 sec)
+</span><span class='line'>mysql&gt; select * from dbtest;
+</span><span class='line'>+------+
+</span><span class='line'>| id   |
+</span><span class='line'>+------+
+</span><span class='line'>|    5 |
+</span><span class='line'>|    6 |
+</span><span class='line'>+------+
+</span><span class='line'>2 rows in set (0.00 sec)
+</span><span class='line'>mysql&gt; begin;
+</span><span class='line'>Query OK, 0 rows affected (0.00 sec)
+</span><span class='line'>mysql&gt; insert into dbtest values(7);
+</span><span class='line'>Query OK, 1 row affected (0.00 sec)
+</span><span class='line'>mysql&gt; rollback;
+</span><span class='line'>Query OK, 0 rows affected (0.00 sec)
+</span><span class='line'>mysql&gt; select * from dbtest;
+</span><span class='line'>+------+
+</span><span class='line'>| id   |
+</span><span class='line'>+------+
+</span><span class='line'>|    5 |
+</span><span class='line'>|    6 |
+</span><span class='line'>+------+
+</span><span class='line'>2 rows in set (0.00 sec)</span></code></pre></td></tr></table></div></figure>
+
+
+<p>mysql> mysql事务处理</p>
+
+<p>php代码实现事务的处理可以通过PHP预定义类mysqli的以下方法实现。</p>
+
+<p>autocommit(boolean)：该方法用于限定查询结果是否自动提交，如果该方法的参数为true则自动提交，如果参数为false则关闭自动提交。MySQL数据库默认为自动提交。</p>
+
+<p>rollback()：利用mysqli类中的该方法可以实现事务的回滚。</p>
+
+<p>commit()：利用该方法可以实现提交所有查询。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;?php
+</span><span class='line'>include_once("conn.php");
+</span><span class='line'>$id=$_GET[id];
+</span><span class='line'>$conn-&gt;autocommit(false);
+</span><span class='line'>if(!$conn-&gt;query("delete from tb_sco where id='".$id."'"))
+</span><span class='line'>{
+</span><span class='line'>  $conn-&gt;rollback();
+</span><span class='line'>}
+</span><span class='line'>if(!$conn-&gt;query("delete from tb_stu where id='".$id."'"))
+</span><span class='line'>{
+</span><span class='line'>  $conn-&gt;rollback();
+</span><span class='line'>}
+</span><span class='line'>  $conn-&gt;commit();
+</span><span class='line'>  $conn-&gt;autocommit(true);
+</span><span class='line'>  echo "ok"
+</span><span class='line'>?&gt;</span></code></pre></td></tr></table></div></figure>
+
+
+<p>示例2：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;?php
+</span><span class='line'>require('connectDB.php'); //建立数据库连接
+</span><span class='line'>mssql_query("BEGIN TRANSACTION DEPS02_DEL"); //开始事务
+</span><span class='line'>$delete_dep_sql="DELETE FROM TBLDEPARTMENT WHERE DEPTID='{$_GET[deptid]}'";
+</span><span class='line'>// echo $delete_dep_sql."&lt;br&gt;";
+</span><span class='line'>mssql_query($delete_dep_sql); //操作数据库
+</span><span class='line'>// var_dump($del_result);
+</span><span class='line'>$delete_result = mssql_query("select @@ROWCOUNT as id");
+</span><span class='line'>$delete_info = mssql_fetch_array($delete_result);
+</span><span class='line'>$delete_rows = $delete_info[0];
+</span><span class='line'>// var_dump($delete_rows);
+</span><span class='line'>mssql_free_result($delete_result);
+</span><span class='line'>echo "&lt;script language=javascript&gt;";
+</span><span class='line'>if(true){    //判断是否回滚提交
+</span><span class='line'>mssql_query("COMMIT TRANSACTION DEPS02_DEL"); //提交事务
+</span><span class='line'>echo "alert('delete success!');";
+</span><span class='line'>}else{
+</span><span class='line'>mssql_query("ROLLBACK TRANSACTION DEPS02_DEL"); //回滚事务
+</span><span class='line'>echo "alert('delete faile!');";
+</span><span class='line'>}
+</span><span class='line'>echo "&lt;/script&gt;";mssql_close();
+</span><span class='line'>?&gt;</span></code></pre></td></tr></table></div></figure>
+
+
+<p>例3</p>
+
+<p>  MySQL的事务处理在处理实际问题中有着广泛且重要的应用，最常见的应用如银行转账业务、电子商务支付业务等等。但是，值得注意的是，MySQL的事务处理功能在MYSIAM存储引擎中是不支持的，在InnoDB存储引擎中是支持的。现在上传一段代码，作为引导认识MySQL事务处理的开始，简单的实例，但融汇思想，相信会有很大的帮助。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;?php
+</span><span class='line'>$conn=mysql_connect('localhost','root','yourpassword')or die(mysql_error());
+</span><span class='line'>mysql_select_db('transaction',$conn);
+</span><span class='line'>mysql_query('set names utf8');
+</span><span class='line'>//创建事务
+</span><span class='line'>mysql_query('START TRANSACTION') or die(mysql_error());
+</span><span class='line'>$sqlA="update A set account=account-1";
+</span><span class='line'>if(!mysql_query($sqlA)){
+</span><span class='line'>&nbsp;&nbsp;&nbsp; mysql_query('ROLLBACK') or exit(mysql_error());//判断当执行失败时回滚
+</span><span class='line'>&nbsp;   exit();
+</span><span class='line'>}
+</span><span class='line'>$sqlB="update B set account=account+1";
+</span><span class='line'>if(!mysql_query($sqlB)){
+</span><span class='line'>&nbsp;&nbsp;&nbsp; mysql_query('ROLLBACK') or exit(mysql_error());//判断当执行失败时回滚
+</span><span class='line'>&nbsp;   exit();
+</span><span class='line'>}
+</span><span class='line'>mysql_query('COMMIT')or die(mysql_error());//执行事务
+</span><span class='line'>mysql_close($conn);
+</span><span class='line'>?&gt;</span></code></pre></td></tr></table></div></figure>
+
+
+<p>以上代码可以作为模拟银行转账业务的事务流程。以表A、B分别表示两个已在银行开户的账户，当账户A执行转出1元给账户B的操作时，如果操作执行失败，转出将会回滚至原始状态，不继续向下执行动作。反之，如果操作执行成功，则账户B可用余额将增加1元，否则事务回滚至原始状态。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[验证码工具类的使用]]></title>
